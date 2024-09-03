@@ -1,21 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   cd-command.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:10:51 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/03 16:09:51 by omartela         ###   ########.fr       */
+/*   Created: 2024/09/03 16:06:06 by omartela          #+#    #+#             */
+/*   Updated: 2024/09/03 16:11:01 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include "../include/minishell.h"
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
-
-# include <stdio.h>
-# include <stdlib.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <unistd.h>
-#endif
+int	cd_command(char *str)
+{
+	if (str == NULL)
+	{
+		// Return to home directory.. when null;
+	}
+	else
+	{
+		if (chdir(str))
+			printf("Error when changing directory");
+	}
+}
