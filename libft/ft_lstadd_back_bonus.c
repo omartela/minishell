@@ -1,39 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_lstadd_back_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/03 22:39:28 by irychkov         ###   ########.fr       */
+/*   Created: 2024/04/23 13:47:16 by irychkov          #+#    #+#             */
+/*   Updated: 2024/04/24 12:47:08 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-void	userprompt(void)
+void	ft_lstadd_back(t_list **lst, t_list *new)
 {
-	char	*input;
+	t_list	*last;
 
-	while (1)
+	if (lst == NULL || new == NULL)
+		return ;
+	if (*lst == NULL)
+		*lst = new;
+	else
 	{
-		input = readline("minishell> ");
-		if (input == NULL)
-		{
-			printf("Exit \n");
-			break ;
-		}
-		if (*input)
-		{
-			add_history(input);
-		}
-		printf("You have entered: %s\n", input);
-		free(input);
+		last = ft_lstlast(*lst);
+		last->next = new;
 	}
-}
-
-int	main(void)
-{
-	userprompt();
 }

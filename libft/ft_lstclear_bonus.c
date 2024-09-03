@@ -1,39 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/03 22:39:28 by irychkov         ###   ########.fr       */
+/*   Created: 2024/04/23 14:17:37 by irychkov          #+#    #+#             */
+/*   Updated: 2024/04/24 12:46:58 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-void	userprompt(void)
+void	ft_lstclear(t_list **lst, void (*del)(void*))
 {
-	char	*input;
+	t_list	*ptr;
+	t_list	*tmp;
 
-	while (1)
+	if (lst && del)
 	{
-		input = readline("minishell> ");
-		if (input == NULL)
+		ptr = *lst;
+		while (ptr != NULL)
 		{
-			printf("Exit \n");
-			break ;
+			tmp = ptr->next;
+			ft_lstdelone(ptr, del);
+			ptr = tmp;
 		}
-		if (*input)
-		{
-			add_history(input);
-		}
-		printf("You have entered: %s\n", input);
-		free(input);
+		*lst = NULL;
 	}
-}
-
-int	main(void)
-{
-	userprompt();
 }

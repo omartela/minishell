@@ -1,39 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/03 22:39:28 by irychkov         ###   ########.fr       */
+/*   Created: 2024/04/29 21:45:55 by irychkov          #+#    #+#             */
+/*   Updated: 2024/05/08 13:42:42 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
 
-void	userprompt(void)
-{
-	char	*input;
+# include <stdarg.h>
+# include <stdlib.h>
+# include <unistd.h>
 
-	while (1)
-	{
-		input = readline("minishell> ");
-		if (input == NULL)
-		{
-			printf("Exit \n");
-			break ;
-		}
-		if (*input)
-		{
-			add_history(input);
-		}
-		printf("You have entered: %s\n", input);
-		free(input);
-	}
-}
+int	ft_print_char(char c);
+int	ft_print_str(char *s);
+int	ft_print_nbr(int n);
+int	ft_print_unsnbr(unsigned int n);
+int	ft_print_hex(unsigned int n, char format);
+int	ft_print_ptr(void *p);
+int	ft_printf(const char *format, ...);
 
-int	main(void)
-{
-	userprompt();
-}
+#endif

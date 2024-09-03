@@ -1,39 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_lstiter_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/03 22:39:28 by irychkov         ###   ########.fr       */
+/*   Created: 2024/04/23 14:20:36 by irychkov          #+#    #+#             */
+/*   Updated: 2024/04/24 12:46:47 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-void	userprompt(void)
+void	ft_lstiter(t_list *lst, void (*f)(void *))
 {
-	char	*input;
+	t_list	*ptr;
 
-	while (1)
+	if (lst && f)
 	{
-		input = readline("minishell> ");
-		if (input == NULL)
+		ptr = lst;
+		while (ptr != NULL)
 		{
-			printf("Exit \n");
-			break ;
+			f(ptr->content);
+			ptr = ptr->next;
 		}
-		if (*input)
-		{
-			add_history(input);
-		}
-		printf("You have entered: %s\n", input);
-		free(input);
 	}
-}
-
-int	main(void)
-{
-	userprompt();
 }

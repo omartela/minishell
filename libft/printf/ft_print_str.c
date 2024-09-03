@@ -1,39 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_print_str.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/03 22:39:28 by irychkov         ###   ########.fr       */
+/*   Created: 2024/05/06 15:52:05 by irychkov          #+#    #+#             */
+/*   Updated: 2024/05/08 14:32:01 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "ft_printf.h"
 
-void	userprompt(void)
+int	ft_print_str(char *s)
 {
-	char	*input;
+	size_t	i;
 
-	while (1)
+	i = 0;
+	if (!s)
 	{
-		input = readline("minishell> ");
-		if (input == NULL)
-		{
-			printf("Exit \n");
-			break ;
-		}
-		if (*input)
-		{
-			add_history(input);
-		}
-		printf("You have entered: %s\n", input);
-		free(input);
+		return (write(1, "(null)", 6));
 	}
-}
-
-int	main(void)
-{
-	userprompt();
+	while (s[i])
+		i++;
+	return (write(1, s, i));
 }

@@ -1,39 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_print_unsnbr.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/03 22:39:28 by irychkov         ###   ########.fr       */
+/*   Created: 2024/05/06 15:50:10 by irychkov          #+#    #+#             */
+/*   Updated: 2024/05/08 14:34:54 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "ft_printf.h"
 
-void	userprompt(void)
+static int	ft_helper_unsnbr(unsigned int n, int *counter)
 {
-	char	*input;
+	char	c;
 
-	while (1)
+	if (n >= 10)
 	{
-		input = readline("minishell> ");
-		if (input == NULL)
-		{
-			printf("Exit \n");
-			break ;
-		}
-		if (*input)
-		{
-			add_history(input);
-		}
-		printf("You have entered: %s\n", input);
-		free(input);
+		if (ft_helper_unsnbr(n / 10, counter) == -1)
+			return (-1);
 	}
+	c = n % 10 + '0';
+	if (write(1, &c, 1) == -1)
+		return (-1);
+	*counter = *counter + 1;
+	return (*counter);
 }
 
-int	main(void)
+int	ft_print_unsnbr(unsigned int n)
 {
-	userprompt();
+	int		counter;
+
+	counter = 0;
+	return (ft_helper_unsnbr(n, &counter));
 }

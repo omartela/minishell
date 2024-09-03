@@ -1,39 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/03 22:39:28 by irychkov         ###   ########.fr       */
+/*   Created: 2024/04/17 11:48:27 by irychkov          #+#    #+#             */
+/*   Updated: 2024/04/24 09:54:36 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-void	userprompt(void)
+void	*ft_memset(void *b, int c, size_t len)
 {
-	char	*input;
+	unsigned char	*temp;
 
-	while (1)
+	temp = (unsigned char *)b;
+	while (len > 0)
 	{
-		input = readline("minishell> ");
-		if (input == NULL)
-		{
-			printf("Exit \n");
-			break ;
-		}
-		if (*input)
-		{
-			add_history(input);
-		}
-		printf("You have entered: %s\n", input);
-		free(input);
+		*temp = c;
+		len--;
+		temp++;
 	}
-}
-
-int	main(void)
-{
-	userprompt();
+	return (b);
 }

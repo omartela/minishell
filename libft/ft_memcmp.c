@@ -1,39 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/03 22:39:28 by irychkov         ###   ########.fr       */
+/*   Created: 2024/04/17 18:08:50 by irychkov          #+#    #+#             */
+/*   Updated: 2024/04/24 09:54:12 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-void	userprompt(void)
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	char	*input;
+	size_t			i;
+	unsigned char	*ptr_s1;
+	unsigned char	*ptr_s2;
 
-	while (1)
+	i = 0;
+	ptr_s1 = (unsigned char *)s1;
+	ptr_s2 = (unsigned char *)s2;
+	while (i < n)
 	{
-		input = readline("minishell> ");
-		if (input == NULL)
-		{
-			printf("Exit \n");
-			break ;
-		}
-		if (*input)
-		{
-			add_history(input);
-		}
-		printf("You have entered: %s\n", input);
-		free(input);
+		if (ptr_s1[i] != ptr_s2[i])
+			return (ptr_s1[i] - ptr_s2[i]);
+		i++;
 	}
-}
-
-int	main(void)
-{
-	userprompt();
+	return (0);
 }

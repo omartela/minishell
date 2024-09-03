@@ -1,39 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/03 22:39:28 by irychkov         ###   ########.fr       */
+/*   Created: 2024/04/18 12:31:54 by irychkov          #+#    #+#             */
+/*   Updated: 2024/04/29 17:37:47 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-void	userprompt(void)
+void	*ft_calloc(size_t count, size_t size)
 {
-	char	*input;
+	void	*b;
+	size_t	total;
 
-	while (1)
-	{
-		input = readline("minishell> ");
-		if (input == NULL)
-		{
-			printf("Exit \n");
-			break ;
-		}
-		if (*input)
-		{
-			add_history(input);
-		}
-		printf("You have entered: %s\n", input);
-		free(input);
-	}
-}
-
-int	main(void)
-{
-	userprompt();
+	total = count * size;
+	if (count != 0 && size != 0 && (size != (total / count)))
+		return (NULL);
+	b = (void *)malloc(total);
+	if (b)
+		ft_bzero(b, total);
+	return (b);
 }

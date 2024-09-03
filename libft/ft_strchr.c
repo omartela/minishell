@@ -1,39 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/03 22:39:28 by irychkov         ###   ########.fr       */
+/*   Created: 2024/04/18 09:14:02 by irychkov          #+#    #+#             */
+/*   Updated: 2024/05/03 10:47:06 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-void	userprompt(void)
+char	*ft_strchr(const char *s, int c)
 {
-	char	*input;
+	char	*ptr_s;
 
-	while (1)
+	ptr_s = (char *)s;
+	while (*ptr_s != (char)c)
 	{
-		input = readline("minishell> ");
-		if (input == NULL)
+		if (*ptr_s == '\0')
 		{
-			printf("Exit \n");
-			break ;
+			return (NULL);
 		}
-		if (*input)
-		{
-			add_history(input);
-		}
-		printf("You have entered: %s\n", input);
-		free(input);
+		ptr_s++;
 	}
-}
-
-int	main(void)
-{
-	userprompt();
+	return (ptr_s);
 }

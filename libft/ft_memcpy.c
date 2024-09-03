@@ -1,39 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/03 22:39:28 by irychkov         ###   ########.fr       */
+/*   Created: 2024/04/17 14:39:01 by irychkov          #+#    #+#             */
+/*   Updated: 2024/04/24 09:54:23 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-void	userprompt(void)
+void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
-	char	*input;
+	unsigned char	*temp_dst;
+	unsigned char	*temp_src;
 
-	while (1)
+	if (dst == NULL && src == NULL)
+		return (NULL);
+	temp_src = (unsigned char *)src;
+	temp_dst = (unsigned char *)dst;
+	while (n > 0)
 	{
-		input = readline("minishell> ");
-		if (input == NULL)
-		{
-			printf("Exit \n");
-			break ;
-		}
-		if (*input)
-		{
-			add_history(input);
-		}
-		printf("You have entered: %s\n", input);
-		free(input);
+		*temp_dst = *temp_src;
+		n--;
+		temp_dst++;
+		temp_src++;
 	}
-}
-
-int	main(void)
-{
-	userprompt();
+	return (dst);
 }

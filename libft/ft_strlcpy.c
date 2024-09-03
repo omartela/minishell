@@ -1,39 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/03 22:39:28 by irychkov         ###   ########.fr       */
+/*   Created: 2024/04/17 10:17:51 by irychkov          #+#    #+#             */
+/*   Updated: 2024/04/24 09:55:46 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-void	userprompt(void)
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
-	char	*input;
+	size_t	i;
+	size_t	src_len;
 
-	while (1)
+	i = 0;
+	src_len = ft_strlen(src);
+	if (dstsize == 0)
+		return (src_len);
+	while (i < dstsize - 1 && src[i])
 	{
-		input = readline("minishell> ");
-		if (input == NULL)
-		{
-			printf("Exit \n");
-			break ;
-		}
-		if (*input)
-		{
-			add_history(input);
-		}
-		printf("You have entered: %s\n", input);
-		free(input);
+		dst[i] = src[i];
+		i++;
 	}
-}
-
-int	main(void)
-{
-	userprompt();
+	dst[i] = '\0';
+	return (src_len);
 }

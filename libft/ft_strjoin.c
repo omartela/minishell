@@ -1,39 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/03 22:39:28 by irychkov         ###   ########.fr       */
+/*   Created: 2024/04/19 15:12:40 by irychkov          #+#    #+#             */
+/*   Updated: 2024/04/24 09:55:32 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-void	userprompt(void)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*input;
+	char	*str;
+	size_t	total_len;
 
-	while (1)
-	{
-		input = readline("minishell> ");
-		if (input == NULL)
-		{
-			printf("Exit \n");
-			break ;
-		}
-		if (*input)
-		{
-			add_history(input);
-		}
-		printf("You have entered: %s\n", input);
-		free(input);
-	}
-}
-
-int	main(void)
-{
-	userprompt();
+	if (!s1 || !s2)
+		return (NULL);
+	total_len = ft_strlen(s1) + ft_strlen(s2) + 1;
+	str = (char *)malloc(sizeof(char) * total_len);
+	if (!str)
+		return (NULL);
+	ft_strlcpy(str, s1, total_len);
+	ft_strlcat(str, s2, total_len);
+	return (str);
 }
