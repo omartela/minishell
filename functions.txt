@@ -1,0 +1,496 @@
+
+### 1. `readline`
+- **Description**: Reads a line of input from the terminal with an optional prompt.
+- **Return Value**: Pointer to the read string, or `NULL` if an error occurs or end-of-file is reached.
+- **Example**:
+  ```c
+  char *line = readline("Enter command: ");
+  if (line) {
+      printf("You entered: %s\n", line);
+  }
+  ```
+
+### 2. `rl_clear_history`
+- **Description**: Clears the history of lines entered using `readline`.
+- **Return Value**: None (void function).
+- **Example**:
+  ```c
+  rl_clear_history();
+  ```
+
+### 3. `rl_on_new_line`
+- **Description**: Prepares the `readline` library for a new line of input.
+- **Return Value**: None (void function).
+- **Example**:
+  ```c
+  rl_on_new_line();
+  ```
+
+### 4. `rl_replace_line`
+- **Description**: Replaces the current line in the `readline` input buffer with the provided text.
+- **Return Value**: None (void function).
+- **Example**:
+  ```c
+  rl_replace_line("new text", 1);
+  ```
+
+### 5. `rl_redisplay`
+- **Description**: Redisplays the current line in the `readline` buffer.
+- **Return Value**: None (void function).
+- **Example**:
+  ```c
+  rl_redisplay();
+  ```
+
+### 6. `add_history`
+- **Description**: Adds the given string to the `readline` history list.
+- **Return Value**: None (void function).
+- **Example**:
+  ```c
+  add_history(line);
+  ```
+
+### 7. `printf`
+- **Description**: Prints formatted output to the standard output (stdout).
+- **Return Value**: Number of characters printed (excluding the null byte).
+- **Example**:
+  ```c
+  int len = printf("Hello, %s!\n", "world");
+  printf("%d characters were printed.\n", len);
+  ```
+
+### 8. `malloc`
+- **Description**: Allocates a block of memory of the specified size.
+- **Return Value**: Pointer to the allocated memory, or `NULL` if the allocation fails.
+- **Example**:
+  ```c
+  char *buffer = (char *)malloc(100);
+  if (buffer) {
+      // Use the buffer
+  }
+  ```
+
+### 9. `free`
+- **Description**: Frees a block of memory previously allocated by `malloc`, `calloc`, or `realloc`.
+- **Return Value**: None (void function).
+- **Example**:
+  ```c
+  free(buffer);
+  ```
+
+### 10. `write`
+- **Description**: Writes data to a file descriptor.
+- **Return Value**: Number of bytes written, or -1 if an error occurs.
+- **Example**:
+  ```c
+  ssize_t bytes_written = write(STDOUT_FILENO, "Hello, world!\n", 14);
+  ```
+
+### 11. `access`
+- **Description**: Checks the accessibility of a file.
+- **Return Value**: 0 if the file is accessible, -1 otherwise.
+- **Example**:
+  ```c
+  if (access("file.txt", F_OK) == 0) {
+      printf("File exists.\n");
+  }
+  ```
+
+### 12. `open`
+- **Description**: Opens a file and returns a file descriptor.
+- **Return Value**: File descriptor on success, or -1 on error.
+- **Example**:
+  ```c
+  int fd = open("file.txt", O_RDONLY);
+  ```
+
+### 13. `read`
+- **Description**: Reads data from a file descriptor.
+- **Return Value**: Number of bytes read, or -1 on error.
+- **Example**:
+  ```c
+  char buffer[100];
+  ssize_t bytes_read = read(fd, buffer, sizeof(buffer));
+  ```
+
+### 14. `close`
+- **Description**: Closes a file descriptor.
+- **Return Value**: 0 on success, or -1 on error.
+- **Example**:
+  ```c
+  close(fd);
+  ```
+
+### 15. `fork`
+- **Description**: Creates a new process by duplicating the calling process.
+- **Return Value**: 0 to the child process, the child's PID to the parent, or -1 on error.
+- **Example**:
+  ```c
+  pid_t pid = fork();
+  if (pid == 0) {
+      printf("Child process.\n");
+  } else if (pid > 0) {
+      printf("Parent process.\n");
+  }
+  ```
+
+### 16. `wait`
+- **Description**: Waits for a child process to change state.
+- **Return Value**: PID of the child that changed state, or -1 on error.
+- **Example**:
+  ```c
+  int status;
+  pid_t child_pid = wait(&status);
+  ```
+
+### 17. `waitpid`
+- **Description**: Waits for a specific child process to change state.
+- **Return Value**: PID of the child that changed state, or -1 on error.
+- **Example**:
+  ```c
+  pid_t child_pid = waitpid(pid, &status, 0);
+  ```
+
+### 18. `wait3`
+- **Description**: Waits for a child process to change state and returns resource usage information.
+- **Return Value**: PID of the child that changed state, or -1 on error.
+- **Example**:
+  ```c
+  struct rusage usage;
+  pid_t child_pid = wait3(&status, 0, &usage);
+  ```
+
+### 19. `wait4`
+- **Description**: Waits for a specific child process to change state and returns resource usage information.
+- **Return Value**: PID of the child that changed state, or -1 on error.
+- **Example**:
+  ```c
+  struct rusage usage;
+  pid_t child_pid = wait4(pid, &status, 0, &usage);
+  ```
+
+### 20. `signal`
+- **Description**: Sets a function to handle a specific signal.
+- **Return Value**: The previous signal handler, or `SIG_ERR` on error.
+- **Example**:
+  ```c
+  signal(SIGINT, handle_signal);
+  ```
+
+### 21. `sigaction`
+- **Description**: Examines or changes the action associated with a specific signal.
+- **Return Value**: 0 on success, or -1 on error.
+- **Example**:
+  ```c
+  struct sigaction sa;
+  sa.sa_handler = handle_signal;
+  sigaction(SIGINT, &sa, NULL);
+  ```
+
+### 22. `sigemptyset`
+- **Description**: Initializes a signal set to exclude all signals.
+- **Return Value**: 0 on success, or -1 on error.
+- **Example**:
+  ```c
+  sigset_t set;
+  sigemptyset(&set);
+  ```
+
+### 23. `sigaddset`
+- **Description**: Adds a specific signal to a signal set.
+- **Return Value**: 0 on success, or -1 on error.
+- **Example**:
+  ```c
+  sigaddset(&set, SIGINT);
+  ```
+
+### 24. `kill`
+- **Description**: Sends a signal to a specific process or group of processes.
+- **Return Value**: 0 on success, or -1 on error.
+- **Example**:
+  ```c
+  kill(pid, SIGKILL);
+  ```
+
+### 25. `exit`
+- **Description**: Terminates the calling process with an exit status.
+- **Return Value**: This function does not return.
+- **Example**:
+  ```c
+  exit(0);
+  ```
+
+### 26. `getcwd`
+- **Description**: Gets the current working directory.
+- **Return Value**: Pointer to a string containing the current working directory, or `NULL` on error.
+- **Example**:
+  ```c
+  char cwd[1024];
+  if (getcwd(cwd, sizeof(cwd)) != NULL) {
+      printf("Current working dir: %s\n", cwd);
+  }
+  ```
+
+### 27. `chdir`
+- **Description**: Changes the current working directory.
+- **Return Value**: 0 on success, or -1 on error.
+- **Example**:
+  ```c
+  if (chdir("/home/user") == 0) {
+      printf("Directory changed.\n");
+  }
+  ```
+
+### 28. `stat`
+- **Description**: Retrieves information about a file.
+- **Return Value**: 0 on success, or -1 on error.
+- **Example**:
+  ```c
+  struct stat st;
+  if (stat("file.txt", &st) == 0) {
+      printf("File size: %ld bytes\n", st.st_size);
+  }
+  ```
+
+### 29. `lstat`
+- **Description**: Like `stat`, but does not follow symbolic links.
+- **Return Value**: 0 on success, or -1 on error.
+- **Example**:
+  ```c
+  struct stat st;
+  if
+
+ (lstat("symlink", &st) == 0) {
+      printf("Symlink size: %ld bytes\n", st.st_size);
+  }
+  ```
+
+### 30. `fstat`
+- **Description**: Retrieves information about an open file using its file descriptor.
+- **Return Value**: 0 on success, or -1 on error.
+- **Example**:
+  ```c
+  struct stat st;
+  if (fstat(fd, &st) == 0) {
+      printf("File size: %ld bytes\n", st.st_size);
+  }
+  ```
+
+### 31. `unlink`
+- **Description**: Deletes a name from the filesystem, possibly removing the file it refers to.
+- **Return Value**: 0 on success, or -1 on error.
+- **Example**:
+  ```c
+  if (unlink("file.txt") == 0) {
+      printf("File deleted.\n");
+  }
+  ```
+
+### 32. `execve`
+- **Description**: Executes a program, replacing the current process.
+- **Return Value**: Does not return on success, or -1 on error.
+- **Example**:
+  ```c
+  char *args[] = { "/bin/ls", NULL };
+  execve("/bin/ls", args, NULL);
+  ```
+
+### 33. `dup`
+- **Description**: Duplicates a file descriptor, returning the new descriptor.
+- **Return Value**: The new file descriptor, or -1 on error.
+- **Example**:
+  ```c
+  int newfd = dup(fd);
+  ```
+
+### 34. `dup2`
+- **Description**: Duplicates a file descriptor to a specific descriptor number.
+- **Return Value**: The new file descriptor, or -1 on error.
+- **Example**:
+  ```c
+  dup2(fd, STDOUT_FILENO);
+  ```
+
+### 35. `pipe`
+- **Description**: Creates a pipe, a unidirectional data channel that can be used for interprocess communication.
+- **Return Value**: 0 on success, or -1 on error.
+- **Example**:
+  ```c
+  int fd[2];
+  if (pipe(fd) == 0) {
+      // fd[0] is for reading, fd[1] is for writing
+  }
+  ```
+
+### 36. `opendir`
+- **Description**: Opens a directory for reading.
+- **Return Value**: Pointer to a `DIR` structure, or `NULL` on error.
+- **Example**:
+  ```c
+  DIR *dir = opendir("/path/to/directory");
+  ```
+
+### 37. `readdir`
+- **Description**: Reads a directory entry from an open directory.
+- **Return Value**: Pointer to a `dirent` structure, or `NULL` when no more entries are available or on error.
+- **Example**:
+  ```c
+  struct dirent *entry;
+  while ((entry = readdir(dir)) != NULL) {
+      printf("%s\n", entry->d_name);
+  }
+  ```
+
+### 38. `closedir`
+- **Description**: Closes an open directory.
+- **Return Value**: 0 on success, or -1 on error.
+- **Example**:
+  ```c
+  closedir(dir);
+  ```
+
+### 39. `strerror`
+- **Description**: Returns a pointer to the textual representation of the current errno value.
+- **Return Value**: Pointer to the error string.
+- **Example**:
+  ```c
+  printf("Error: %s\n", strerror(errno));
+  ```
+
+### 40. `perror`
+- **Description**: Prints a description of the error to stderr.
+- **Return Value**: None (void function).
+- **Example**:
+  ```c
+  perror("Error");
+  ```
+
+### 41. `isatty`
+- **Description**: Checks if a file descriptor refers to a terminal.
+- **Return Value**: 1 if true, 0 if false, or -1 on error.
+- **Example**:
+  ```c
+  if (isatty(STDIN_FILENO)) {
+      printf("Standard input is a terminal.\n");
+  }
+  ```
+
+### 42. `ttyname`
+- **Description**: Returns the name of the terminal associated with a file descriptor.
+- **Return Value**: Pointer to a string containing the terminal name, or `NULL` on error.
+- **Example**:
+  ```c
+  char *name = ttyname(STDIN_FILENO);
+  if (name) {
+      printf("Terminal name: %s\n", name);
+  }
+  ```
+
+### 43. `ttyslot`
+- **Description**: Returns the index of the current terminal in the utmp file.
+- **Return Value**: Index of the terminal, or 0 on error.
+- **Example**:
+  ```c
+  int slot = ttyslot();
+  if (slot > 0) {
+      printf("Terminal slot: %d\n", slot);
+  }
+  ```
+
+### 44. `ioctl`
+- **Description**: Performs device-specific input/output operations.
+- **Return Value**: 0 on success, or -1 on error.
+- **Example**:
+  ```c
+  int flags;
+  ioctl(fd, FIONREAD, &flags);
+  ```
+
+### 45. `getenv`
+- **Description**: Retrieves the value of an environment variable.
+- **Return Value**: Pointer to the value of the environment variable, or `NULL` if the variable is not found.
+- **Example**:
+  ```c
+  char *path = getenv("PATH");
+  if (path) {
+      printf("PATH: %s\n", path);
+  }
+  ```
+
+### 46. `tcsetattr`
+- **Description**: Sets the parameters associated with a terminal.
+- **Return Value**: 0 on success, or -1 on error.
+- **Example**:
+  ```c
+  struct termios options;
+  tcgetattr(STDIN_FILENO, &options);
+  options.c_lflag &= ~ECHO;
+  tcsetattr(STDIN_FILENO, TCSANOW, &options);
+  ```
+
+### 47. `tcgetattr`
+- **Description**: Gets the parameters associated with a terminal.
+- **Return Value**: 0 on success, or -1 on error.
+- **Example**:
+  ```c
+  struct termios options;
+  if (tcgetattr(STDIN_FILENO, &options) == 0) {
+      // Modify options
+  }
+  ```
+
+### 48. `tgetent`
+- **Description**: Loads the entry for a terminal type from the termcap database.
+- **Return Value**: 1 on success, 0 if the terminal type is not found, or -1 on error.
+- **Example**:
+  ```c
+  char buffer[2048];
+  if (tgetent(buffer, getenv("TERM")) == 1) {
+      printf("Terminal entry loaded.\n");
+  }
+  ```
+
+### 49. `tgetflag`
+- **Description**: Retrieves the boolean value of a termcap capability.
+- **Return Value**: 1 if the capability is present, 0 if not.
+- **Example**:
+  ```c
+  int has_auto_right_margin = tgetflag("am");
+  ```
+
+### 50. `tgetnum`
+- **Description**: Retrieves the numeric value of a termcap capability.
+- **Return Value**: Numeric value if the capability is found, or -1 if not.
+- **Example**:
+  ```c
+  int columns = tgetnum("co");
+  ```
+
+### 51. `tgetstr`
+- **Description**: Retrieves the string value of a termcap capability.
+- **Return Value**: Pointer to the string value, or `NULL` if not found.
+- **Example**:
+  ```c
+  char *clear = tgetstr("cl", NULL);
+  if (clear) {
+      printf("Clear screen: %s\n", clear);
+  }
+  ```
+
+### 52. `tgoto`
+- **Description**: Produces a cursor movement string for a terminal.
+- **Return Value**: Pointer to the resulting cursor movement string.
+- **Example**:
+  ```c
+  char *cm = tgoto(tgetstr("cm", NULL), 10, 5);
+  ```
+
+### 53. `tputs`
+- **Description**: Outputs a string with padding, as required by the terminal.
+- **Return Value**: 0 on success, or ERR on error.
+- **Example**:
+  ```c
+  tputs(tgetstr("cl", NULL), 1, putchar);
+  ```
+
+These descriptions, return values, and examples provide a concise understanding of each function in the list.
