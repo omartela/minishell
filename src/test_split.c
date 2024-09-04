@@ -1,40 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   test_split.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/04 13:08:03 by irychkov         ###   ########.fr       */
+/*   Created: 2024/09/04 13:00:40 by irychkov          #+#    #+#             */
+/*   Updated: 2024/09/04 13:18:37 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	userprompt(void)
-{
-	char	*input;
+/* 
+minishell> libft "ls -la" 'grep "{print $1}"'
+You have entered: libft "ls -la" 'grep "{print $1}"'
+arg[0]: libft
+arg[1]: "ls -la"
+arg[2]: 'grep "{print $1}"'
+ */
 
-	while (1)
+void	test_split(char *input)
+{
+	char	**result;
+	int		i;
+
+	i = 0;
+	result = ft_split_args(input, ' ');
+	while (result[i])
 	{
-		input = readline("minishell> ");
-		if (input == NULL)
-		{
-			printf("Exit \n");
-			break ;
-		}
-		if (*input)
-		{
-			add_history(input);
-		}
-		printf("You have entered: %s\n", input);
-		test_split(input);
-		free(input);
+		printf("arg[%d]: %s\n", i, result[i]);
+		free(result[i]);
+		i++;
 	}
-}
-
-int	main(void)
-{
-	userprompt();
+	free(result);
 }

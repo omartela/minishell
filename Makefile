@@ -6,13 +6,13 @@
 #    By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 22:33:20 by irychkov          #+#    #+#              #
-#    Updated: 2024/09/03 22:42:03 by irychkov         ###   ########.fr        #
+#    Updated: 2024/09/04 13:04:42 by irychkov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRCS = src/main.c
+SRCS = src/main.c src/ft_split_args.c src/test_split.c
 
 OBJS = $(SRCS:src/%.c=src/%.o)
 
