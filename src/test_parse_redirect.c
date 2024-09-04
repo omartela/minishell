@@ -1,45 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   test_parse_redirect.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/04 22:34:36 by irychkov         ###   ########.fr       */
+/*   Created: 2024/09/04 22:30:45 by irychkov          #+#    #+#             */
+/*   Updated: 2024/09/04 22:32:55 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_array(char **array)
+void	print_command(t_cmd *cmd)
 {
-	int	i;
-
-	i = 0;
-	while (array[i])
-	{
-		free(array[i]);
-		i++;
+	printf("Command: ");
+	for (int i = 0; cmd->args[i] != NULL; i++) {
+		printf("%s ", cmd->args[i]);
 	}
-	free(array);
-}
+	printf("\n");
 
-void	free_array_back(char **array, size_t i)
-{
-	while (i > 0)
+	if (cmd->infile)
+		printf("Input file: %s\n", cmd->infile);
+
+	if (cmd->outfile) 
 	{
-		i--;
-		free(array[i]);
+		printf("Output file: %s\n", cmd->outfile);
+		if (cmd->append)
+			printf("Append mode (>>)\n");
+		else
+			printf("Overwrite mode (>)\n");
 	}
-	free(array);
-}
-
-void	free_cmd(t_cmd *cmd)
-{
-	if (cmd->args)
-		free_array(cmd->args);
-	if (cmd->path)
-		free_array(cmd->path);
-	free(cmd);
 }

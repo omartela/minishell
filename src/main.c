@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/04 18:23:02 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/04 21:55:01 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 void	userprompt(char **envp)
 {
+	t_shell sh;
 	char	*input;
-	char	**commands;
 
+	sh.commands = NULL;
+	sh.envp = envp;
 	while (1)
 	{
 		input = readline("minishell> ");
@@ -31,12 +33,12 @@ void	userprompt(char **envp)
 		}
 		printf("You have entered: %s\n", input);
 		test_split(input);
-		commands = ft_split(input, '|');
-		if (commands)
+		sh.commands = ft_split(input, '|');
+		if (sh.commands)
 		{
-			if (execute_pipes(commands, envp) == 1)
+			if (execute_pipes(&sh) == 1)
 				perror("comment"); //TBH we don't care about the return value
-			free_array(commands);
+			free_array(sh.commands);
 		}
 		else
 			perror("ft_split failed");

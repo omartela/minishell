@@ -6,14 +6,15 @@
 #    By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 22:33:20 by irychkov          #+#    #+#              #
-#    Updated: 2024/09/04 16:36:52 by irychkov         ###   ########.fr        #
+#    Updated: 2024/09/04 22:36:46 by irychkov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRCS = src/main.c src/ft_split_args.c src/test_split.c src/exec_pipes.c \
-		src/free.c src/init_cmd.c
+SRCS = src/main.c src/ft_split_args.c src/exec_pipes.c \
+		src/free.c src/init_cmd.c src/parse_redirect.c\
+		src/test_split.c src/test_parse_redirect.c
 
 OBJS = $(SRCS:src/%.c=src/%.o)
 
