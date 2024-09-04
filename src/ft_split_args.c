@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 12:44:50 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/04 13:52:35 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:28:27 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static size_t	ft_strcounter(char const *s, char c)
 	return (elements);
 }
 
-static void	free_array(char **array, size_t i)
+static void	free_array_back(char **array, size_t i)
 {
 	while (i > 0)
 	{
@@ -126,7 +126,7 @@ static char	**ft_helper(char const *s, char c, size_t i, char **result)
 		result[i] = copy_without_quotes(start, s - start);
 		if (!result[i])
 		{
-			free_array(result, i);
+			free_array_back(result, i);
 			return (NULL);
 		}
 		i++;
