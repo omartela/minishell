@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 12:44:50 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/04 13:15:50 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/04 13:52:35 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,45 @@ static void	free_array(char **array, size_t i)
 	free(array);
 }
 
+static size_t	len_without_quotes(const char *str, size_t len)
+{
+	size_t	i;
+	size_t	count;
+
+	i = 0;
+	count = 0;
+	while (i < len)
+	{
+		if (str[i] != '\'' && str[i] != '\"')
+			count++;
+		i++;
+	}
+	return (count);
+}
+
+static char	*copy_without_quotes(const char *start, size_t len)
+{
+	size_t	i;
+	size_t	j;
+	size_t	new_len;
+	char	*result;
+
+	i = 0;
+	j = 0;
+	new_len = len_without_quotes(start, len);
+	result = malloc(new_len + 1);
+	if (!result)
+		return (NULL);
+	while (i < len)
+	{
+		if (start[i] != '\'' && start[i] != '\"')
+			result[j++] = start[i];
+		i++;
+	}
+	result[j] = '\0';
+	return (result);
+}
+
 static char	**ft_helper(char const *s, char c, size_t i, char **result)
 {
 	const char	*start;
@@ -84,13 +123,12 @@ static char	**ft_helper(char const *s, char c, size_t i, char **result)
 				in_quotes = 0;
 			s++;
 		}
-		result[i] = (char *)malloc(sizeof(char) * (s - start + 1));
+		result[i] = copy_without_quotes(start, s - start);
 		if (!result[i])
 		{
 			free_array(result, i);
 			return (NULL);
 		}
-		ft_strlcpy(result[i], start, s - start + 1);
 		i++;
 	}
 	result[i] = NULL;
