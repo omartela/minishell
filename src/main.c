@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/05 15:32:13 by omartela         ###   ########.fr       */
+/*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
+/*   Updated: 2024/09/05 15:43:12 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 void	userprompt(char **envp)
 {
@@ -19,6 +19,7 @@ void	userprompt(char **envp)
 
 	sh.commands = NULL;
 	sh.envp = envp;
+	sh.homepath = ft_strdup(getenv("HOME"));
 	while (1)
 	{
 		input = readline("minishell> ");

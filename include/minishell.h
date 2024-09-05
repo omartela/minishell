@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:10:51 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/05 15:31:53 by omartela         ###   ########.fr       */
+/*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
+/*   Updated: 2024/09/05 15:45:08 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,13 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <unistd.h>
 
 typedef struct s_shell
 {
 	char	**commands;
 	char	**envp;
+	char	*homepath;
 }	t_shell;
 
 typedef struct s_cmd
@@ -50,5 +52,8 @@ void	test_echo_command(char *argv[], t_shell *shell);
 
 // echo_command
 void	echo_command(char *argv[]);
+
+// utilities.c
+char	*expand_tilde(t_shell *sh);
 
 #endif
