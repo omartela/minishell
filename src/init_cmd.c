@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/04 22:39:36 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/05 13:16:00 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,9 @@ int	init_cmd(t_cmd **cmd, const char *command, char **envp)
 		perror("malloc"); //free all
 		return (1);
 	}
+	(*cmd)->infile = NULL;
+	(*cmd)->outfile = NULL;
+	(*cmd)->append = 0;
 	(*cmd)->args = ft_split_args(command, ' ');
 	if (!(*cmd)->args)
 	{
