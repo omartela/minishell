@@ -6,14 +6,14 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:10:51 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/05 11:32:19 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:31:53 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "libft.h"
+# include "../libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <readline/readline.h>
@@ -44,5 +44,11 @@ char	**ft_split_args(char const *s, char c);
 void	free_array_back(char **array, size_t i);
 void	free_array(char **array);
 void	free_cmd(t_cmd *cmd);
+
+// test_echo_command.c
+void	test_echo_command(char *argv[], t_shell *shell);
+
+// echo_command
+void	echo_command(char *argv[]);
 
 #endif
