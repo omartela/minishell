@@ -6,19 +6,20 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/05 11:38:28 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/05 12:40:37 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 void	userprompt(char **envp)
 {
-	t_shell sh;
+	t_shell	sh;
 	char	*input;
 
 	sh.commands = NULL;
 	sh.envp = envp;
+	sh.homepath = ft_strdup(getenv("HOME"));
 	while (1)
 	{
 		input = readline("minishell> ");

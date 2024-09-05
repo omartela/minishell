@@ -6,23 +6,25 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:10:51 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/05 11:32:19 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/05 11:59:54 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "libft.h"
+# include "../libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <unistd.h>
 
 typedef struct s_shell
 {
 	char	**commands;
 	char	**envp;
+	char	*homepath;
 }	t_shell;
 
 typedef struct s_cmd
@@ -44,5 +46,9 @@ char	**ft_split_args(char const *s, char c);
 void	free_array_back(char **array, size_t i);
 void	free_array(char **array);
 void	free_cmd(t_cmd *cmd);
+
+// utilities.c
+char	*expand_tilde(t_shell *sh);
+
 
 #endif
