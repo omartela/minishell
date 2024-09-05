@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/04 22:35:13 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/05 14:34:22 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	parse_redirections(t_cmd *cmd, char **args)
 	{
 		if (ft_strncmp(args[i], "<", 2) == 0 && args[i + 1])
 		{
-			cmd->infile = ft_strdup(args[i + 1]);
+			cmd->infile = ft_strdup(args[i + 1]); //probably I already have and should free previous
 			if (!cmd->infile)
 			{
 				perror("ft_strdup failed");
@@ -65,7 +65,7 @@ int	parse_redirections(t_cmd *cmd, char **args)
 		}
 		if (ft_strncmp(args[i], ">", 2) == 0 && args[i + 1])
 		{
-			cmd->outfile = ft_strdup(args[i + 1]);
+			cmd->outfile = ft_strdup(args[i + 1]); //probably I already have and should free previous
 			if (!cmd->outfile)
 			{
 				perror("ft_strdup failed");
@@ -78,7 +78,7 @@ int	parse_redirections(t_cmd *cmd, char **args)
 		}
 		if (ft_strncmp(args[i], ">>", 3) == 0 && args[i + 1])
 		{
-			cmd->outfile = ft_strdup(args[i + 1]);
+			cmd->outfile = ft_strdup(args[i + 1]); //probably I already have and should free previous
 			if (!cmd->outfile)
 			{
 				perror("ft_strdup failed");

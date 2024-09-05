@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:10:51 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/05 11:59:54 by omartela         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:46:27 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <fcntl.h>
 # include <unistd.h>
 
 typedef struct s_shell
@@ -34,8 +35,11 @@ typedef struct s_cmd
 	char	*infile;
 	char	*outfile;
 	int		append;
+	int		fd_in;
+	int		fd_out;
 }	t_cmd;
 
+void	init_fds(t_cmd *cmd);
 int		init_cmd(t_cmd **cmd, const char *command, char **envp);
 int		parse_redirections(t_cmd *cmd, char **args);
 int		execute_pipes(t_shell *sh);
