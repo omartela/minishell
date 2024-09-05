@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:10:51 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/04 22:35:35 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/05 11:32:19 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int		parse_redirections(t_cmd *cmd, char **args);
 int		execute_pipes(t_shell *sh);
 void	test_split(char *input); //only for test
 void	print_command(t_cmd *cmd); //only for test
+void	free_shell(t_shell *sh);
 char	**ft_split_args(char const *s, char c);
 void	free_array_back(char **array, size_t i);
 void	free_array(char **array);

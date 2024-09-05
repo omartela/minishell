@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/04 21:55:01 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/05 11:38:28 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	userprompt(char **envp)
 			perror("ft_split failed");
 		free(input);
 	}
+	free_shell(&sh);
 }
 
 int	main(int ac, char **av, char **envp)
