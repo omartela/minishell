@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/04 18:22:07 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/04 22:05:27 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	execute_command(t_cmd *cmd, char **envp)
 	exit(1);
 }
 
-int	execute_pipes(char **commands, char **envp)
+int	execute_pipes(t_shell *sh)
 {
 	int		i;
 	int		fd[2];
@@ -71,11 +71,11 @@ int	execute_pipes(char **commands, char **envp)
 	cmd = NULL;
 	prev_fd = -1;
 	ft_memset(fd, -1, sizeof(fd));
-	while (commands[i] != NULL)
+	while (sh->commands[i] != NULL)
 	{
-		if (init_cmd(&cmd, commands[i], envp) == 1)
+		if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
 			return (1);
-		if (commands[i + 1] != NULL)
+		if (sh->commands[i + 1] != NULL)
 		{
 			if (pipe(fd) == -1)
 			{
@@ -98,13 +98,13 @@ int	execute_pipes(char **commands, char **envp)
 				dup2(prev_fd, STDIN_FILENO);
 				close(prev_fd);
 			}
-			if (commands[i + 1] != NULL)
+			if (sh->commands[i + 1] != NULL)
 			{
 				close(fd[0]);
 				dup2(fd[1], STDOUT_FILENO);
 				close(fd[1]);
 			}
-			execute_command(cmd, envp);
+			execute_command(cmd, sh->envp);
 		}
 		else
 		{//parent
@@ -113,7 +113,7 @@ int	execute_pipes(char **commands, char **envp)
 			{
 				close(prev_fd);
 			}
-			if (commands[i + 1] != NULL)
+			if (sh->commands[i + 1] != NULL)
 			{
 				close(fd[1]);
 				prev_fd = fd[0];

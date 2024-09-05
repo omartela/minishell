@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 12:44:50 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/04 16:28:27 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/04 22:34:36 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,6 @@ static size_t	ft_strcounter(char const *s, char c)
 		}
 	}
 	return (elements);
-}
-
-static void	free_array_back(char **array, size_t i)
-{
-	while (i > 0)
-	{
-		i--;
-		free(array[i]);
-	}
-	free(array);
 }
 
 static size_t	len_without_quotes(const char *str, size_t len)
