@@ -6,13 +6,13 @@
 /*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:06:00 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/05 11:42:18 by omartela         ###   ########.fr       */
+/*   Updated: 2024/09/05 14:09:51 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char	*expand_tilde(t_shell sh)
+char	*expand_tilde(t_shell *sh)
 {
-	return (sh.homepath);
+	return (sh->homepath);
 }
