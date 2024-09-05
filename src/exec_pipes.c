@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/05 16:08:43 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/05 22:40:25 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ int	execute_pipes(t_shell *sh)
 	ft_memset(fd, -1, sizeof(fd));
 	while (sh->commands[i] != NULL)
 	{
-		if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
-			return (1);
+		/* if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
+			return (1); */
 		if (sh->commands[i + 1] != NULL)
 		{
 			if (pipe(fd) == -1)
@@ -93,12 +93,14 @@ int	execute_pipes(t_shell *sh)
 		}
 		if (pid == 0)
 		{//child
+			if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
+				exit (1);
 			if (prev_fd != -1)
 			{
 				dup2(prev_fd, STDIN_FILENO);
 				close(prev_fd);
 			}
-			if (cmd->infile)
+/* 			if (cmd->infile)
 			{
 				dup2(cmd->fd_in, STDIN_FILENO);
 				close(cmd->fd_in);
@@ -107,7 +109,7 @@ int	execute_pipes(t_shell *sh)
 			{
 				dup2(cmd->fd_out, STDOUT_FILENO);
 				close(cmd->fd_out);
-			}
+			} */
 			if (sh->commands[i + 1] != NULL)
 			{
 				close(fd[0]);
@@ -134,7 +136,7 @@ int	execute_pipes(t_shell *sh)
 				close(fd[1]);
 				prev_fd = fd[0];
 			}
-			free_cmd(cmd);
+			/* free_cmd(cmd); */
 		}
 		i++;
 	}
