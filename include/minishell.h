@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:10:51 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/05 11:59:54 by omartela         ###   ########.fr       */
+/*   Updated: 2024/09/05 16:09:06 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <unistd.h>
+# include <limits.h>
 
 typedef struct s_shell
 {
@@ -49,6 +50,5 @@ void	free_cmd(t_cmd *cmd);
 
 // utilities.c
 char	*expand_tilde(t_shell *sh);
-
 
 #endif
