@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/05 11:28:35 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/06 17:27:46 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ void	free_shell(t_shell *sh)
 {
 	if (sh->commands)
 		free_array(sh->commands);
+	if (sh->homepath)
+		free(sh->homepath);
 /* 	if (sh->envp)
 		free_array(sh->envp); */
 }

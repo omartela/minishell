@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/06 17:10:15 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/06 18:03:56 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_cmd
 }	t_cmd;
 
 int		init_cmd(t_cmd **cmd, const char *command, char **envp);
+void	init_num_cmds(t_shell *sh);
 int		parse_redirections(t_cmd *cmd, char **args);
 int		execute_pipes(t_shell *sh);
 void	test_split(char *input); //only for test

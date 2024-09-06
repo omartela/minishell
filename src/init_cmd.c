@@ -6,13 +6,13 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/06 15:25:19 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/06 18:03:47 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	path_init(t_cmd *cmd, char **envp)//or getenv("PATH")
+static int	path_init(t_cmd *cmd, char **envp)//or getenv("PATH")
 {
 	int	i;
 
@@ -33,6 +33,16 @@ int	path_init(t_cmd *cmd, char **envp)//or getenv("PATH")
 	}
 	cmd->path = NULL;
 	return (0);
+}
+
+void	init_num_cmds(t_shell *sh)
+{
+	int	i;
+	
+	i = 0;
+	while (sh->commands[i] != NULL)
+		i++;
+	sh->num_cmds = i;
 }
 
 int	init_cmd(t_cmd **cmd, const char *command, char **envp)
