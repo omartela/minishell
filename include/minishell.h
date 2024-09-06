@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:10:51 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/06 10:56:54 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/06 15:10:30 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "../libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <fcntl.h>
@@ -40,7 +41,6 @@ typedef struct s_cmd
 	int		fd_out;
 }	t_cmd;
 
-void	init_fds(t_cmd *cmd);
 int		init_cmd(t_cmd **cmd, const char *command, char **envp);
 int		parse_redirections(t_cmd *cmd, char **args);
 int		execute_pipes(t_shell *sh);

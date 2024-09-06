@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/06 12:06:38 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/06 15:25:19 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ int	init_cmd(t_cmd **cmd, const char *command, char **envp)
 		free(*cmd);
 		return (1);
 	}
-	/* init_fds(*cmd); */
 	print_command(*cmd); //only for test
 	return (0);
 }
