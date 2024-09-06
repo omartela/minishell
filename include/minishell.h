@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:10:51 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/05 15:46:27 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/06 10:56:54 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 
 typedef struct s_shell
 {
+	int		num_cmds;
 	char	**commands;
 	char	**envp;
 	char	*homepath;

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/05 22:27:21 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/06 12:06:38 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ int	init_cmd(t_cmd **cmd, const char *command, char **envp)
 		perror("malloc"); //free all
 		return (1);
 	}
+	(*cmd)->fd_in = STDIN_FILENO;
+	(*cmd)->fd_out = STDOUT_FILENO;
 	(*cmd)->infile = NULL;
 	(*cmd)->outfile = NULL;
 	(*cmd)->append = 0;

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:07:16 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/05 14:31:42 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/06 10:57:59 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@ void	userprompt(char **envp)
 	t_shell	sh;
 	char	*input;
 
+	sh.num_cmds = 0;
 	sh.commands = NULL;
 	sh.envp = envp;
-	sh.homepath = ft_strdup(getenv("HOME"));
+	sh.homepath = ft_strdup(getenv("HOME")); //protect
 	while (1)
 	{
 		input = readline("minishell> ");

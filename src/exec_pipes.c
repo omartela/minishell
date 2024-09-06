@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/05 22:40:25 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/06 13:40:52 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,82 +62,112 @@ void	execute_command(t_cmd *cmd, char **envp)
 int	execute_pipes(t_shell *sh)
 {
 	int		i;
-	int		fd[2];
-	int		prev_fd;
-	pid_t	pid;
+
+	/* int		prev_fd; */
 	t_cmd	*cmd;
 
 	i = 0;
 	cmd = NULL;
-	prev_fd = -1;
-	ft_memset(fd, -1, sizeof(fd));
+	/* prev_fd = -1; */
+	while (sh->commands[i] != NULL) {
+		i++;
+	}
+	sh->num_cmds = i;
+	int		fd[sh->num_cmds - 1][2];
+	pid_t	pid[sh->num_cmds];
+	i = 0;
 	while (sh->commands[i] != NULL)
 	{
-		/* if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
-			return (1); */
+		if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
+			return (1);
 		if (sh->commands[i + 1] != NULL)
 		{
-			if (pipe(fd) == -1)
+			if (pipe(fd[i]) == -1)
 			{
 				free_cmd(cmd);
 				perror("pipe");
 				return (1);
 			}
 		}
-		pid = fork();
-		if (pid == -1)
+		pid[i] = fork();
+		if (pid[i] == -1)
 		{
 			free_cmd(cmd);
 			perror("fork");
 			return (1);
 		}
-		if (pid == 0)
+		if (pid[i] == 0)
 		{//child
-			if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
-				exit (1);
-			if (prev_fd != -1)
+			if (i == 0)
 			{
-				dup2(prev_fd, STDIN_FILENO);
-				close(prev_fd);
+				if (cmd->infile)
+				{
+					dup2(cmd->fd_in, STDIN_FILENO);
+					close(cmd->fd_in);
+				}
+				if (cmd->outfile)
+				{
+					dup2(cmd->fd_out, STDOUT_FILENO);
+					close(cmd->fd_out);
+				}
+				else if (sh->num_cmds > 1)
+				{
+					close(fd[i][0]);
+					dup2(fd[i][1], STDOUT_FILENO);
+					close(fd[i][1]);
+				}
+				execute_command(cmd, sh->envp);
 			}
-/* 			if (cmd->infile)
+			else if (i == sh->num_cmds - 1)
 			{
-				dup2(cmd->fd_in, STDIN_FILENO);
-				close(cmd->fd_in);
-			}
-			if (cmd->outfile)
-			{
-				dup2(cmd->fd_out, STDOUT_FILENO);
-				close(cmd->fd_out);
-			} */
-			if (sh->commands[i + 1] != NULL)
-			{
-				close(fd[0]);
-				dup2(fd[1], STDOUT_FILENO);
-				close(fd[1]);
+				close(fd[i - 1][1]);
+				dup2(fd[i - 1][0], STDIN_FILENO);
+				close(fd[i - 1][0]);
+				if (cmd->infile)
+				{
+					dup2(cmd->fd_in, STDIN_FILENO);
+					close(cmd->fd_in);
+				}
+				if (cmd->outfile)
+				{
+					dup2(cmd->fd_out, STDOUT_FILENO);
+					close(cmd->fd_out);
+				}
+				execute_command(cmd, sh->envp);
 			}
 			else
 			{
-				dup2(cmd->fd_out, STDOUT_FILENO);
-				close(cmd->fd_out);
+				close(fd[i - 1][1]);
+				dup2(fd[i-1][0], STDIN_FILENO);
+				close(fd[i-1][0]);
+				close(fd[i][0]);
+				dup2(fd[i][1], STDOUT_FILENO);
+				close(fd[i][1]);
+				if (cmd->infile)
+				{
+					dup2(cmd->fd_in, STDIN_FILENO);
+					close(cmd->fd_in);
+				}
+				if (cmd->outfile)
+				{
+					dup2(cmd->fd_out, STDOUT_FILENO);
+					close(cmd->fd_out);
+				}
+				execute_command(cmd, sh->envp);
 			}
-			
-			execute_command(cmd, sh->envp);
 		}
-		else
-		{//parent
-			waitpid(pid, NULL, 0);
-			if (prev_fd != -1)
-			{
-				close(prev_fd);
-			}
-			if (sh->commands[i + 1] != NULL)
-			{
-				close(fd[1]);
-				prev_fd = fd[0];
-			}
-			/* free_cmd(cmd); */
-		}
+		i++;
+	}
+	//parent
+	i = 0;
+	while (i < sh->num_cmds - 1) {
+		close(fd[i][0]);
+		close(fd[i][1]);
+		i++;
+	}
+	i = 0;
+	while (i < sh->num_cmds) {
+		waitpid(pid[i], NULL, 0);
 		i++;
 	}
 	return (0);
