@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 23:28:36 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/07 23:38:33 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/08 00:17:53 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,5 @@ int	init_pipes(t_pipes *pipes, int num_cmds)
 		return (1);
 	}
 	init_fds(pipes->fd, num_cmds);
-	return 0;
+	return (0);
 }

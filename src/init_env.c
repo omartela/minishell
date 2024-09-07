@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:07:15 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/05 11:31:13 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/08 00:40:07 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	count_env_vars(char **envp)
 {
 	int	count;
-	
+
 	count = 0;
 	while (envp[count])
 		count++;
@@ -32,8 +32,7 @@ char	**copy_envp(char **envp)
 	env_count = count_env_vars(envp);
 	env_copy = (char **)malloc((env_count + 1) * sizeof(char *));
 	if (!env_copy)
-		return NULL;
-	
+		return (NULL);
 	while (i < env_count)
 	{
 		env_copy[i] = strdup(envp[i]);

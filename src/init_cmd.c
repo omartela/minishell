@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/06 18:03:47 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/08 00:41:22 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	path_init(t_cmd *cmd, char **envp)//or getenv("PATH")
 void	init_num_cmds(t_shell *sh)
 {
 	int	i;
-	
+
 	i = 0;
 	while (sh->commands[i] != NULL)
 		i++;

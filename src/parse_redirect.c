@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/05 22:28:59 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/08 00:43:14 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,16 @@
 
 static int	count_new_args_len(char **args)
 {
-	int i;
+	int	i;
 	int	arg_count;
 
 	i = 0;
 	arg_count = 0;
 	while (args[i])
 	{
-		if ((ft_strncmp(args[i], "<\0", 2) == 0 || ft_strncmp(args[i], ">\0", 2) == 0
-			|| ft_strncmp(args[i], ">>\0", 3) == 0) && args[i + 1])
+		if ((ft_strncmp(args[i], "<\0", 2) == 0
+				|| ft_strncmp(args[i], ">\0", 2) == 0
+				|| ft_strncmp(args[i], ">>\0", 3) == 0) && args[i + 1])
 		{
 			i = i + 2;
 			continue ;
@@ -53,7 +54,7 @@ static void	open_fdin(char *infile, t_cmd *cmd)
 	}
 }
 
-static void open_fdout(char *outfile, t_cmd *cmd)
+static void	open_fdout(char *outfile, t_cmd *cmd)
 {
 	cmd->fd_out = open(outfile, O_DIRECTORY);
 	if (cmd->fd_out != -1)

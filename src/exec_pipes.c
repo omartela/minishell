@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/08 00:00:15 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/08 00:37:33 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,32 +39,6 @@ static void	wait_for_children(t_pipes *pipes, int num_cmds)
 	}
 }
 
-static void	child_io(t_cmd *cmd, int **fd, int i, int num_cmds)
-{
-	if (cmd->infile)
-	{
-		dup2(cmd->fd_in, STDIN_FILENO);
-		close(cmd->fd_in);
-	}
-	else if (i > 0)
-	{
-		close(fd[i - 1][1]);
-		dup2(fd[i - 1][0], STDIN_FILENO);
-		close(fd[i - 1][0]);
-	}
-	if (cmd->outfile)
-	{
-		dup2(cmd->fd_out, STDOUT_FILENO);
-		close(cmd->fd_out);
-	}
-	else if (i < num_cmds - 1)
-	{
-		close(fd[i][0]);
-		dup2(fd[i][1], STDOUT_FILENO);
-		close(fd[i][1]);
-	}
-}
-
 int	execute_pipes(t_shell *sh)
 {
 	int		i;
@@ -79,10 +53,10 @@ int	execute_pipes(t_shell *sh)
 	{
 		if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
 			return (1);
-		if (setup_pipe_and_fork(sh, pipes, i, *cmd) != 0)
+		if (pipe_and_fork(sh, &pipes, i, cmd) != 0)
 		{
 			free_cmd(cmd);
-			return 1;
+			return (1);
 		}
 		free_cmd(cmd);
 		i++;

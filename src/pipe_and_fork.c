@@ -6,11 +6,37 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 21:40:30 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/07 23:58:00 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/08 00:37:03 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	child_io(t_cmd *cmd, int **fd, int i, int num_cmds)
+{
+	if (cmd->infile)
+	{
+		dup2(cmd->fd_in, STDIN_FILENO);
+		close(cmd->fd_in);
+	}
+	else if (i > 0)
+	{
+		close(fd[i - 1][1]);
+		dup2(fd[i - 1][0], STDIN_FILENO);
+		close(fd[i - 1][0]);
+	}
+	if (cmd->outfile)
+	{
+		dup2(cmd->fd_out, STDOUT_FILENO);
+		close(cmd->fd_out);
+	}
+	else if (i < num_cmds - 1)
+	{
+		close(fd[i][0]);
+		dup2(fd[i][1], STDOUT_FILENO);
+		close(fd[i][1]);
+	}
+}
 
 int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 {
