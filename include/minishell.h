@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/08 00:39:05 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/08 00:50:23 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ int		init_cmd(t_cmd **cmd, const char *command, char **envp);
 void	init_num_cmds(t_shell *sh);
 int		parse_redirections(t_cmd *cmd, char **args);
 int		init_pipes(t_pipes *pipes, int num_cmds);
-int		pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd);
 int		execute_pipes(t_shell *sh);
 void	execute_command(t_cmd *cmd, char **envp);
 
