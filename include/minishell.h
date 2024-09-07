@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/06 18:03:56 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/07 23:40:35 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 
-typedef struct s_shell
+typedef struct	s_shell
 {
 	int		num_cmds;
 	char	**commands;
@@ -30,7 +30,7 @@ typedef struct s_shell
 	char	*homepath;
 }	t_shell;
 
-typedef struct s_cmd
+typedef struct	s_cmd
 {
 	char	**args;
 	char	**path;
@@ -41,19 +41,31 @@ typedef struct s_cmd
 	int		fd_out;
 }	t_cmd;
 
+typedef struct	s_pipes
+{
+	int		**fd;
+	pid_t	*pid;
+}	t_pipes;
+
+// main functions
+char	**ft_split_args(char const *s, char c);
 int		init_cmd(t_cmd **cmd, const char *command, char **envp);
 void	init_num_cmds(t_shell *sh);
 int		parse_redirections(t_cmd *cmd, char **args);
+int		init_pipes(t_pipes *pipes, int num_cmds);
 int		execute_pipes(t_shell *sh);
-void	test_split(char *input); //only for test
-void	print_command(t_cmd *cmd); //only for test
-void	free_shell(t_shell *sh);
-char	**ft_split_args(char const *s, char c);
-void	free_array_back(char **array, size_t i);
-void	free_array(char **array);
-void	free_cmd(t_cmd *cmd);
+void	execute_command(t_cmd *cmd, char **envp);
 
-// test_echo_command.c
+// free functions
+void	free_array_back(void **array, size_t i);
+void	free_array(char **array);
+void	free_shell(t_shell *sh);
+void	free_cmd(t_cmd *cmd);
+void	free_pipes(t_pipes *pipes, int num_cmds);
+
+// test functions
+void	test_split(char *input);
+void	print_command(t_cmd *cmd);
 void	test_echo_command(char *argv[], t_shell *shell);
 
 // echo_command
