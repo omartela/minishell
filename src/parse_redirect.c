@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/08 00:43:14 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/08 20:46:27 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ static void	open_fdin(char *infile, t_cmd *cmd)
 	}
 	if (access(infile, R_OK) == -1)
 	{
-		perror("Permission denied");
-		exit(126);
+		perror(infile);// perror("Permission denied");
+		exit(126); // think about return
 	}
 	cmd->fd_in = open(infile, O_RDONLY);
 	if (cmd->fd_in == -1)
