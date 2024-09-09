@@ -6,121 +6,114 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/04 22:05:27 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/08 00:49:46 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	execute_command(t_cmd *cmd, char **envp)
+static void	child_io(t_cmd *cmd, int **fd, int i, int num_cmds)
 {
-	int		i;
-	char	*cmd_path;
-	char	*full_path;
+	if (cmd->infile)
+	{
+		dup2(cmd->fd_in, STDIN_FILENO);
+		close(cmd->fd_in);
+	}
+	else if (i > 0)
+	{
+		close(fd[i - 1][1]);
+		dup2(fd[i - 1][0], STDIN_FILENO);
+		close(fd[i - 1][0]);
+	}
+	if (cmd->outfile)
+	{
+		dup2(cmd->fd_out, STDOUT_FILENO);
+		close(cmd->fd_out);
+	}
+	else if (i < num_cmds - 1)
+	{
+		close(fd[i][0]);
+		dup2(fd[i][1], STDOUT_FILENO);
+		close(fd[i][1]);
+	}
+}
+
+static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
+{
+	if (i < sh->num_cmds - 1)
+	{
+		if (pipe(pipes->fd[i]) == -1)
+		{
+			perror("pipe");
+			return (1);
+		}
+	}
+	pipes->pid[i] = fork();
+	if (pipes->pid[i] == -1)
+	{
+		perror("fork");
+		return (1);
+	}
+	if (pipes->pid[i] == 0)
+	{
+		child_io(cmd, pipes->fd, i, sh->num_cmds);
+		execute_command(cmd, sh->envp);
+		exit(1);
+	}
+	return (0);
+}
+
+static void	close_pipes_in_parent(t_pipes *pipes, int num_cmds)
+{
+	int	i;
 
 	i = 0;
-	if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
+	while (i < num_cmds - 1)
 	{
-		execve(cmd->args[0], cmd->args, envp); //check if it exists
-		free_cmd(cmd);
-		perror("execve");
-		exit(1);
-	}
-	if (!cmd->path)
-	{
-		free_cmd(cmd);
-		write(2, "Error: PATH not found\n", 22);
-		exit(1);
-	}
-	while (cmd->path[i])
-	{
-		cmd_path = ft_strjoin(cmd->path[i], "/");
-		if (!cmd_path)
-		{
-			free_cmd(cmd);
-			perror("ft_strjoin");
-			exit(1);
-		}
-		full_path = ft_strjoin(cmd_path, cmd->args[0]);
-		free(cmd_path);
-		if (!full_path)
-		{
-			free_cmd(cmd);
-			perror("ft_strjoin");
-			exit(1);
-		}
-		execve(full_path, cmd->args, envp);
-		free(full_path);
+		if (pipes->fd[i][0] != -1)
+			close(pipes->fd[i][0]);
+		if (pipes->fd[i][1] != -1)
+			close(pipes->fd[i][1]);
 		i++;
 	}
-	write(2, "Error: command not found\n", 25);
-	free_cmd(cmd);
-	/* perror("execve failed"); */
-	exit(1);
+}
+
+static void	wait_for_children(t_pipes *pipes, int num_cmds)
+{
+	int	i;
+
+	i = 0;
+	while (i < num_cmds)
+	{
+		waitpid(pipes->pid[i], NULL, 0);
+		i++;
+	}
 }
 
 int	execute_pipes(t_shell *sh)
 {
 	int		i;
-	int		fd[2];
-	int		prev_fd;
-	pid_t	pid;
 	t_cmd	*cmd;
+	t_pipes	pipes;
 
 	i = 0;
 	cmd = NULL;
-	prev_fd = -1;
-	ft_memset(fd, -1, sizeof(fd));
+	if (init_pipes(&pipes, sh->num_cmds) == 1)
+		return (1);
 	while (sh->commands[i] != NULL)
 	{
 		if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
 			return (1);
-		if (sh->commands[i + 1] != NULL)
-		{
-			if (pipe(fd) == -1)
-			{
-				free_cmd(cmd);
-				perror("pipe");
-				return (1);
-			}
-		}
-		pid = fork();
-		if (pid == -1)
+		if (pipe_and_fork(sh, &pipes, i, cmd) != 0)
 		{
 			free_cmd(cmd);
-			perror("fork");
 			return (1);
 		}
-		if (pid == 0)
-		{//child
-			if (prev_fd != -1)
-			{
-				dup2(prev_fd, STDIN_FILENO);
-				close(prev_fd);
-			}
-			if (sh->commands[i + 1] != NULL)
-			{
-				close(fd[0]);
-				dup2(fd[1], STDOUT_FILENO);
-				close(fd[1]);
-			}
-			execute_command(cmd, sh->envp);
-		}
-		else
-		{//parent
-			waitpid(pid, NULL, 0);
-			if (prev_fd != -1)
-			{
-				close(prev_fd);
-			}
-			if (sh->commands[i + 1] != NULL)
-			{
-				close(fd[1]);
-				prev_fd = fd[0];
-			}
-			free_cmd(cmd);
-		}
+		free_cmd(cmd);
 		i++;
 	}
+	close_pipes_in_parent(&pipes, sh->num_cmds);
+	wait_for_children(&pipes, sh->num_cmds);
+	free_pipes(&pipes, sh->num_cmds);
 	return (0);
 }
