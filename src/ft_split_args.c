@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 12:44:50 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/04 22:34:36 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/09 23:04:30 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ The function allocates memory for the array and for each string.
 The array is NULL-terminated. If the allocation fails, the function returns NULL.
 */
 
-static size_t	ft_strcounter(char const *s, char c)
+static size_t	ft_strcounter(char *s, char c)
 {
 	size_t	elements;
 	int		in_quotes;
@@ -49,7 +49,7 @@ static size_t	ft_strcounter(char const *s, char c)
 	return (elements);
 }
 
-static size_t	len_without_quotes(const char *str, size_t len)
+static size_t	len_without_quotes(char *str, size_t len)
 {
 	size_t	i;
 	size_t	count;
@@ -65,7 +65,7 @@ static size_t	len_without_quotes(const char *str, size_t len)
 	return (count);
 }
 
-static char	*copy_without_quotes(const char *start, size_t len)
+static char	*copy_without_quotes(char *start, size_t len)
 {
 	size_t	i;
 	size_t	j;
@@ -88,9 +88,9 @@ static char	*copy_without_quotes(const char *start, size_t len)
 	return (result);
 }
 
-static char	**ft_helper(char const *s, char c, size_t i, char **result)
+static char	**ft_helper(char *s, char c, size_t i, char **result)
 {
-	const char	*start;
+	char	*start;
 	int			in_quotes;
 	char		quote_type;
 
@@ -125,7 +125,7 @@ static char	**ft_helper(char const *s, char c, size_t i, char **result)
 	return (result);
 }
 
-char	**ft_split_args(char const *s, char c)
+char	**ft_split_args(char *s, char c)
 {
 	size_t		i;
 	char		**result;

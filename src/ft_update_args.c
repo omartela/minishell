@@ -6,27 +6,13 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:04:53 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/09 16:30:59 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/09 23:13:04 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/* #include "minishell.h" */
-#include "..//libft/libft.h"
-#include <stdio.h>
+#include "minishell.h"
 
-size_t	ft_strlen(const char	*str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
-}
-
-static size_t	ft_redirect_counter(char const *s)
+static size_t	ft_redirect_counter(char *s)
 {
 	size_t	spaces;
 	int		in_quotes;
@@ -55,7 +41,7 @@ static size_t	ft_redirect_counter(char const *s)
 	return (spaces);
 }
 
-static char	*ft_add_spaces(char const *s)
+char	*ft_add_spaces(char *s)
 {
 	size_t	len;
 	size_t	spaces_needed;
@@ -70,7 +56,7 @@ static char	*ft_add_spaces(char const *s)
 	new_str = malloc(len + spaces_needed + 1); // protect
 	dest = new_str;
 	if (!new_str)
-		return NULL;
+		return (NULL);
 	while (*s)
 	{
 		if (((*s == '<') || (*s == '>')) && !in_quotes)
@@ -94,20 +80,6 @@ static char	*ft_add_spaces(char const *s)
 		}
 		s++;
 	}
-
 	*dest = '\0';
 	return (new_str);
-}
-
-int	main(void)
-{
-	char str[] = "<<<>><cat'<sda,d>'<><<>";
-	char *new_str = ft_add_spaces(str);
-	if (new_str)
-	{
-		printf("Original string: \"%s\"\n", str);
-		printf("Modified string: \"%s\"\n", new_str);
-		free(new_str);
-	}
-	return (0);
 }
