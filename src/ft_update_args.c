@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:04:53 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/09 16:22:29 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/09 16:30:59 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,5 +109,5 @@ int	main(void)
 		printf("Modified string: \"%s\"\n", new_str);
 		free(new_str);
 	}
-	return 0;
+	return (0);
 }
