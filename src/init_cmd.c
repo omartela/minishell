@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/09 23:10:50 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/10 12:16:42 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	path_init(t_cmd *cmd, char **envp)//or getenv("PATH")
 			cmd->path = ft_split(envp[i] + 5, ':');
 			if (!cmd->path)
 			{
-				perror("ft_split"); //free all
+				error_sys("ft_split failed\n"); //free all
 				return (1);
 			}
 			return (0);
@@ -47,13 +47,13 @@ void	init_num_cmds(t_shell *sh)
 
 int	init_cmd(t_cmd **cmd, char *command, char **envp)
 {
-	char *temp;
+	char	*temp;
 
 
 	*cmd = malloc(sizeof(t_cmd));
 	if (!*cmd)
 	{
-		perror("malloc"); //free all
+		error_sys("malloc failed\n"); //free all
 		return (1);
 	}
 	(*cmd)->fd_in = STDIN_FILENO;
@@ -65,27 +65,27 @@ int	init_cmd(t_cmd **cmd, char *command, char **envp)
 	temp = ft_add_spaces(command);
 	if (!(temp))
 	{
-		perror("malloc"); //free all
-		free(*cmd);
+		error_sys("malloc failed\n"); //free all
+		free_cmd(*cmd);
 		return (1);
 	}
 	(*cmd)->args = ft_split_args(temp, ' ');
 	if (!(*cmd)->args)
 	{
-		perror("ft_split_args"); //free all
-		free(*cmd);
+		error_sys("ft_split_args failed\n"); //free all
+		free_cmd(*cmd);
 		return (1);
 	}
 	if (parse_redirections(*cmd, (*cmd)->args) == 1)
 	{
 		free_array((*cmd)->args);
-		free(*cmd);
+		free_cmd(*cmd);
 		return (1);
 	}
 	if (path_init(*cmd, envp) == 1)
 	{
 		free_array((*cmd)->args);
-		free(*cmd);
+		free_cmd(*cmd);
 		return (1);
 	}
 	print_command(*cmd); //only for test

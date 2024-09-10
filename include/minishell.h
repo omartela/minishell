@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/09 23:01:40 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/10 12:03:23 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,10 @@ void	free_array(char **array);
 void	free_shell(t_shell *sh);
 void	free_cmd(t_cmd *cmd);
 void	free_pipes(t_pipes *pipes, int num_cmds);
+
+// errors
+void	show_error_free_cmd(int code, char *name, char *msg, t_cmd *cmd);
+void	error_sys(char *msg);
 
 // test functions
 void	test_split(char *input);

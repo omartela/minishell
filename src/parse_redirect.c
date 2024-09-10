@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/08 20:46:27 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/10 11:28:50 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	parse_redirections(t_cmd *cmd, char **args)
 	clean_args = malloc(sizeof(char *) * (arg_count + 1));
 	if (!clean_args)
 	{
-		perror("malloc failed"); //free all
+		error_sys("malloc failed\n"); //free all
 		return (1);
 	}
 	while (args[i])
@@ -116,7 +116,7 @@ int	parse_redirections(t_cmd *cmd, char **args)
 			cmd->infile = ft_strdup(args[i + 1]);
 			if (!cmd->infile)
 			{
-				perror("ft_strdup failed");
+				error_sys("ft_strdup failed\n");
 				free_array_back(clean_args, j);
 				return (1);
 			}
@@ -135,7 +135,7 @@ int	parse_redirections(t_cmd *cmd, char **args)
 			cmd->outfile = ft_strdup(args[i + 1]);
 			if (!cmd->outfile)
 			{
-				perror("ft_strdup failed");
+				error_sys("ft_strdup failed\n");
 				free_array_back(clean_args, j);
 				return (1);
 			}
@@ -154,7 +154,7 @@ int	parse_redirections(t_cmd *cmd, char **args)
 			cmd->outfile = ft_strdup(args[i + 1]);
 			if (!cmd->outfile)
 			{
-				perror("ft_strdup failed");
+				error_sys("ft_strdup failed\n");
 				free_array_back(clean_args, j);
 				return (1);
 			}
@@ -164,7 +164,7 @@ int	parse_redirections(t_cmd *cmd, char **args)
 		clean_args[j] = ft_strdup(args[i]); //protect
 		if (!clean_args[j])
 		{
-			perror("ft_strdup failed");
+			error_sys("ft_strdup failed");
 			free_array_back(clean_args, j);
 			return (1);
 		}
