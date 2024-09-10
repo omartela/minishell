@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/08 20:46:27 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:05:52 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	open_fdin(char *infile, t_cmd *cmd)
 {
 	if (access(infile, F_OK) == -1)
 	{
-		perror("No such file or directory");
+		perror(infile);/*  perror("No such file or directory"); */
 		exit(127);
 	}
 	if (access(infile, R_OK) == -1)
@@ -49,8 +49,8 @@ static void	open_fdin(char *infile, t_cmd *cmd)
 	cmd->fd_in = open(infile, O_RDONLY);
 	if (cmd->fd_in == -1)
 	{
-		perror("open");
-		exit(1);
+		error_sys("open failed\n");
+		exit (1);
 	}
 }
 
@@ -59,12 +59,12 @@ static void	open_fdout(char *outfile, t_cmd *cmd)
 	cmd->fd_out = open(outfile, O_DIRECTORY);
 	if (cmd->fd_out != -1)
 	{
-		perror("Is a directory");
+		perror(outfile);/* perror("Is a directory"); */
 		exit(126);
 	}
 	if (access(outfile, F_OK) == 0 && access(outfile, W_OK) == -1)
 	{
-		perror("Permission denied");
+		perror(outfile);/* perror("Permission denied"); */
 		exit(1);
 	}
 	if (cmd->append)
@@ -72,8 +72,8 @@ static void	open_fdout(char *outfile, t_cmd *cmd)
 		cmd->fd_out = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (cmd->fd_out == -1)
 		{
-			perror("open");
-			exit(1);
+			perror(outfile);
+			exit (1);
 		}
 	}
 	else
@@ -81,13 +81,13 @@ static void	open_fdout(char *outfile, t_cmd *cmd)
 		cmd->fd_out = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (cmd->fd_out == -1)
 		{
-			perror("open");
-			exit(1);
+			perror(outfile);
+			exit (1);
 		}
 	}
 }
 
-int	parse_redirections(t_cmd *cmd, char **args)
+void	parse_redirections(t_cmd *cmd, char **args)
 {
 	int		i;
 	int		j;
@@ -100,8 +100,8 @@ int	parse_redirections(t_cmd *cmd, char **args)
 	clean_args = malloc(sizeof(char *) * (arg_count + 1));
 	if (!clean_args)
 	{
-		perror("malloc failed"); //free all
-		return (1);
+		error_sys("malloc failed\n"); //free all
+		exit (1);
 	}
 	while (args[i])
 	{
@@ -112,13 +112,13 @@ int	parse_redirections(t_cmd *cmd, char **args)
 				free(cmd->infile);
 				close(cmd->fd_in);
 			}
-			open_fdin(args[i + 1], cmd);
+			open_fdin(args[i + 1], cmd);//set flag for is_exec?
 			cmd->infile = ft_strdup(args[i + 1]);
 			if (!cmd->infile)
 			{
-				perror("ft_strdup failed");
+				error_sys("ft_strdup failed\n");
 				free_array_back(clean_args, j);
-				return (1);
+				exit (1);
 			}
 			i += 2;
 			continue ;
@@ -135,9 +135,9 @@ int	parse_redirections(t_cmd *cmd, char **args)
 			cmd->outfile = ft_strdup(args[i + 1]);
 			if (!cmd->outfile)
 			{
-				perror("ft_strdup failed");
+				error_sys("ft_strdup failed\n");
 				free_array_back(clean_args, j);
-				return (1);
+				exit (1);
 			}
 			i += 2;
 			continue ;
@@ -154,9 +154,9 @@ int	parse_redirections(t_cmd *cmd, char **args)
 			cmd->outfile = ft_strdup(args[i + 1]);
 			if (!cmd->outfile)
 			{
-				perror("ft_strdup failed");
+				error_sys("ft_strdup failed\n");
 				free_array_back(clean_args, j);
-				return (1);
+				exit (1);
 			}
 			i += 2;
 			continue ;
@@ -164,9 +164,9 @@ int	parse_redirections(t_cmd *cmd, char **args)
 		clean_args[j] = ft_strdup(args[i]); //protect
 		if (!clean_args[j])
 		{
-			perror("ft_strdup failed");
+			error_sys("ft_strdup failed");
 			free_array_back(clean_args, j);
-			return (1);
+			exit (1);
 		}
 		j++;
 		i++;
@@ -174,5 +174,4 @@ int	parse_redirections(t_cmd *cmd, char **args)
 	clean_args[j] = NULL;
 	free_array(cmd->args);
 	cmd->args = clean_args;
-	return (0);
 }

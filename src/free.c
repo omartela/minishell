@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/07 23:20:47 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/10 12:14:21 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,16 @@ void	free_array_back(char **array, size_t i)
 
 void	free_cmd(t_cmd *cmd)
 {
+/* 	if (!cmd)
+		return ; */
 	if (cmd->args)
 		free_array(cmd->args);
 	if (cmd->path)
 		free_array(cmd->path);
+	if (cmd->infile)
+		free(cmd->infile);
+	if (cmd->outfile)
+		free(cmd->outfile);
 	free(cmd);
 }
 

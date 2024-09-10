@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 17:58:11 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/06 17:59:39 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/10 12:07:34 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,22 +23,18 @@ void	execute_command(t_cmd *cmd, char **envp)
 	{
 		execve(cmd->args[0], cmd->args, envp); //check if it exists
 		free_cmd(cmd);
-		perror("execve");
+		error_sys("execve failed\n");
 		exit(1);
 	}
 	if (!cmd->path)
-	{
-		free_cmd(cmd);
-		write(2, "Error: PATH not found\n", 22);
-		exit(1);
-	}
+		show_error_free_cmd(1, cmd->args[0], "command not found\n", cmd);
 	while (cmd->path[i])
 	{
 		cmd_path = ft_strjoin(cmd->path[i], "/");
 		if (!cmd_path)
 		{
 			free_cmd(cmd);
-			perror("ft_strjoin");
+			error_sys("ft_strjoin failed\n");
 			exit(1);
 		}
 		full_path = ft_strjoin(cmd_path, cmd->args[0]);
@@ -46,15 +42,13 @@ void	execute_command(t_cmd *cmd, char **envp)
 		if (!full_path)
 		{
 			free_cmd(cmd);
-			perror("ft_strjoin");
+			error_sys("ft_strjoin failed\n");
 			exit(1);
 		}
 		execve(full_path, cmd->args, envp);
 		free(full_path);
 		i++;
 	}
-	write(2, "Error: command not found\n", 25);
-	free_cmd(cmd);
+	show_error_free_cmd(1, cmd->args[0], "command not found\n", cmd);
 	/* perror("execve failed"); */
-	exit(1);
 }

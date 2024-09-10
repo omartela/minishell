@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/10 14:12:14 by omartela         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:02:47 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,20 @@ static void	initialize_shell(t_shell *sh, char **envp)
 	sh->num_cmds = 0;
 	sh->commands = NULL;
 	copy_env(envp, sh);
-	sh->homepath = ft_strdup(getenv("HOME")); // Protect this
+	sh->homepath = ft_strdup(getenv("HOME"));
+	if (!sh->homepath)
+	{
+		error_sys("ft_strdup failed for getenv\n");
+		exit (1);
+	}
 }
 
 static void	process_input(t_shell *sh, char *input)
 {
 	if (*input)
 		add_history(input);
-	printf("You have entered: %s\n", input); // Only for testing
-	test_split(input); // Only for testing
+/* 	printf("You have entered: %s\n", input); // Only for testing
+	test_split(input); // Only for testing */
 	sh->commands = ft_split(input, '|');
 	if (sh->commands)
 	{
@@ -35,7 +40,9 @@ static void	process_input(t_shell *sh, char *input)
 		free_array(sh->commands);
 	}
 	else
-		perror("ft_split failed");
+	{
+		error_sys("ft_split failed\n"); //do we need to return something?
+	}
 }
 
 static void	userprompt(char **envp)
