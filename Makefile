@@ -6,7 +6,7 @@
 #    By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 22:33:20 by irychkov          #+#    #+#              #
-#    Updated: 2024/09/08 00:49:59 by irychkov         ###   ########.fr        #
+#    Updated: 2024/09/09 22:50:25 by irychkov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 SRCS = src/main.c src/ft_split_args.c \
 		src/init_pipes.c src/init_cmd.c \
-		src/parse_redirect.c \
+		src/ft_update_args.c src/parse_redirect.c \
 		src/exec_cmd.c src/exec_pipes.c \
 		src/free.c \
 		src/test_split.c src/test_parse_redirect.c

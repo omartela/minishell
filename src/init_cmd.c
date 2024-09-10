@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/08 00:41:22 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/09 23:10:50 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,11 @@ void	init_num_cmds(t_shell *sh)
 	sh->num_cmds = i;
 }
 
-int	init_cmd(t_cmd **cmd, const char *command, char **envp)
+int	init_cmd(t_cmd **cmd, char *command, char **envp)
 {
+	char *temp;
+
+
 	*cmd = malloc(sizeof(t_cmd));
 	if (!*cmd)
 	{
@@ -58,7 +61,15 @@ int	init_cmd(t_cmd **cmd, const char *command, char **envp)
 	(*cmd)->infile = NULL;
 	(*cmd)->outfile = NULL;
 	(*cmd)->append = 0;
-	(*cmd)->args = ft_split_args(command, ' ');
+	(*cmd)->args = NULL;
+	temp = ft_add_spaces(command);
+	if (!(temp))
+	{
+		perror("malloc"); //free all
+		free(*cmd);
+		return (1);
+	}
+	(*cmd)->args = ft_split_args(temp, ' ');
 	if (!(*cmd)->args)
 	{
 		perror("ft_split_args"); //free all

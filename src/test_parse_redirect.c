@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 22:30:45 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/05 13:10:14 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/09 23:19:45 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ void	print_command(t_cmd *cmd)
 		printf("Error: cmd->args is NULL\n");
 		return;
 	}
-	printf("Command: ");
+	printf("Command: \n");
 	for (int i = 0; cmd->args[i] != NULL; i++) {
-		printf("%s ", cmd->args[i]);
+		printf("cmd[%d] %s\n", i, cmd->args[i]);
 	}
 	printf("\n");
 
