@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:39:37 by irychkov          #+#    #+#             */
-/*   Updated: 2024/06/12 22:57:59 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/10 13:46:32 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,5 +67,6 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 char	*get_next_line(int fd);
 int		ft_printf(const char *format, ...);
+void	*ft_realloc(void *ptr, size_t old_size, size_t new_size);
 
 #endif

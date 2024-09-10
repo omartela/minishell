@@ -6,7 +6,7 @@
 #    By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 16:29:24 by irychkov          #+#    #+#              #
-#    Updated: 2024/06/12 21:14:47 by irychkov         ###   ########.fr        #
+#    Updated: 2024/09/10 13:29:36 by omartela         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ SRC			= ./ft_atoi.c ./ft_bzero.c ./ft_calloc.c ./ft_isalnum.c \
 			./ft_lstclear_bonus.c ./ft_lstdelone_bonus.c ./ft_lstiter_bonus.c \
 			./ft_lstlast_bonus.c ./ft_lstmap_bonus.c ./ft_lstnew_bonus.c \
 			./ft_lstsize_bonus.c \
-			./get_next_line_bonus.c ./get_next_line_utils_bonus.c
+			./get_next_line_bonus.c ./get_next_line_utils_bonus.c ./ft_realloc.c
 
 PRINTF_DIR	= printf
 
