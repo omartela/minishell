@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/09 23:01:40 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:49:01 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,12 @@ void	echo_command(char *argv[]);
 
 // utilities.c
 char	*expand_tilde(t_shell *sh);
+
+// environment.c
+void	copy_env(char **envp, t_shell *shell);
+int		set_env(t_shell *shell, const char *variable, const char *value);
+
+//export command.c
+int		export(t_shell *shell, char **arguments);
 
 #endif

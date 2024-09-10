@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/06 18:05:30 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/10 14:12:14 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	initialize_shell(t_shell *sh, char **envp)
 {
 	sh->num_cmds = 0;
 	sh->commands = NULL;
-	sh->envp = envp;
+	copy_env(envp, sh);
 	sh->homepath = ft_strdup(getenv("HOME")); // Protect this
 }
 
