@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/10 15:13:16 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:05:52 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static void	open_fdout(char *outfile, t_cmd *cmd)
 		cmd->fd_out = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (cmd->fd_out == -1)
 		{
-			error_sys("open failed\n");
+			perror(outfile);
 			exit (1);
 		}
 	}
@@ -81,7 +81,7 @@ static void	open_fdout(char *outfile, t_cmd *cmd)
 		cmd->fd_out = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (cmd->fd_out == -1)
 		{
-			error_sys("open failed\n");
+			perror(outfile);
 			exit (1);
 		}
 	}
