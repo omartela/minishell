@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/08 00:49:46 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/10 15:09:26 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,18 +44,19 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 	{
 		if (pipe(pipes->fd[i]) == -1)
 		{
-			perror("pipe");
+			error_sys("pipe failed\n");
 			return (1);
 		}
 	}
 	pipes->pid[i] = fork();
 	if (pipes->pid[i] == -1)
 	{
-		perror("fork");
+		error_sys("fork failed\n");
 		return (1);
 	}
 	if (pipes->pid[i] == 0)
 	{
+		parse_redirections(cmd, cmd->args);
 		child_io(cmd, pipes->fd, i, sh->num_cmds);
 		execute_command(cmd, sh->envp);
 		exit(1);
@@ -99,7 +100,10 @@ int	execute_pipes(t_shell *sh)
 	i = 0;
 	cmd = NULL;
 	if (init_pipes(&pipes, sh->num_cmds) == 1)
+	{
+		error_sys("malloc failed\n");
 		return (1);
+	}
 	while (sh->commands[i] != NULL)
 	{
 		if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
