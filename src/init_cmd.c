@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/10 12:16:42 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/10 15:22:18 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ int	init_cmd(t_cmd **cmd, char *command, char **envp)
 {
 	char	*temp;
 
-
 	*cmd = malloc(sizeof(t_cmd));
 	if (!*cmd)
 	{
@@ -76,18 +75,11 @@ int	init_cmd(t_cmd **cmd, char *command, char **envp)
 		free_cmd(*cmd);
 		return (1);
 	}
-	if (parse_redirections(*cmd, (*cmd)->args) == 1)
-	{
-		free_array((*cmd)->args);
-		free_cmd(*cmd);
-		return (1);
-	}
 	if (path_init(*cmd, envp) == 1)
 	{
 		free_array((*cmd)->args);
 		free_cmd(*cmd);
 		return (1);
 	}
-	print_command(*cmd); //only for test
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 12:44:50 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/09 23:04:30 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/10 15:19:49 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ static char	*copy_without_quotes(char *start, size_t len)
 static char	**ft_helper(char *s, char c, size_t i, char **result)
 {
 	char	*start;
-	int			in_quotes;
-	char		quote_type;
+	int		in_quotes;
+	char	quote_type;
 
 	in_quotes = 0;
 	while (*s)
