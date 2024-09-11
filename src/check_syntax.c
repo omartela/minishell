@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:27:15 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/11 16:51:03 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/11 23:46:31 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 static int	is_valid_redirect(char *input)
 {
-	if (ft_strncmp(input, ">>", 2) == 0 || ft_strncmp(input, "<>", 2) == 0)
+	if (ft_strncmp(input, ">>", 2) == 0 || ft_strncmp(input, "<>", 2) == 0
+		|| ft_strncmp(input, "<<", 2) == 0)
 		return (1);
 	return (0);
 }
@@ -42,6 +43,7 @@ static int	is_ampersand(char c)
 
 int	check_syntax(char *input)
 {
+	char	quote;
 	size_t	len;
 	size_t	i;
 	int or;
@@ -72,6 +74,7 @@ int	check_syntax(char *input)
 				i++;
 			}
 			redirect = 1;
+			printf("Hi");
 		}
 		else if (is_pipe(input[i]) && is_pipe(input[i + 1]))
 		{
@@ -156,6 +159,17 @@ int	check_syntax(char *input)
 		}
 		else if (input[i] != ' ')
 		{
+			if (input[i] == '\'' || input[i] == '\"')
+			{
+				quote = input[i];
+				i++;
+				while (input[i] && input[i] != quote)
+				{
+					i++;
+				}
+				if (input[i] == '\0')
+					i--;
+			}
 			text = 1;
 			or = 0;
 			pipe = 0;
@@ -163,6 +177,11 @@ int	check_syntax(char *input)
 			ampersand = 0;
 		}
 		i++;
+	}
+	if (redirect == 1)
+	{
+		error_sys("minishell: syntax error near unexpected token `newline'\n");
+		return (1);
 	}
 	return (0);
 }
