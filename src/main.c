@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/10 19:43:03 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/11 16:08:43 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,11 @@ static void	process_input(t_shell *sh, char *input)
 		add_history(input);
 /* 	printf("You have entered: %s\n", input); // Only for testing
 	test_split(input); // Only for testing */
+	if (check_syntax(input))
+			return;
 	sh->commands = ft_split(input, '|');
 	if (sh->commands)
 	{
-		if (syntax_check(sh->commands))
-		{
-			free_array(sh->commands);
-			return;
-		}
 		init_num_cmds(sh);
 		printf("Number of commands: %d\n", sh->num_cmds); // Only for testingd
 		if (execute_pipes(sh) == 1)
