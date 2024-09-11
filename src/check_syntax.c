@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:27:15 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/11 16:06:46 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/11 16:51:03 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	check_syntax(char *input)
 	int	redirect;
 	int ampersand;
 	int	pipe;
+	int	text;
 
 
 	i = 0;
@@ -55,6 +56,7 @@ int	check_syntax(char *input)
 	pipe = 0;
 	redirect = 0;
 	ampersand = 0;
+	text = 0;
 	len = ft_strlen(input);
 	while (input[i])
 	{
@@ -73,7 +75,7 @@ int	check_syntax(char *input)
 		}
 		else if (is_pipe(input[i]) && is_pipe(input[i + 1]))
 		{
-			if (or == 0 && redirect == 0 && ampersand == 0 && pipe == 0)
+			if (or == 0 && redirect == 0 && ampersand == 0 && pipe == 0 && text == 1)
 				or = 1;
 			else
 			{
@@ -84,7 +86,7 @@ int	check_syntax(char *input)
 		}
 		else if (is_pipe(input[i]))
 		{
-			if (pipe == 0 && redirect == 0 && or == 0 && ampersand == 0)
+			if (pipe == 0 && redirect == 0 && or == 0 && ampersand == 0 && text == 1)
 				pipe = 1;
 			else
 			{
@@ -94,7 +96,7 @@ int	check_syntax(char *input)
 		}
 		else if (is_ampersand(input[i]) && is_ampersand(input[i + 1]))
 		{
-			if (ampersand == 0 && redirect == 0 && pipe == 0 && or == 0)
+			if (ampersand == 0 && redirect == 0 && pipe == 0 && or == 0 && text == 1)
 				ampersand = 1;
 			else
 			{
@@ -105,7 +107,7 @@ int	check_syntax(char *input)
 		}
 		else if (is_ampersand(input[i]))
 		{
-			if (ampersand == 0 && redirect == 0 && pipe == 0 && or == 0)
+			if (ampersand == 0 && redirect == 0 && pipe == 0 && or == 0 && text == 1)
 				ampersand = 1;
 			else
 			{
@@ -154,6 +156,7 @@ int	check_syntax(char *input)
 		}
 		else if (input[i] != ' ')
 		{
+			text = 1;
 			or = 0;
 			pipe = 0;
 			redirect = 0;
