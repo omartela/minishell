@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/10 15:09:26 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:05:46 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 	{
 		parse_redirections(cmd, cmd->args);
 		child_io(cmd, pipes->fd, i, sh->num_cmds);
+		execute_builtin_command(cmd, sh);
 		execute_command(cmd, sh->envp);
 		exit(1);
 	}
@@ -108,6 +109,8 @@ int	execute_pipes(t_shell *sh)
 	{
 		if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
 			return (1);
+		if (ft_strncmp(cmd->args[0], "export\0", 7) == 0)
+			return (export(sh, cmd->args));
 		if (pipe_and_fork(sh, &pipes, i, cmd) != 0)
 		{
 			free_cmd(cmd);

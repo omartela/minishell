@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/10 17:01:25 by omartela         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:15:13 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	echo_command(char *argv[]);
 
 // utilities.c
 char	*expand_tilde(t_shell *sh);
+void	execute_builtin_command(t_cmd *cmd, t_shell *shell);
 
 // environment.c
 void	copy_env(char **envp, t_shell *shell);

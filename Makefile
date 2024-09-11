@@ -6,7 +6,7 @@
 #    By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 22:33:20 by irychkov          #+#    #+#              #
-#    Updated: 2024/09/10 12:17:28 by irychkov         ###   ########.fr        #
+#    Updated: 2024/09/10 17:14:18 by omartela         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ SRCS = src/main.c src/ft_split_args.c \
 		src/exec_cmd.c src/exec_pipes.c \
 		src/errors.c src/sys_errors.c\
 		src/free.c \
-		src/test_split.c src/test_parse_redirect.c
+		src/test_split.c src/test_parse_redirect.c \
+		src/environment.c src/builtin-export.c src/utilities.c
 
 OBJS = $(SRCS:src/%.c=src/%.o)
 
