@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/10 17:15:13 by omartela         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:45:04 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,10 @@ int		set_table(char ***table, const char *variable, const char *value);
 int		add_table(char ***table, const char *variable, const char *value);
 char	**sort_table(char **envp);
 
-//export command.c
+//export command
 int		export(t_shell *shell, char **arguments);
+
+//env	command
+int		env(t_shell *shell, char **arguments);
 
 #endif
