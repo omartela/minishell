@@ -6,7 +6,7 @@
 /*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 14:13:39 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/11 11:11:35 by omartela         ###   ########.fr       */
+/*   Updated: 2024/09/11 11:59:47 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,15 @@ int	export(t_shell *shell, char **arguments)
 
 	argc = 0;
 	i = 0;
+	temp = NULL;
 	equal = NULL;
 	while (arguments[argc])
 		argc++;
 	if (argc == 1)
 	{
-		while (shell->envp[i])
+		while (shell->local_shellvars[i])
 		{
-			ft_printf("declare -x %s \n", shell->envp[i]);
+			ft_printf("declare -x %s \n", shell->local_shellvars[i]);
 			++i;
 		}
 		return (0);
@@ -37,16 +38,36 @@ int	export(t_shell *shell, char **arguments)
 	{
 		equal = ft_strchr(arguments[1], '=');
 		if (equal && (*(equal - 1) != '-') && (*(equal - 1) != '+'))
+		{
 			temp = ft_split(arguments[1], '=');
-		if (temp)
-			return (set_env(shell, temp[0], temp[1]));
-		else
-			return (1);
+			if (temp)
+			{
+				if (!set_table(&shell->envp, temp[0], temp[1]))
+				{
+					if (!set_table(&shell->local_shellvars, temp[0], temp[1]))
+					{
+						sort_table(shell->local_shellvars);
+						return (0);
+					}
+					else
+						return (1);
+				}
+				else
+					return (1);
+			}
+			else
+				return (1);
+		}
 	}
 	else if (arguments[0] && arguments[1])
 	{
-		ft_printf("set env export test \n");
-		return (set_env(shell, arguments[1], NULL));
+		if (!add_table(&shell->local_shellvars, arguments[1], NULL))
+		{
+			sort_table(shell->local_shellvars);
+			return (0);
+		}
+		else
+			return (1);
 	}
-	return (1);
+	return (0);
 }

@@ -12,16 +12,10 @@
 
 #include "../include/minishell.h"
 
-void	execute_builtin_command(t_cmd *cmd, t_shell *shell)
+/* void	execute_builtin_command(t_cmd *cmd, t_shell *shell)
 {
-	if (ft_strncmp(cmd->args[0], "export", ft_strlen(cmd->args[0])) == 0)
-	{
-		if (export(shell, cmd->args))
-			exit(1);
-		else
-			exit(0);
-	}
-}
+	return ;
+} */
 
 char	*expand_tilde(t_shell *sh)
 {

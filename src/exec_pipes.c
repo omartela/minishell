@@ -58,7 +58,7 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 	{
 		parse_redirections(cmd, cmd->args);
 		child_io(cmd, pipes->fd, i, sh->num_cmds);
-		execute_builtin_command(cmd, sh);
+		//execute_builtin_command(cmd, sh);
 		execute_command(cmd, sh->envp);
 		exit(1);
 	}
@@ -107,10 +107,14 @@ int	execute_pipes(t_shell *sh)
 	}
 	while (sh->commands[i] != NULL)
 	{
+		ft_printf("%s \n", sh->envp[0]);
 		if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
 			return (1);
 		if (ft_strncmp(cmd->args[0], "export\0", 7) == 0)
-			return (export(sh, cmd->args));
+		{
+			export(sh, cmd->args);
+			return (0);
+		}
 		if (pipe_and_fork(sh, &pipes, i, cmd) != 0)
 		{
 			free_cmd(cmd);

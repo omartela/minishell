@@ -27,6 +27,7 @@ typedef struct s_shell
 	int		num_cmds;
 	char	**commands;
 	char	**envp;
+	char	**local_shellvars;
 	char	*homepath;
 }	t_shell;
 
@@ -82,7 +83,9 @@ void	execute_builtin_command(t_cmd *cmd, t_shell *shell);
 
 // environment.c
 void	copy_env(char **envp, t_shell *shell);
-int		set_env(t_shell *shell, const char *variable, const char *value);
+int		set_table(char ***table, const char *variable, const char *value);
+int		add_table(char ***table, const char *variable, const char *value);
+char	**sort_table(char **envp);
 
 //export command.c
 int		export(t_shell *shell, char **arguments);

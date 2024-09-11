@@ -11,84 +11,114 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
+char	**sort_table(char **envp)
+{
+	char	*temp;
+	int			i;
+
+	i = 1;
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], envp[i - 1], ft_strlen(envp[i])) < 0)
+		{
+			temp = envp[i - 1];
+			envp[i - 1] = envp[i];
+			envp[i] = temp;
+			i = 0;
+		}
+		i++;
+	}
+	return (envp);
+}
 void	copy_env(char **envp, t_shell *shell)
 {
 	size_t	sarray;
 	char	**copied_envp;
-	int		i;
+	char	**local_shellvars;
+	size_t	i;
 
-	i = 0;
 	sarray = 0;
+	i = 0;
 	while (envp[sarray])
 		sarray++;
-	copied_envp = malloc(sizeof(char *) * sarray);
-	if (!copied_envp)
+	copied_envp = ft_calloc(sarray, sizeof(char *) + 1);
+	local_shellvars = ft_calloc(sarray, sizeof(char *) + 1);
+	if (!copied_envp || !local_shellvars)
 	{
 		shell->envp = NULL;
+		shell->local_shellvars = NULL;
 		perror("Copy environment failed..");
 		exit(1);
 	}
-	while (envp[i])
+	i = 0 ;
+	while (i < sarray)
 	{
 		copied_envp[i] = ft_strdup(envp[i]);
+		local_shellvars[i] = ft_strdup(envp[i]);
 		++i;
 	}
+	copied_envp[i] = NULL;
+	local_shellvars[i] = NULL;
+	local_shellvars = sort_table(local_shellvars);
 	shell->envp = copied_envp;
+	shell->local_shellvars = local_shellvars;
 }
 
-static int	add_new(t_shell *shell, const char *variable, const char *value)
+int	add_table(char ***table, const char *variable, const char *value)
 {
 	size_t	sarr;
 	char	*temp;
-	char	**envp;
 
 	sarr = 0;
-	envp = shell->envp;
-	while (envp[sarr])
+	while ((*table)[sarr])
 		sarr++;
-	envp = ft_realloc(envp, sarr * sizeof(char *), (sarr + 1) * sizeof(char *));
-	ft_printf("%p \n", envp);
-	if (!envp)
+	*table = ft_realloc(*table, sarr * sizeof(char *), (sarr + 1) * sizeof(char *));
+	if (!(*table))
 		return (1);
+	(*table)[sarr] = ft_strdup(variable);
 	if (value)
 	{
-		ft_printf("test add_new \n");
-		envp[sarr + 1] = ft_strjoin(variable, "=");
-		temp = envp[sarr + 1];
-		envp[sarr + 1] = ft_strjoin(temp, value);
-		ft_printf("envp[sarrr + 1] %s\n", envp[sarr + 1]);
-		free(temp);
+		temp = (*table)[sarr];
+		(*table)[sarr] = ft_strjoin(temp, "=");
+		if (!(*table)[sarr])
+			return (1);
+		//free(temp);
+		temp = (*table)[sarr];
+		(*table)[sarr] = ft_strjoin(temp, value);
+		//free(temp);
+		if (!((*table))[sarr])
+		return (1);
 	}
-	else
-		envp[sarr + 1] = ft_strdup(variable);
-	ft_printf("added new %s \n", envp[sarr + 1]);
+	(*table)[sarr + 1] = NULL;
 	return (0);
 }
 
-int	set_env(t_shell *shell, const char *variable, const char *value)
+int	set_table(char ***table, const char *variable, const char *value)
 {
 	size_t	i;
 	size_t	len;
 	char	*temp;
 
 	i = 0;
-	if (!value)
-		return (add_new(shell, variable, value));
-	while (shell->envp[i])
+
+	while ((*table)[i])
 	{
 		len = ft_strlen(variable);
-		if (ft_strncmp(shell->envp[i], variable, len) == 0)
+		if (ft_strncmp((*table)[i], variable, len) == 0)
 		{
-			temp = shell->envp[i];
-			shell->envp[i] = ft_strjoin(variable, "=");
+			temp = (*table)[i];
+			(*table)[i] = ft_strjoin(variable, "=");
+			if (!(*table)[i])
+				return (1);
 			free(temp);
-			temp = shell->envp[i];
-			shell->envp[i] = ft_strjoin(shell->envp[i], value);
-			ft_printf("%s \n", shell->envp[i]);
+			temp = (*table)[i];
+			(*table)[i] = ft_strjoin((*table)[i], value);
+			if (!(*table)[i])
+				return (1);
 			free(temp);
 			return (0);
 		}
 		++i;
 	}
-	return (0);
+	return (add_table(table, variable, value));
 }
