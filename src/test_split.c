@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 13:00:40 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/04 17:08:10 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/13 11:49:12 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ arg[1]: ls -la
 arg[2]: grep {print $1}
  */
 
-void	test_split_args(char *input)
+void	test_split_args(char *input, char c)
 {
 	char	**result;
 	int		i;
 
 	i = 0;
-	result = ft_split_args(input, ' ');
+	result = ft_split_args(input, c);
 	while (result[i])
 	{
 		printf("arg[%d]: %s\n", i, result[i]);

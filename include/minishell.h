@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/11 16:07:39 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/13 13:01:58 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_pipes
 char	**ft_split_args(char *s, char c);
 int		init_cmd(t_cmd **cmd, char *command, char **envp);
 int		check_syntax(char *input);
+char	*trim_spaces(char *str);
 void	init_num_cmds(t_shell *sh);
 char	*ft_add_spaces(char *s);
 int		init_pipes(t_pipes *pipes, int num_cmds);
@@ -71,6 +72,7 @@ void	error_sys(char *msg);
 
 // test functions
 void	test_split(char *input);
+void	test_split_args(char *input, char c);
 void	print_command(t_cmd *cmd);
 void	test_echo_command(char *argv[], t_shell *shell);
 

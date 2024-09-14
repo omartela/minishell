@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:27:15 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/11 23:46:31 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/14 12:22:14 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,11 @@ int	check_syntax(char *input)
 	char	quote;
 	size_t	len;
 	size_t	i;
-	int or;
-	int	redirect;
-	int ampersand;
-	int	pipe;
-	int	text;
-
+	int		or;
+	int		redirect;
+	int		ampersand;
+	int		pipe;
+	int		text;
 
 	i = 0;
 	or = 0;
@@ -66,8 +65,8 @@ int	check_syntax(char *input)
 		{
 			if (input[i + 1] == '\0') // or newline?
 			{
-					error_sys("minishell: syntax error near unexpected token `newline'\n");
-					return (1);
+				error_sys("minishell: syntax error near unexpected token `newline'\n");
+				return (1);
 			}
 			if (is_redirection_operator(input[i + 1]) && is_valid_redirect(input + i))
 			{

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/11 23:28:07 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/14 12:24:31 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,36 @@ static void	initialize_shell(t_shell *sh, char **envp)
 
 static void	process_input(t_shell *sh, char *input)
 {
-	if (*input)
-		add_history(input);
+	int		len;
+	char	*next_input;
+
 /* 	printf("You have entered: %s\n", input); // Only for testing
 	test_split(input); // Only for testing */
+	input = trim_spaces(input);
+	len = ft_strlen(input);
 	if (check_syntax(input))
-			return;
+		return ;
+	while (input[len - 1] == '|' || (len > 2 && input[len - 1] == '&' && input[len - 2] == '&'))
+	{
+		next_input = readline("> ");
+		if (!next_input)
+		{
+			free(input);
+			printf("Exit \n");
+			return ;//nor sure if this is the right way to exit
+		}
+		char *temp = input;
+		input = ft_strjoin(input, next_input);
+		free(temp);
+		free(next_input);
+		trim_spaces(input);
+		len = ft_strlen(input);
+		if (check_syntax(input))
+			return ;
+	}
+	if (*input)
+		add_history(input);
+	test_split_args(input , '|'); // Only for testing
 	sh->commands = ft_split_args(input, '|');
 	if (sh->commands)
 	{
