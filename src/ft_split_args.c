@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 12:44:50 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/10 15:19:49 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/14 13:59:53 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ The function allocates memory for the array and for each string.
 The array is NULL-terminated. If the allocation fails, the function returns NULL.
 */
 
-static size_t	ft_strcounter(char *s, char c)
+size_t	ft_strcounter(char *s, char c)
 {
 	size_t	elements;
 	int		in_quotes;

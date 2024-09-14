@@ -6,13 +6,13 @@
 #    By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 22:33:20 by irychkov          #+#    #+#              #
-#    Updated: 2024/09/13 13:02:24 by irychkov         ###   ########.fr        #
+#    Updated: 2024/09/14 14:24:09 by irychkov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRCS = src/main.c src/ft_split_args.c \
+SRCS = src/main.c src/ft_split_args.c src/ft_split_args2.c \
 		src/init_pipes.c src/init_cmd.c \
 		src/ft_update_args.c src/parse_redirect.c \
 		src/check_syntax.c src/trim_spaces.c \

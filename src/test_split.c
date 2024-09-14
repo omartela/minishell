@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 13:00:40 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/13 11:49:12 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/14 14:25:12 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,22 @@ void	test_split_args(char *input, char c)
 
 	i = 0;
 	result = ft_split_args(input, c);
+	while (result[i])
+	{
+		printf("arg[%d]: %s\n", i, result[i]);
+		free(result[i]);
+		i++;
+	}
+	free(result);
+}
+
+void	test_split_args2(char *input, char c)
+{
+	char	**result;
+	int		i;
+
+	i = 0;
+	result = ft_split_args2(input, c);
 	while (result[i])
 	{
 		printf("arg[%d]: %s\n", i, result[i]);
