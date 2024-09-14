@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/14 14:27:58 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/14 14:55:54 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,11 @@ static void	process_input(t_shell *sh, char *input)
 /* 	printf("You have entered: %s\n", input); // Only for testing
 	test_split(input); // Only for testing */
 	input = trim_spaces(input);
+	if (ft_strncmp(input, "$?\0", 3) == 0)
+	{
+		ft_printf("%d\n", sh->exit_status);
+		return;
+	}
 	len = ft_strlen(input);
 	if (check_syntax(input))
 		return ;

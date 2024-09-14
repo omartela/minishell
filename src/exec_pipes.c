@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/10 15:09:26 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/14 14:50:09 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,17 @@ static void	close_pipes_in_parent(t_pipes *pipes, int num_cmds)
 	}
 }
 
-static void	wait_for_children(t_pipes *pipes, int num_cmds)
+static void	wait_for_children(t_pipes *pipes, t_shell *sh)
 {
 	int	i;
+	int	status;
 
 	i = 0;
-	while (i < num_cmds)
+	while (i < sh->num_cmds)
 	{
-		waitpid(pipes->pid[i], NULL, 0);
+		waitpid(pipes->pid[i], &status, 0);
+		if (WIFEXITED(status))
+			sh->exit_status = WEXITSTATUS(status);
 		i++;
 	}
 }
@@ -117,7 +120,7 @@ int	execute_pipes(t_shell *sh)
 		i++;
 	}
 	close_pipes_in_parent(&pipes, sh->num_cmds);
-	wait_for_children(&pipes, sh->num_cmds);
+	wait_for_children(&pipes, sh);
 	free_pipes(&pipes, sh->num_cmds);
 	return (0);
 }
