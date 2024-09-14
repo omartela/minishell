@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/14 12:24:31 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/14 12:56:19 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,11 @@ static void	initialize_shell(t_shell *sh, char **envp)
 static void	process_input(t_shell *sh, char *input)
 {
 	int		len;
+	char *temp;
 	char	*next_input;
 
+	temp = NULL;
+	next_input = NULL;
 /* 	printf("You have entered: %s\n", input); // Only for testing
 	test_split(input); // Only for testing */
 	input = trim_spaces(input);
@@ -45,10 +48,10 @@ static void	process_input(t_shell *sh, char *input)
 			printf("Exit \n");
 			return ;//nor sure if this is the right way to exit
 		}
-		char *temp = input;
+		temp = input;
 		input = ft_strjoin(input, next_input);
-		free(temp);
-		free(next_input);
+		/* free(temp);
+		free(next_input); */ //SegFAULT if I free here. I should think
 		trim_spaces(input);
 		len = ft_strlen(input);
 		if (check_syntax(input))
@@ -56,7 +59,11 @@ static void	process_input(t_shell *sh, char *input)
 	}
 	if (*input)
 		add_history(input);
-	test_split_args(input , '|'); // Only for testing
+	if (temp)
+		free(temp);
+	if (next_input)
+		free(next_input);
+	/* test_split_args(input , '|'); // Only for testing */
 	sh->commands = ft_split_args(input, '|');
 	if (sh->commands)
 	{

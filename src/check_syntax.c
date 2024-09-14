@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:27:15 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/14 12:22:14 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/14 12:34:48 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ int	check_syntax(char *input)
 				i++;
 			}
 			redirect = 1;
-			printf("Hi");
 		}
 		else if (is_pipe(input[i]) && is_pipe(input[i + 1]))
 		{
