@@ -6,35 +6,19 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 13:00:40 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/14 14:25:12 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/15 12:38:53 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-first commit
-minishell> libft "ls -la" 'grep "{print $1}"'
-You have entered: libft "ls -la" 'grep "{print $1}"'
-arg[0]: libft
-arg[1]: "ls -la"
-arg[2]: 'grep "{print $1}"'
-
-second commit
-minishell> libft "ls -la" 'grep "{print $1}"'
-You have entered: libft "ls -la" 'grep "{print $1}"'
-arg[0]: libft
-arg[1]: ls -la
-arg[2]: grep {print $1}
- */
-
-void	test_split_args(char *input, char c)
+void	test_split_args_without_quotes(char *input, char c)
 {
 	char	**result;
 	int		i;
 
 	i = 0;
-	result = ft_split_args(input, c);
+	result = split_args_without_quotes(input, c);
 	while (result[i])
 	{
 		printf("arg[%d]: %s\n", i, result[i]);
@@ -44,29 +28,13 @@ void	test_split_args(char *input, char c)
 	free(result);
 }
 
-void	test_split_args2(char *input, char c)
+void	test_split_args_with_quotes(char *input, char c)
 {
 	char	**result;
 	int		i;
 
 	i = 0;
-	result = ft_split_args2(input, c);
-	while (result[i])
-	{
-		printf("arg[%d]: %s\n", i, result[i]);
-		free(result[i]);
-		i++;
-	}
-	free(result);
-}
-
-void	test_split(char *input)
-{
-	char	**result;
-	int		i;
-
-	i = 0;
-	result = ft_split(input, '|');
+	result = split_args_with_quotes(input, c);
 	while (result[i])
 	{
 		printf("arg[%d]: %s\n", i, result[i]);

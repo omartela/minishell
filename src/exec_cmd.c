@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 17:58:11 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/10 12:07:34 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/15 13:11:34 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,6 @@ void	execute_command(t_cmd *cmd, char **envp)
 		free(full_path);
 		i++;
 	}
-	show_error_free_cmd(1, cmd->args[0], "command not found\n", cmd);
+	show_error_free_cmd(127, cmd->args[0], "command not found\n", cmd);
 	/* perror("execve failed"); */
 }

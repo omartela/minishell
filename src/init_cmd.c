@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/10 15:22:18 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/15 12:35:37 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	init_cmd(t_cmd **cmd, char *command, char **envp)
 		free_cmd(*cmd);
 		return (1);
 	}
-	(*cmd)->args = ft_split_args(temp, ' ');
+	(*cmd)->args = split_args_without_quotes(temp, ' ');
 	if (!(*cmd)->args)
 	{
 		error_sys("ft_split_args failed\n"); //free all

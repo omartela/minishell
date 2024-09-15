@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/10 16:05:52 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/15 13:15:57 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	open_fdin(char *infile, t_cmd *cmd)
 	if (access(infile, F_OK) == -1)
 	{
 		perror(infile);/*  perror("No such file or directory"); */
-		exit(127);
+		exit(1);
 	}
 	if (access(infile, R_OK) == -1)
 	{
