@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/14 14:50:09 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/15 14:48:32 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,15 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 		execute_command(cmd, sh->envp);
 		exit(1);
 	}
+	if (i > 0)
+	{
+		close(pipes->fd[i - 1][0]);
+		close(pipes->fd[i - 1][1]);
+	}
 	return (0);
 }
 
-static void	close_pipes_in_parent(t_pipes *pipes, int num_cmds)
+/* static void	close_pipes_in_parent(t_pipes *pipes, int num_cmds)
 {
 	int	i;
 
@@ -77,7 +82,7 @@ static void	close_pipes_in_parent(t_pipes *pipes, int num_cmds)
 			close(pipes->fd[i][1]);
 		i++;
 	}
-}
+} */
 
 static void	wait_for_children(t_pipes *pipes, t_shell *sh)
 {
@@ -119,7 +124,7 @@ int	execute_pipes(t_shell *sh)
 		free_cmd(cmd);
 		i++;
 	}
-	close_pipes_in_parent(&pipes, sh->num_cmds);
+	/* close_pipes_in_parent(&pipes, sh->num_cmds); */
 	wait_for_children(&pipes, sh);
 	free_pipes(&pipes, sh->num_cmds);
 	return (0);
