@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/15 13:28:34 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/15 13:54:24 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ typedef struct s_split_opts
 char	*trim_spaces(char *str);
 int		check_syntax(char *input);
 size_t	ft_strcounter(char *s, char c);
-char	**split_args_without_quotes(char *s, char c);
-char	**split_args_with_quotes(char *s, char c);
+char	**split_args_remove_quotes(char *s, char c);
+char	**split_args_leave_quotes(char *s, char c);
 char	**split_args_general(char *s, char c, int keep_quotes);
 int		init_cmd(t_cmd **cmd, char *command, char **envp);
 void	init_num_cmds(t_shell *sh);
@@ -81,8 +81,8 @@ void	show_error_free_cmd(int code, char *name, char *msg, t_cmd *cmd);
 void	error_sys(char *msg);
 
 // test functions
-void	test_split_args_with_quotes(char *input, char c);
-void	test_split_args_without_quotes(char *input, char c);
+void	test_split_args_leave_quotes(char *input, char c);
+void	test_split_args_remove_quotes(char *input, char c);
 void	print_command(t_cmd *cmd);
 void	test_echo_command(char *argv[], t_shell *shell);
 

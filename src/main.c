@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/15 13:10:11 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/15 13:54:48 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ static void	process_input(t_shell *sh, char *input)
 		free(temp);
 	if (next_input)
 		free(next_input);
-/* 	test_split_args_with_quotes(input , '|'); // Only for testing */
-	sh->commands = split_args_with_quotes(input, '|');
+/* 	test_split_args_leave_quotes(input , '|'); // Only for testing */
+	sh->commands = split_args_leave_quotes(input, '|');
 	if (sh->commands)
 	{
 		init_num_cmds(sh);

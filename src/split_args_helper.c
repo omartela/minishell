@@ -6,18 +6,18 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 12:14:41 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/15 12:59:40 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/15 13:54:59 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	**split_args_without_quotes(char *s, char c)
+char	**split_args_remove_quotes(char *s, char c)
 {
 	return (split_args_general(s, c, 0));
 }
 
-char	**split_args_with_quotes(char *s, char c)
+char	**split_args_leave_quotes(char *s, char c)
 {
 	return (split_args_general(s, c, 1));
 }
