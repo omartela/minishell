@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/15 13:54:48 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/16 16:06:27 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	initialize_shell(t_shell *sh, char **envp)
 {
-	sh->exit_status = 1;
+	sh->exit_status = 0;
 	sh->num_cmds = 0;
 	sh->commands = NULL;
 	sh->envp = envp;
@@ -58,16 +58,28 @@ static void	process_input(t_shell *sh, char *input)
 		}
 		temp = input;
 		input = ft_strjoin(input, next_input);
+		if (!input)
+		{
+			error_sys("ft_strjoin failed\n");
+			sh->exit_status = 1;
+			free(next_input);
+			return ;
+		}
 		/* free(temp);
 		free(next_input); */ //SegFAULT if I free here. I should think
 		trim_spaces(input);
 		len = ft_strlen(input);
 		if (check_syntax(input))
+		{
+			free(input);
+			free(next_input);
+			sh->exit_status = 2;
 			return ;
+		}
 	}
 	if (*input)
 		add_history(input);
-	if (temp)
+	if (temp)// think about this, we free it in userprompt
 		free(temp);
 	if (next_input)
 		free(next_input);
