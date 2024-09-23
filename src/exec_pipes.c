@@ -127,6 +127,11 @@ int	execute_pipes(t_shell *sh)
 			cd(sh, cmd->args);
 			return (0);
 		}
+		if (ft_strncmp(cmd->args[0], "unset\0", 6) == 0)
+		{
+			unset(sh, cmd->args);
+			return (0);
+		}
 		if (ft_strncmp(cmd->args[0], "pwd\0", 4) == 0)
 		{
 			pwd();

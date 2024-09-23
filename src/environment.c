@@ -68,13 +68,15 @@ int	add_table(char ***table, const char *variable, const char *value)
 {
 	size_t	sarr;
 	char	*temp;
+	char	**temp_table;
 
 	sarr = 0;
 	while ((*table)[sarr])
 		sarr++;
-	*table = ft_realloc(*table, sarr * sizeof(char *), (sarr + 1) * sizeof(char *));
-	if (!(*table))
+	temp_table = ft_realloc(*table, sarr * sizeof(char *), (sarr + 1) * sizeof(char *));
+	if (!temp_table)
 		return (1);
+	*table = temp_table;
 	(*table)[sarr] = ft_strdup(variable);
 	if (value)
 	{
@@ -90,6 +92,41 @@ int	add_table(char ***table, const char *variable, const char *value)
 		return (1);
 	}
 	(*table)[sarr + 1] = NULL;
+	return (0);
+}
+
+int	remove_table(char ***table, const char *variable)
+{
+	size_t	size;
+	size_t	index_to_remove;
+	char	**temp_table;
+
+	size = 0;
+	index_to_remove = -1;
+	temp_table = NULL;
+	while ((*table)[size])
+	{
+		if (ft_strncmp((*table)[size], variable, ft_strlen(variable)) == 0)
+			index_to_remove = size;
+		++size;
+	}
+	if ((int)index_to_remove != -1)
+	{
+		free((*table)[index_to_remove]);
+		for (size_t i = index_to_remove; i < size - 1; i++) {
+        (*table)[i] = (*table)[i + 1];
+    	}	
+
+    	/* // Null-terminate the new table
+    	(*table)[size - 1] = NULL;
+		temp_table = ft_realloc(*table, size, size - 1);
+		if (!temp_table)
+		{
+			// need to free table
+			return (1);
+		} */
+		//*table = temp_table;
+	}
 	return (0);
 }
 

@@ -101,6 +101,7 @@ void	copy_env(char **envp, t_shell *shell);
 int		set_table(char ***table, const char *variable, const char *value);
 int		add_table(char ***table, const char *variable, const char *value);
 char	**sort_table(char **envp);
+int		remove_table(char ***table, const char *variable);
 
 //export command
 int		export(t_shell *shell, char **arguments);
@@ -113,5 +114,8 @@ int		env(t_shell *shell, char **arguments);
 
 // pwd command
 int    pwd(void);
+
+// unset command
+int unset(t_shell *sh, char **args);
 
 #endif
