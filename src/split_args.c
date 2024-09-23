@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 11:56:47 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/15 12:29:26 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/16 17:23:51 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,16 +82,7 @@ static char	**ft_helper(char *s, size_t i, char **result, t_split_opts *opts)
 			break ;
 		start = s;
 		while (*s && (in_quotes || *s != opts->delimiter))
-		{
-			if ((*s == '\'' || *s == '\"') && !in_quotes)
-			{
-				in_quotes = 1;
-				quote_type = *s;
-			}
-			else if (*s == quote_type && in_quotes)
-				in_quotes = 0;
-			s++;
-		}
+			process_quotes(&s, &in_quotes, &quote_type);
 		result[i] = copy_string(start, s - start, opts);
 		if (!result[i])
 		{
