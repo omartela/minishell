@@ -21,6 +21,7 @@
 # include <readline/history.h>
 # include <fcntl.h>
 # include <unistd.h>
+# include <linux/limits.h>
 
 typedef struct s_shell
 {
@@ -104,7 +105,13 @@ char	**sort_table(char **envp);
 //export command
 int		export(t_shell *shell, char **arguments);
 
+//cd command
+int	cd(t_shell *sh, char **args);
+
 //env	command
 int		env(t_shell *shell, char **arguments);
+
+// pwd command
+int    pwd(void);
 
 #endif

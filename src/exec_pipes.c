@@ -123,6 +123,16 @@ int	execute_pipes(t_shell *sh)
 			export(sh, cmd->args);
 			return (0);
 		}
+		if (ft_strncmp(cmd->args[0], "cd\0", 3) == 0)
+		{
+			cd(sh, cmd->args);
+			return (0);
+		}
+		if (ft_strncmp(cmd->args[0], "pwd\0", 4) == 0)
+		{
+			pwd();
+			return (0);
+		}
 		if (pipe_and_fork(sh, &pipes, i, cmd) != 0)
 		{
 			free_cmd(cmd);
