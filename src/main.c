@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/10 17:02:47 by omartela         ###   ########.fr       */
+/*   Updated: 2024/09/16 16:06:27 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static void	initialize_shell(t_shell *sh, char **envp)
 {
+	sh->exit_status = 0;
 	sh->num_cmds = 0;
 	sh->commands = NULL;
 	copy_env(envp, sh);
@@ -27,14 +28,67 @@ static void	initialize_shell(t_shell *sh, char **envp)
 
 static void	process_input(t_shell *sh, char *input)
 {
+	int		len;
+	char	*temp;
+	char	*next_input;
+
+	temp = NULL;
+	next_input = NULL;
+//	printf("You have entered: %s\n", input);// Only for testing
+	input = trim_spaces(input);
+	if (ft_strncmp(input, "echo $?\0", 8) == 0)
+	{
+		ft_printf("%d\n", sh->exit_status);
+		return ;
+	}
+	len = ft_strlen(input);
+	if (check_syntax(input))
+	{
+		sh->exit_status = 2;
+		return ;
+	}
+	while (input[len - 1] == '|' || (len > 2 && input[len - 1] == '&' && input[len - 2] == '&'))
+	{
+		next_input = readline("> ");
+		if (!next_input)
+		{
+			free(input);
+			printf("Exit \n");
+			return ;//nor sure if this is the right way to exit
+		}
+		temp = input;
+		input = ft_strjoin(input, next_input);
+		if (!input)
+		{
+			error_sys("ft_strjoin failed\n");
+			sh->exit_status = 1;
+			free(next_input);
+			return ;
+		}
+		/* free(temp);
+		free(next_input); */ //SegFAULT if I free here. I should think
+		trim_spaces(input);
+		len = ft_strlen(input);
+		if (check_syntax(input))
+		{
+			free(input);
+			free(next_input);
+			sh->exit_status = 2;
+			return ;
+		}
+	}
 	if (*input)
 		add_history(input);
-/* 	printf("You have entered: %s\n", input); // Only for testing
-	test_split(input); // Only for testing */
-	sh->commands = ft_split(input, '|');
+	if (temp)// think about this, we free it in userprompt
+		free(temp);
+	if (next_input)
+		free(next_input);
+/* 	test_split_args_leave_quotes(input , '|'); // Only for testing */
+	sh->commands = split_args_leave_quotes(input, '|');
 	if (sh->commands)
 	{
 		init_num_cmds(sh);
+/* 		printf("Number of commands: %d\n", sh->num_cmds); // Only for testingd */
 		if (execute_pipes(sh) == 1)
 			perror("comment"); //TBH we don't care about the return value
 		free_array(sh->commands);

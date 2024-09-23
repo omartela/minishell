@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/10 17:05:46 by omartela         ###   ########.fr       */
+/*   Updated: 2024/09/15 14:48:32 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,15 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 		execute_command(cmd, sh->envp);
 		exit(1);
 	}
+	if (i > 0)
+	{
+		close(pipes->fd[i - 1][0]);
+		close(pipes->fd[i - 1][1]);
+	}
 	return (0);
 }
 
-static void	close_pipes_in_parent(t_pipes *pipes, int num_cmds)
+/* static void	close_pipes_in_parent(t_pipes *pipes, int num_cmds)
 {
 	int	i;
 
@@ -78,16 +83,19 @@ static void	close_pipes_in_parent(t_pipes *pipes, int num_cmds)
 			close(pipes->fd[i][1]);
 		i++;
 	}
-}
+} */
 
-static void	wait_for_children(t_pipes *pipes, int num_cmds)
+static void	wait_for_children(t_pipes *pipes, t_shell *sh)
 {
 	int	i;
+	int	status;
 
 	i = 0;
-	while (i < num_cmds)
+	while (i < sh->num_cmds)
 	{
-		waitpid(pipes->pid[i], NULL, 0);
+		waitpid(pipes->pid[i], &status, 0);
+		if (WIFEXITED(status))
+			sh->exit_status = WEXITSTATUS(status);
 		i++;
 	}
 }
@@ -123,8 +131,8 @@ int	execute_pipes(t_shell *sh)
 		free_cmd(cmd);
 		i++;
 	}
-	close_pipes_in_parent(&pipes, sh->num_cmds);
-	wait_for_children(&pipes, sh->num_cmds);
+	/* close_pipes_in_parent(&pipes, sh->num_cmds); */
+	wait_for_children(&pipes, sh);
 	free_pipes(&pipes, sh->num_cmds);
 	return (0);
 }

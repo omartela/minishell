@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/10 16:05:52 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/16 14:35:08 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,9 @@ static int	count_new_args_len(char **args)
 static void	open_fdin(char *infile, t_cmd *cmd)
 {
 	if (access(infile, F_OK) == -1)
-	{
-		perror(infile);/*  perror("No such file or directory"); */
-		exit(127);
-	}
+		show_error_free_cmd(1, infile, "No such file or directory", NULL); //free cmd?
 	if (access(infile, R_OK) == -1)
-	{
-		perror(infile);// perror("Permission denied");
-		exit(126); // think about return
-	}
+		show_error_free_cmd(126, infile, "Permission denied", NULL);
 	cmd->fd_in = open(infile, O_RDONLY);
 	if (cmd->fd_in == -1)
 	{
@@ -58,21 +52,15 @@ static void	open_fdout(char *outfile, t_cmd *cmd)
 {
 	cmd->fd_out = open(outfile, O_DIRECTORY);
 	if (cmd->fd_out != -1)
-	{
-		perror(outfile);/* perror("Is a directory"); */
-		exit(126);
-	}
+		show_error_free_cmd(126, outfile, "Is a directory", NULL);
 	if (access(outfile, F_OK) == 0 && access(outfile, W_OK) == -1)
-	{
-		perror(outfile);/* perror("Permission denied"); */
-		exit(1);
-	}
+		show_error_free_cmd(1, outfile, "Permission denied", NULL);
 	if (cmd->append)
 	{
 		cmd->fd_out = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (cmd->fd_out == -1)
 		{
-			perror(outfile);
+			error_sys("open failed\n");
 			exit (1);
 		}
 	}
@@ -81,7 +69,7 @@ static void	open_fdout(char *outfile, t_cmd *cmd)
 		cmd->fd_out = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (cmd->fd_out == -1)
 		{
-			perror(outfile);
+			error_sys("open failed\n");
 			exit (1);
 		}
 	}
@@ -164,7 +152,7 @@ void	parse_redirections(t_cmd *cmd, char **args)
 		clean_args[j] = ft_strdup(args[i]); //protect
 		if (!clean_args[j])
 		{
-			error_sys("ft_strdup failed");
+			error_sys("ft_strdup failed\n");
 			free_array_back(clean_args, j);
 			exit (1);
 		}
