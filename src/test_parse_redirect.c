@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 22:30:45 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/09 23:19:45 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/15 12:58:40 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,23 @@
 
 void	print_command(t_cmd *cmd)
 {
-	if (cmd == NULL) {
+	if (cmd == NULL)
+	{
 		printf("Error: cmd is NULL\n");
-		return;
+		return ;
 	}
-
-	if (cmd->args == NULL) {
+	if (cmd->args == NULL)
+	{
 		printf("Error: cmd->args is NULL\n");
-		return;
+		return ;
 	}
 	printf("Command: \n");
 	for (int i = 0; cmd->args[i] != NULL; i++) {
 		printf("cmd[%d] %s\n", i, cmd->args[i]);
 	}
 	printf("\n");
-
 	if (cmd->infile)
 		printf("Input file: %s\n", cmd->infile);
-
 	if (cmd->outfile) 
 	{
 		printf("Output file: %s\n", cmd->outfile);

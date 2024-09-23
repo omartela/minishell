@@ -1,52 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split_args.c                                    :+:      :+:    :+:   */
+/*   split_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/04 12:44:50 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/10 15:19:49 by irychkov         ###   ########.fr       */
+/*   Created: 2024/09/15 11:56:47 by irychkov          #+#    #+#             */
+/*   Updated: 2024/09/15 12:29:26 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-The function handles only quotes and spaces as separators.
-It returns an array of strings, each string is a separate argument.
-The function allocates memory for the array and for each string.
-The array is NULL-terminated. If the allocation fails, the function returns NULL.
-*/
-
-static size_t	ft_strcounter(char *s, char c)
+static char	*copy_with_quotes(char *start, size_t len)
 {
-	size_t	elements;
-	int		in_quotes;
-	char	quote_type;
+	char	*result;
 
-	elements = 0;
-	in_quotes = 0;
-	while (*s)
-	{
-		while (*s == c && !in_quotes)
-			s++;
-		if (*s == '\0')
-			break ;
-		elements++;
-		while (*s && (in_quotes || *s != c))
-		{
-			if ((*s == '\'' || *s == '\"') && !in_quotes)
-			{
-				in_quotes = 1;
-				quote_type = *s;
-			}
-			else if (*s == quote_type && in_quotes)
-				in_quotes = 0;
-			s++;
-		}
-	}
-	return (elements);
+	result = malloc(len + 1);
+	if (!result)
+		return (NULL);
+	ft_strlcpy(result, start, len + 1);
+	return (result);
 }
 
 static size_t	len_without_quotes(char *str, size_t len)
@@ -65,15 +39,20 @@ static size_t	len_without_quotes(char *str, size_t len)
 	return (count);
 }
 
-static char	*copy_without_quotes(char *start, size_t len)
+static char	*copy_string(char *start, size_t len, t_split_opts *opts)
 {
+	char	*result;
+	size_t	new_len;
 	size_t	i;
 	size_t	j;
-	size_t	new_len;
-	char	*result;
 
 	i = 0;
 	j = 0;
+	if (opts->keep_quotes)
+	{
+		result = copy_with_quotes(start, len);
+		return (result);
+	}
 	new_len = len_without_quotes(start, len);
 	result = malloc(new_len + 1);
 	if (!result)
@@ -88,7 +67,7 @@ static char	*copy_without_quotes(char *start, size_t len)
 	return (result);
 }
 
-static char	**ft_helper(char *s, char c, size_t i, char **result)
+static char	**ft_helper(char *s, size_t i, char **result, t_split_opts *opts)
 {
 	char	*start;
 	int		in_quotes;
@@ -97,12 +76,12 @@ static char	**ft_helper(char *s, char c, size_t i, char **result)
 	in_quotes = 0;
 	while (*s)
 	{
-		while (*s == c && !in_quotes)
+		while (*s == opts->delimiter && !in_quotes)
 			s++;
 		if (*s == '\0')
 			break ;
 		start = s;
-		while (*s && (in_quotes || *s != c))
+		while (*s && (in_quotes || *s != opts->delimiter))
 		{
 			if ((*s == '\'' || *s == '\"') && !in_quotes)
 			{
@@ -113,7 +92,7 @@ static char	**ft_helper(char *s, char c, size_t i, char **result)
 				in_quotes = 0;
 			s++;
 		}
-		result[i] = copy_without_quotes(start, s - start);
+		result[i] = copy_string(start, s - start, opts);
 		if (!result[i])
 		{
 			free_array_back(result, i);
@@ -125,14 +104,17 @@ static char	**ft_helper(char *s, char c, size_t i, char **result)
 	return (result);
 }
 
-char	**ft_split_args(char *s, char c)
+char	**split_args_general(char *s, char c, int keep_quotes)
 {
-	size_t		i;
-	char		**result;
+	size_t			i;
+	char			**result;
+	t_split_opts	opts;
 
 	i = 0;
+	opts.keep_quotes = keep_quotes;
+	opts.delimiter = c;
 	result = (char **)malloc(sizeof(char *) * (ft_strcounter(s, c) + 1));
 	if (!result || !s)
 		return (NULL);
-	return (ft_helper(s, c, i, result));
+	return (ft_helper(s, i, result, &opts));
 }
