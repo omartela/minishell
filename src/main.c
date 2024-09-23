@@ -29,10 +29,10 @@ static void	initialize_shell(t_shell *sh, char **envp)
 static void	process_input(t_shell *sh, char *input)
 {
 	int		len;
-	char	*temp;
+	//char	*temp;
 	char	*next_input;
 
-	temp = NULL;
+	//temp = NULL;
 	next_input = NULL;
 //	printf("You have entered: %s\n", input);// Only for testing
 	input = trim_spaces(input);
@@ -56,7 +56,7 @@ static void	process_input(t_shell *sh, char *input)
 			printf("Exit \n");
 			return ;//nor sure if this is the right way to exit
 		}
-		temp = input;
+		//temp = input;
 		input = ft_strjoin(input, next_input);
 		if (!input)
 		{
@@ -79,8 +79,8 @@ static void	process_input(t_shell *sh, char *input)
 	}
 	if (*input)
 		add_history(input);
-	if (temp)// think about this, we free it in userprompt
-		free(temp);
+	/* if (temp)// think about this, we free it in userprompt
+		free(temp); */
 	if (next_input)
 		free(next_input);
 /* 	test_split_args_leave_quotes(input , '|'); // Only for testing */
@@ -91,7 +91,7 @@ static void	process_input(t_shell *sh, char *input)
 /* 		printf("Number of commands: %d\n", sh->num_cmds); // Only for testingd */
 		if (execute_pipes(sh) == 1)
 			perror("comment"); //TBH we don't care about the return value
-		free_array(sh->commands);
+		//free_array(sh->commands);
 	}
 	else
 	{

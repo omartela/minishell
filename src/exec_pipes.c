@@ -115,7 +115,6 @@ int	execute_pipes(t_shell *sh)
 	}
 	while (sh->commands[i] != NULL)
 	{
-		ft_printf("%s \n", sh->envp[0]);
 		if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
 			return (1);
 		if (ft_strncmp(cmd->args[0], "export\0", 7) == 0)

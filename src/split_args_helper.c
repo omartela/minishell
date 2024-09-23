@@ -44,6 +44,7 @@ size_t	ft_strcounter(char *s, char c)
 
 	elements = 0;
 	in_quotes = 0;
+	quote_type = 0;
 	while (*s)
 	{
 		while (*s == c && !in_quotes)
