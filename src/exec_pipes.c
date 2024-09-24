@@ -48,6 +48,23 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 			return (1);
 		}
 	}
+	if (sh->num_cmds == 1 && is_builtin(cmd))
+	{
+		parse_redirections(cmd, cmd->args);
+		if (cmd->infile)
+		{
+			dup2(cmd->fd_in, STDIN_FILENO);
+			close(cmd->fd_in);
+		}
+		if (cmd->outfile)
+		{
+			dup2(cmd->fd_out, STDOUT_FILENO);
+			close(cmd->fd_out);
+		}
+		if (execute_builtin(sh, cmd))
+			return (1);
+		return (0);
+	}
 	pipes->pid[i] = fork();
 	if (pipes->pid[i] == -1)
 	{
@@ -59,6 +76,13 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 		parse_redirections(cmd, cmd->args);
 		child_io(cmd, pipes->fd, i, sh->num_cmds);
 		//execute_builtin_command(cmd, sh);
+		if (is_builtin(cmd))
+		{
+			if (execute_builtin(sh, cmd))
+				exit(1);
+			else
+				exit(0);
+		}
 		execute_command(cmd, sh->envp);
 		exit(1);
 	}
@@ -117,31 +141,6 @@ int	execute_pipes(t_shell *sh)
 	{
 		if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
 			return (1);
-		if (ft_strncmp(cmd->args[0], "export\0", 7) == 0)
-		{
-			export(sh, cmd->args);
-			return (0);
-		}
-		if (ft_strncmp(cmd->args[0], "cd\0", 3) == 0)
-		{
-			cd(sh, cmd->args);
-			return (0);
-		}
-		if (ft_strncmp(cmd->args[0], "unset\0", 6) == 0)
-		{
-			unset(sh, cmd->args);
-			return (0);
-		}
-		if (ft_strncmp(cmd->args[0], "pwd\0", 4) == 0)
-		{
-			pwd();
-			return (0);
-		}
-		if (ft_strncmp(cmd->args[0], "echo $?\0", 8) == 0)
-		{
-			ft_printf("%d\n", sh->exit_status);
-			return (0);
-		}
 		if (pipe_and_fork(sh, &pipes, i, cmd) != 0)
 		{
 			free_cmd(cmd);

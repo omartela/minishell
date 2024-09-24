@@ -90,11 +90,12 @@ void	print_command(t_cmd *cmd);
 void	test_echo_command(char *argv[], t_shell *shell);
 
 // echo_command
-void	echo_command(char *argv[]);
+int		echo(char *argv[]);
 
 // utilities.c
 char	*expand_tilde(t_shell *sh);
-void	execute_builtin_command(t_cmd *cmd, t_shell *shell);
+int		is_builtin(t_cmd *cmd);
+int		execute_builtin(t_shell *sh, t_cmd *cmd);
 
 // environment.c
 void	copy_env(char **envp, t_shell *shell);

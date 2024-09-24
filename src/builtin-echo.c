@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-void	echo_command(char *argv[])
+int	echo(char *argv[])
 {
 	int	i;
 	int	no_nl;
@@ -33,4 +33,5 @@ void	echo_command(char *argv[])
 	}
 	if (!no_nl)
 		write(1, "\n", 1);
+	return (0);
 }

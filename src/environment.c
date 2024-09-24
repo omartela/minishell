@@ -127,6 +127,8 @@ int	remove_table(char ***table, const char *variable)
     	// Null-terminate the new table
     	(*table)[size - 1] = NULL;
 	}
+	else
+		return (1);
 	return (0);
 }
 
