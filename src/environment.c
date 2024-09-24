@@ -99,33 +99,33 @@ int	remove_table(char ***table, const char *variable)
 {
 	size_t	size;
 	size_t	index_to_remove;
-	char	**temp_table;
+	size_t	i;
+	int		found;
 
 	size = 0;
-	index_to_remove = -1;
-	temp_table = NULL;
+	i = 0;
+	index_to_remove = 0;
+	found = 0;
 	while ((*table)[size])
 	{
 		if (ft_strncmp((*table)[size], variable, ft_strlen(variable)) == 0)
+		{
 			index_to_remove = size;
+			found = 1;
+		}
 		++size;
 	}
-	if ((int)index_to_remove != -1)
+	if (found)
 	{
 		free((*table)[index_to_remove]);
-		for (size_t i = index_to_remove; i < size - 1; i++) {
-        (*table)[i] = (*table)[i + 1];
-    	}	
-
-    	/* // Null-terminate the new table
-    	(*table)[size - 1] = NULL;
-		temp_table = ft_realloc(*table, size, size - 1);
-		if (!temp_table)
+		i = index_to_remove;
+		while (i < size - 1)
 		{
-			// need to free table
-			return (1);
-		} */
-		//*table = temp_table;
+			(*table)[i] = (*table)[i + 1];
+			++i;
+		}
+    	// Null-terminate the new table
+    	(*table)[size - 1] = NULL;
 	}
 	return (0);
 }

@@ -137,6 +137,11 @@ int	execute_pipes(t_shell *sh)
 			pwd();
 			return (0);
 		}
+		if (ft_strncmp(cmd->args[0], "echo $?\0", 8) == 0)
+		{
+			ft_printf("%d\n", sh->exit_status);
+			return (0);
+		}
 		if (pipe_and_fork(sh, &pipes, i, cmd) != 0)
 		{
 			free_cmd(cmd);
