@@ -68,13 +68,15 @@ int	add_table(char ***table, const char *variable, const char *value)
 {
 	size_t	sarr;
 	char	*temp;
+	char	**temp_table;
 
 	sarr = 0;
 	while ((*table)[sarr])
 		sarr++;
-	*table = ft_realloc(*table, sarr * sizeof(char *), (sarr + 1) * sizeof(char *));
-	if (!(*table))
+	temp_table = ft_realloc(*table, sarr * sizeof(char *), (sarr + 1) * sizeof(char *));
+	if (!temp_table)
 		return (1);
+	*table = temp_table;
 	(*table)[sarr] = ft_strdup(variable);
 	if (value)
 	{
@@ -90,6 +92,43 @@ int	add_table(char ***table, const char *variable, const char *value)
 		return (1);
 	}
 	(*table)[sarr + 1] = NULL;
+	return (0);
+}
+
+int	remove_table(char ***table, const char *variable)
+{
+	size_t	size;
+	size_t	index_to_remove;
+	size_t	i;
+	int		found;
+
+	size = 0;
+	i = 0;
+	index_to_remove = 0;
+	found = 0;
+	while ((*table)[size])
+	{
+		if (ft_strncmp((*table)[size], variable, ft_strlen(variable)) == 0)
+		{
+			index_to_remove = size;
+			found = 1;
+		}
+		++size;
+	}
+	if (found)
+	{
+		free((*table)[index_to_remove]);
+		i = index_to_remove;
+		while (i < size - 1)
+		{
+			(*table)[i] = (*table)[i + 1];
+			++i;
+		}
+    	// Null-terminate the new table
+    	(*table)[size - 1] = NULL;
+	}
+	else
+		return (1);
 	return (0);
 }
 
