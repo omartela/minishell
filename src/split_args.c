@@ -74,6 +74,8 @@ static char	**ft_helper(char *s, size_t i, char **result, t_split_opts *opts)
 	char	quote_type;
 
 	in_quotes = 0;
+	start = NULL;
+	quote_type = 0;
 	while (*s)
 	{
 		while (*s == opts->delimiter && !in_quotes)
