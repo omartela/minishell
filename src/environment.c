@@ -127,8 +127,6 @@ int	remove_table(char ***table, const char *variable)
     	// Null-terminate the new table
     	(*table)[size - 1] = NULL;
 	}
-	else
-		return (1);
 	return (0);
 }
 
@@ -139,10 +137,9 @@ int	set_table(char ***table, const char *variable, const char *value)
 	char	*temp;
 
 	i = 0;
-
+	len = ft_strlen(variable);
 	while ((*table)[i])
 	{
-		len = ft_strlen(variable);
 		if (ft_strncmp((*table)[i], variable, len) == 0)
 		{
 			temp = (*table)[i];

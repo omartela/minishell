@@ -23,35 +23,14 @@ static void	display_local_shellvars(t_shell *shell)
 	}
 }
 
-static char	**parse_equal_sign(char *args, char **temp, int *append)
-{
-	char	*equal;
-
-	equal = ft_strchr(args, '=');
-	if (args && equal && (*(equal + 1) != '\0'))
-	{
-		if (equal && (*(equal - 1) != '-') && (*(equal - 1) != '+'))
-		{
-			temp = ft_split(args, '=');
-			return (temp);
-		}
-		else if (equal && (*(equal - 1) != '+'))
-		{
-			*append = 1;
-			return (temp);
-		}
-		return (temp);
-	}
-	return (temp);
-}
-
 static int	set_variables(t_shell *shell, char *variable, char *value)
 {
 	int	success1;
 	int success2;
 
 	success1 = set_table(&shell->envp, variable, value);
-	success2 = set_table(&shell->local_shellvars, variable, value);
+	//success2 = set_table(&shell->local_shellvars, variable, value);
+	success2 = 0;
 	if (!success2)
 	{
 		sort_table(shell->local_shellvars);
@@ -61,43 +40,93 @@ static int	set_variables(t_shell *shell, char *variable, char *value)
 	return (0);
 }
 
-int	is_valid_argument_name(const char *name)
+static int	is_valid_argument_name(const char *name)
 {
 	int	i;
 
 	i = 0;
-	if (!name || !ft_isalpha(name[0]) && name[0] != '_')
+	if ((!name || !ft_isalpha(name[0])) && name[0] != '_')
 		return (0);
 	while (name[i])
 	{
 		if (!ft_isalnum(name[i]) && name[i] != '_')
 			return (0);
+		++i;
 	}
+	return (1);
+}
+
+static int	is_valid_value(const char *value)
+{
+	if (value)
+		return (1);
 	return (1);
 }
 
 static int	is_valid_export_argument(const char *arg)
 {
 	char	*equal_sign;
+	char	**variable_value;
+	int		valid_value;
+	int		valid_name;
 
 	equal_sign = ft_strchr(arg, '=');
 	if (equal_sign)
 	{
-		
+		variable_value = ft_split(arg, '=');
+		if (!variable_value)
+			return (0);
+		valid_value = is_valid_value(variable_value[1]);
+		valid_name = is_valid_argument_name(variable_value[0]);
+		//free_array(variable_value);
+		if (valid_value && valid_name)
+			return (1);
+		else
+			return (0);
 	}
+	else
+	{
+		if (is_valid_argument_name(arg))
+			return (2);
+	}
+	return (1);
+}
+
+static int	parse_export_arg_and_add(t_shell *sh, char *arg)
+{
+	char	**var_value;
+
+	if (is_valid_export_argument(arg) == 1)
+	{
+		var_value = ft_split(arg, '=');
+		ft_printf("var value[0] %s and var value[1] %s \n", var_value[0], var_value[1]);
+		if (set_variables(sh, var_value[0], var_value[1]))
+		{
+			//free_array(var_value);
+			return (1);
+		}
+		//free_array(variable_value);free_array(var_value);
+		return (0);
+	}
+	else if (is_valid_export_argument(arg) == 2)
+	{
+		if (add_table(&sh->local_shellvars, arg, NULL))
+			return (1);
+		else
+			return (0);
+	}
+	return (0);
 }
 
 int	export(t_shell *shell, char **args)
 {
 	int		argc;
-	char	**temp;
 	int 	i;
 	int		append;
 
 	argc = 0;
 	i = 1;
 	append = 0;
-	temp = NULL;
 	while (args[argc])
 		argc++;
 	if (argc == 1)
@@ -109,20 +138,7 @@ int	export(t_shell *shell, char **args)
 	{
 		while (i < argc)
 		{
-			temp = parse_equal_sign(args[i], temp, &append);
-			if (temp)
-			{
-				if (set_variables(shell, temp[0], temp[1]))
-				{
-					free_array(temp);
-					return (1);
-				}
-				free_array(temp);
-			}
-			else if (!add_table(&shell->local_shellvars, args[i], NULL))
-				sort_table(shell->local_shellvars);
-			else
-				return (1);
+			parse_export_arg_and_add(shell, args[i]);
 			++i;
 		}
 	}

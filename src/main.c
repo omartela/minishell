@@ -36,11 +36,6 @@ static void	process_input(t_shell *sh, char *input)
 	next_input = NULL;
 //	printf("You have entered: %s\n", input);// Only for testing
 	input = trim_spaces(input);
-	if (ft_strncmp(input, "echo $?\0", 8) == 0)
-	{
-		ft_printf("%d\n", sh->exit_status);
-		return ;
-	}
 	len = ft_strlen(input);
 	if (check_syntax(input))
 	{
