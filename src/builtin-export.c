@@ -96,7 +96,7 @@ static int	is_valid_export_argument(const char *arg)
 		if (is_valid_argument_name(arg))
 			return (2);
 	}
-	return (1);
+	return (0);
 }
 
 static int	parse_export_arg_and_add(t_shell *sh, char *arg)
@@ -129,7 +129,7 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 			return (0);
 		}
 	}
-	return (0);
+	return (1);
 }
 
 int	export(t_shell *shell, char **args)
@@ -152,7 +152,8 @@ int	export(t_shell *shell, char **args)
 	{
 		while (i < argc)
 		{
-			parse_export_arg_and_add(shell, args[i]);
+			if (parse_export_arg_and_add(shell, args[i]))
+				return (1);
 			++i;
 		}
 	}

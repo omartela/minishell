@@ -17,15 +17,15 @@ int unset(t_shell *sh, char **args)
     int i;
     /// add error checking for args
     argc = 0;
-    i = 0;
+    i = 1;
     while (args[argc])
         ++argc;
     if (argc >= 2)
     {
         while (i < argc)
         {
-            remove_table(&sh->envp, args[1]);
-            remove_table(&sh->local_shellvars, args[1]);
+            remove_table(&sh->envp, args[i]);
+            remove_table(&sh->local_shellvars, args[i]);
             ++i;
         }
     }

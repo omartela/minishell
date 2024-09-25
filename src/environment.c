@@ -100,15 +100,17 @@ int	remove_table(char ***table, const char *variable)
 	size_t	size;
 	size_t	index_to_remove;
 	size_t	i;
+	size_t	len;
 	int		found;
 
 	size = 0;
 	i = 0;
 	index_to_remove = 0;
 	found = 0;
+	len = ft_strlen(variable);
 	while ((*table)[size])
 	{
-		if (ft_strncmp((*table)[size], variable, ft_strlen(variable)) == 0)
+		if (is_check_key_equal((*table)[size], variable))
 		{
 			index_to_remove = size;
 			found = 1;
