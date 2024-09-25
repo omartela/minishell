@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 11:56:47 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/16 17:23:51 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/24 17:16:10 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,29 @@ static size_t	len_without_quotes(char *str, size_t len)
 {
 	size_t	i;
 	size_t	count;
+	int		in_quotes;
+	char	quote_type;
 
+	in_quotes = 0;
+	quote_type = 0;
 	i = 0;
 	count = 0;
 	while (i < len)
 	{
-		if (str[i] != '\'' && str[i] != '\"')
+		if ((str[i] == '\'' || str[i] == '\"') && !in_quotes)
+		{
+			in_quotes = 1;
+			quote_type = str[i];
+		}
+		else if (str[i] == quote_type && in_quotes)
+		{
+			in_quotes = 0;
+			quote_type = 0;
+		}
+		else
+		{
 			count++;
+		}
 		i++;
 	}
 	return (count);
@@ -45,7 +61,11 @@ static char	*copy_string(char *start, size_t len, t_split_opts *opts)
 	size_t	new_len;
 	size_t	i;
 	size_t	j;
+	int		in_quotes;
+	char	quote_type;
 
+	in_quotes = 0;
+	quote_type = 0;
 	i = 0;
 	j = 0;
 	if (opts->keep_quotes)
@@ -59,8 +79,20 @@ static char	*copy_string(char *start, size_t len, t_split_opts *opts)
 		return (NULL);
 	while (i < len)
 	{
-		if (start[i] != '\'' && start[i] != '\"')
+		if ((start[i] == '\'' || start[i] == '\"') && !in_quotes)
+		{
+			in_quotes = 1;
+			quote_type = start[i];
+		}
+		else if (start[i] == quote_type && in_quotes)
+		{
+			in_quotes = 0;
+			quote_type = 0;
+		}
+		else
+		{
 			result[j++] = start[i];
+		}
 		i++;
 	}
 	result[j] = '\0';
