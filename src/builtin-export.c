@@ -29,7 +29,6 @@ static void	display_local_shellvars(t_shell *shell)
 		++i;
 		free_array(temp);
 	}
-	printf("\nrows in display: %d\n", i);
 }
 
 static int	set_variables(t_shell *shell, char *variable, char *value)
@@ -107,7 +106,6 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 	if (is_valid_export_argument(arg) == 1)
 	{
 		var_value = ft_split(arg, '=');
-		ft_printf("var value[0] %s and var value[1] %s \n", var_value[0], var_value[1]);
 		if (var_value[1] == NULL)
 		{
 			set_variables(sh, var_value[0], "");
@@ -115,10 +113,10 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 		}
 		if (set_variables(sh, var_value[0], var_value[1]))
 		{
-			//free_array(var_value);
+			free_array(var_value);
 			return (1);
 		}
-		//free_array(variable_value);free_array(var_value);
+		free_array(var_value);
 		return (0);
 	}
 	else if (is_valid_export_argument(arg) == 2)

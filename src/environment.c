@@ -73,7 +73,6 @@ int	add_table(char ***table, const char *variable, const char *value)
 	sarr = 0;
 	while ((*table)[sarr])
 		sarr++;
-	printf("\nsarr counter is %zu\n", sarr);
 	temp_table = ft_realloc(*table, sarr * sizeof(char *), (sarr + 2) * sizeof(char *));
 	if (!temp_table)
 		return (1);
