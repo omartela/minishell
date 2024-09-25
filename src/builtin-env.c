@@ -27,6 +27,7 @@ int	env(t_shell *shell, char **args)
 			ft_printf("%s \n", shell->envp[i]);
 			++i;
 		}
+		printf("\nbiultin env is %d\n", i);
 	}
 	return (0);
 }

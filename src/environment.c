@@ -73,7 +73,8 @@ int	add_table(char ***table, const char *variable, const char *value)
 	sarr = 0;
 	while ((*table)[sarr])
 		sarr++;
-	temp_table = ft_realloc(*table, sarr * sizeof(char *), (sarr + 1) * sizeof(char *));
+	printf("\nsarr counter is %zu\n", sarr);
+	temp_table = ft_realloc(*table, sarr * sizeof(char *), (sarr + 2) * sizeof(char *));
 	if (!temp_table)
 		return (1);
 	*table = temp_table;
@@ -140,18 +141,24 @@ int	set_table(char ***table, const char *variable, const char *value)
 	len = ft_strlen(variable);
 	while ((*table)[i])
 	{
-		if (ft_strncmp((*table)[i], variable, len) == 0)
+		if (ft_strncmp((*table)[i], variable, len + 1) == 0 && !value)
+			return (0);
+		if (ft_strncmp((*table)[i], variable, len) == 0 && ((*table)[i][len] == '=' || (*table)[i][len] == '\0'))
 		{
 			temp = (*table)[i];
 			(*table)[i] = ft_strjoin(variable, "=");
 			if (!(*table)[i])
 				return (1);
 			free(temp);
-			temp = (*table)[i];
-			(*table)[i] = ft_strjoin((*table)[i], value);
-			if (!(*table)[i])
-				return (1);
-			free(temp);
+			if (value)
+			{
+				temp = (*table)[i];
+				(*table)[i] = ft_strjoin((*table)[i], value);
+				if (!(*table)[i])
+					return (1);
+				free(temp);
+				return (0);
+			}
 			return (0);
 		}
 		++i;

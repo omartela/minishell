@@ -28,7 +28,7 @@ int	is_builtin(t_cmd *cmd)
 	int i;
 	int is_builtin;
 
-	str = ft_split("export,cd,unset,pwd,echo", ',');
+	str = ft_split("export,cd,env,unset,pwd,echo", ',');
 	i = 0;
 	is_builtin = 0;
 	while (str[i])
@@ -52,6 +52,17 @@ int	execute_builtin(t_shell *sh, t_cmd *cmd)
 	if (ft_strncmp(cmd->args[0], "export\0", 7) == 0)
 	{
 		if (export(sh, cmd->args))
+		{
+			sh->exit_status = 1;
+			return (1);
+		}
+		sh->exit_status = 0;
+		return (0);
+	}
+	if (ft_strncmp(cmd->args[0], "env\0", 4) == 0)
+	{
+		ft_printf("testing env \n");
+		if (env(sh, cmd->args))
 		{
 			sh->exit_status = 1;
 			return (1);

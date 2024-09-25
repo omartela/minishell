@@ -14,13 +14,22 @@
 
 static void	display_local_shellvars(t_shell *shell)
 {
-	int	i;
+	int		i;
+	char	**temp;
 	i = 0;
 	while (shell->local_shellvars[i])
 	{
-		ft_printf("declare -x %s \n", shell->local_shellvars[i]);
+		temp = ft_split(shell->local_shellvars[i], '=');
+		if (temp[1])
+			ft_printf("declare -x %s=\"%s\" \n", temp[0], temp[1]);
+		else if (ft_strchr(shell->local_shellvars[i], '='))
+			ft_printf("declare -x %s\"\" \n", shell->local_shellvars[i]);
+		else
+			ft_printf("declare -x %s \n", shell->local_shellvars[i]);
 		++i;
+		free_array(temp);
 	}
+	printf("\nrows in display: %d\n", i);
 }
 
 static int	set_variables(t_shell *shell, char *variable, char *value)
@@ -29,8 +38,7 @@ static int	set_variables(t_shell *shell, char *variable, char *value)
 	int success2;
 
 	success1 = set_table(&shell->envp, variable, value);
-	//success2 = set_table(&shell->local_shellvars, variable, value);
-	success2 = 0;
+	success2 = set_table(&shell->local_shellvars, variable, value);
 	if (!success2)
 	{
 		sort_table(shell->local_shellvars);
@@ -100,6 +108,11 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 	{
 		var_value = ft_split(arg, '=');
 		ft_printf("var value[0] %s and var value[1] %s \n", var_value[0], var_value[1]);
+		if (var_value[1] == NULL)
+		{
+			set_variables(sh, var_value[0], "");
+			return (0);
+		}
 		if (set_variables(sh, var_value[0], var_value[1]))
 		{
 			//free_array(var_value);
@@ -110,10 +123,13 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 	}
 	else if (is_valid_export_argument(arg) == 2)
 	{
-		if (add_table(&sh->local_shellvars, arg, NULL))
+		if (set_table(&sh->local_shellvars, arg, NULL))
 			return (1);
 		else
+		{
+			sort_table(sh->local_shellvars);
 			return (0);
+		}
 	}
 	return (0);
 }
