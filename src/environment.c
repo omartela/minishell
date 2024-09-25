@@ -89,7 +89,7 @@ int	add_table(char ***table, const char *variable, const char *value)
 		(*table)[sarr] = ft_strjoin(temp, value);
 		//free(temp);
 		if (!((*table))[sarr])
-		return (1);
+			return (1);
 	}
 	(*table)[sarr + 1] = NULL;
 	return (0);
