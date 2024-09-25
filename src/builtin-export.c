@@ -78,7 +78,13 @@ int	is_valid_argument_name(const char *name)
 
 static int	is_valid_export_argument(const char *arg)
 {
+	char	*equal_sign;
 
+	equal_sign = ft_strchr(arg, '=');
+	if (equal_sign)
+	{
+		
+	}
 }
 
 int	export(t_shell *shell, char **args)
