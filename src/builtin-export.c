@@ -52,7 +52,9 @@ static int	is_valid_argument_name(const char *name)
 	int	i;
 
 	i = 0;
-	if ((!name || !ft_isalpha(name[0])) && name[0] != '_')
+	if (!name)
+		return (0);
+	if (!ft_isalpha(name[0]) && name[0] != '_')
 		return (0);
 	while (name[i])
 	{
@@ -85,7 +87,7 @@ static int	is_valid_export_argument(const char *arg)
 			return (0);
 		valid_value = is_valid_value(variable_value[1]);
 		valid_name = is_valid_argument_name(variable_value[0]);
-		//free_array(variable_value);
+		free_array(variable_value);
 		if (valid_value && valid_name)
 			return (1);
 		else
