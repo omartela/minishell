@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/26 14:01:57 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/26 18:05:08 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,13 @@ void	parse_redirections(t_cmd *cmd, char **args)
 {
 	int		i;
 	int		j;
+	int		k;
 	int		arg_count;
 	char	**clean_args;
 
 	i = 0;
 	j = 0;
+	k = 0;
 	arg_count = count_new_args_len(args);
 	clean_args = malloc(sizeof(char *) * (arg_count + 1));
 	if (!clean_args)
@@ -155,11 +157,10 @@ void	parse_redirections(t_cmd *cmd, char **args)
 			i += 2;
 			continue ;
 		}
-		if (ft_strncmp(args[i], "<<\0", 2) == 0 && args[i + 1])
+		if (ft_strncmp(args[i], "<<\0", 3) == 0 && args[i + 1])
 		{
-			if (cmd->limiter)
+			if (cmd->here_doc)
 			{
-				free(cmd->limiter);
 				close(cmd->fd_in);
 			}
 			if (cmd->infile)
@@ -167,14 +168,7 @@ void	parse_redirections(t_cmd *cmd, char **args)
 				free(cmd->infile);
 				close(cmd->fd_in);
 			}
-			handle_here_doc(cmd);
-			cmd->limiter = ft_strdup(args[i + 1]);
-			if (!cmd->limiter)
-			{
-				error_sys("ft_strdup failed\n");
-				free_array_back(clean_args, j);
-				exit (1);
-			}
+			//cmd->fd_in = sh-> THINK!!!!!!!!!!!!!!!
 			i += 2;
 			continue ;
 		}

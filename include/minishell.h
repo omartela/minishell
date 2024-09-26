@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/26 14:00:46 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/26 17:47:32 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct s_shell
 	char	**envp;
 	char	**local_shellvars;
 	char	*homepath;
+	int		**heredoc_fd;
 }	t_shell;
 
 typedef struct s_cmd
@@ -40,7 +41,7 @@ typedef struct s_cmd
 	char	*infile;
 	char	*outfile;
 	int		append;
-	char	*limiter;
+	int		here_doc;
 	int		fd_in;
 	int		fd_out;
 }	t_cmd;

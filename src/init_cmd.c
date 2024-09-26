@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/26 14:21:31 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/26 17:56:23 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ int	init_cmd(t_cmd **cmd, char *command, char **envp)
 	(*cmd)->infile = NULL;
 	(*cmd)->outfile = NULL;
 	(*cmd)->append = 0;
+	(*cmd)->here_doc = 0;
 	(*cmd)->args = NULL;
-	(*cmd)->limiter = NULL;
 	temp = ft_add_spaces(command);
 	if (!(temp))
 	{

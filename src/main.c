@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/16 16:06:27 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/26 17:43:29 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static void	initialize_shell(t_shell *sh, char **envp)
 	sh->exit_status = 0;
 	sh->num_cmds = 0;
 	sh->commands = NULL;
+	sh->heredoc_fd = NULL;
 	copy_env(envp, sh);
 	sh->homepath = ft_strdup(getenv("HOME"));
 	if (!sh->homepath)
