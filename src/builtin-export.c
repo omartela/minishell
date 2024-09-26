@@ -72,6 +72,11 @@ static int	is_valid_value(const char *value)
 	return (1);
 }
 
+static int	is_plus_sign(const char *str)
+{
+
+}
+
 static int	is_valid_export_argument(const char *arg)
 {
 	char	*equal_sign;

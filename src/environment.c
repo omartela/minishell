@@ -132,6 +132,40 @@ int	remove_table(char ***table, const char *variable)
 	return (0);
 }
 
+int	append_table(char ***table, const char *variable, const char *value)
+{
+	size_t	size;
+	size_t	i;
+	int		index_to_modify;
+	size_t	len;
+	int		found;
+	char	*temp;
+
+	i = 0;
+	found = 0;
+	size = 0;
+	len = ft_strlen(variable);
+	while ((*table)[size])
+	{
+		if (is_check_key_equal((*table)[size], variable))
+		{
+			index_to_modify = size;
+			found = 1;
+		}
+		++size;
+	}
+	if (found)
+	{
+		temp = (*table)[size];
+		if (!(*table)[size])
+			return (0);
+		(*table)[size] = ft_strjoin((*table)[size], value);
+		free((*table)[size]);
+		return (0);
+	}
+	return (1);
+}
+
 int	set_table(char ***table, const char *variable, const char *value)
 {
 	size_t	i;
