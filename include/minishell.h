@@ -105,6 +105,7 @@ int		set_table(char ***table, const char *variable, const char *value);
 int		add_table(char ***table, const char *variable, const char *value);
 char	**sort_table(char **envp);
 int		remove_table(char ***table, const char *variable);
+int		append_table(char ***table, const char *variable, const char *value);
 
 //export command
 int		export(t_shell *shell, char **arguments);

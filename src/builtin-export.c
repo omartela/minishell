@@ -72,8 +72,17 @@ static int	is_valid_value(const char *value)
 	return (1);
 }
 
-static int	is_plus_sign(const char *str)
+static int	is_last_plus_sign_and_remove(char *str)
 {
+	int	len;
+
+	len = ft_strlen(str);
+	if (str[(len - 1)] == '+')
+	{
+		str[len - 1] = '\0';
+		return (1);
+	}
+	return (0);
 
 }
 
@@ -83,18 +92,23 @@ static int	is_valid_export_argument(const char *arg)
 	char	**variable_value;
 	int		valid_value;
 	int		valid_name;
+	int		plus_sign;
 
 	equal_sign = ft_strchr(arg, '=');
+	plus_sign = 0;
 	if (equal_sign)
 	{
 		variable_value = ft_split(arg, '=');
 		if (!variable_value)
 			return (0);
+		plus_sign = is_last_plus_sign_and_remove(variable_value[0]);
 		valid_value = is_valid_value(variable_value[1]);
 		valid_name = is_valid_argument_name(variable_value[0]);
 		free_array(variable_value);
-		if (valid_value && valid_name)
+		if (valid_value && valid_name && !plus_sign)
 			return (1);
+		else if (valid_value && valid_name && plus_sign)
+			return (3);
 		else
 			return (0);
 	}
@@ -113,6 +127,8 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 	if (is_valid_export_argument(arg) == 1)
 	{
 		var_value = ft_split(arg, '=');
+		if (!var_value)
+			return (0);
 		if (var_value[1] == NULL)
 		{
 			set_variables(sh, var_value[0], "");
@@ -135,6 +151,19 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 			sort_table(sh->local_shellvars);
 			return (0);
 		}
+	}
+	else if (is_valid_export_argument(arg) == 3)
+	{
+		var_value = ft_split(arg, '=');
+		if (!var_value)
+			return (1);
+		is_last_plus_sign_and_remove(var_value[0]);
+		if (append_table(&sh->envp, var_value[0], var_value[1]))
+			return (1);
+		if (append_table(&sh->local_shellvars, var_value[0], var_value[1]))
+			return (1);
+		sort_table(sh->local_shellvars);
+		return (0);
 	}
 	return (1);
 }

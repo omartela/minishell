@@ -151,16 +151,23 @@ int	append_table(char ***table, const char *variable, const char *value)
 		{
 			index_to_modify = size;
 			found = 1;
+			break;
 		}
 		++size;
 	}
 	if (found)
 	{
-		temp = (*table)[size];
-		if (!(*table)[size])
+		temp = (*table)[index_to_modify];
+		if (!(*table)[index_to_modify])
 			return (0);
-		(*table)[size] = ft_strjoin((*table)[size], value);
-		free((*table)[size]);
+		(*table)[index_to_modify] = ft_strjoin((*table)[index_to_modify], value);
+		free(temp);
+		return (0);
+	}
+	else
+	{
+		if (add_table(table, variable, value))
+			return (1);
 		return (0);
 	}
 	return (1);
