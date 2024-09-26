@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/26 17:43:29 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/26 23:34:06 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ static void	initialize_shell(t_shell *sh, char **envp)
 	sh->exit_status = 0;
 	sh->num_cmds = 0;
 	sh->commands = NULL;
-	sh->heredoc_fd = NULL;
+	sh->heredoc_fds = NULL;
+	sh->num_heredocs = 0;
+	sh->heredoc_index = 0;
 	copy_env(envp, sh);
 	sh->homepath = ft_strdup(getenv("HOME"));
 	if (!sh->homepath)
@@ -48,6 +50,8 @@ static void	process_input(t_shell *sh, char *input)
 		sh->exit_status = 2;
 		return ;
 	}
+	if (is_heredoc(input))
+		handle_here_doc(sh, input);
 	while (input[len - 1] == '|' || (len > 2 && input[len - 1] == '&' && input[len - 2] == '&'))
 	{
 		next_input = readline("> ");
@@ -57,6 +61,8 @@ static void	process_input(t_shell *sh, char *input)
 			printf("Exit \n");
 			return ;//nor sure if this is the right way to exit
 		}
+		if (is_heredoc(next_input))
+			handle_here_doc(sh, next_input); //I THINK CHECK_SYNTAX SHOULD BE HERE
 		//temp = input;
 		input = ft_strjoin(input, next_input);
 		if (!input)

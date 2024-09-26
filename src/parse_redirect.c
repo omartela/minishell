@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/26 18:05:08 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/26 23:34:45 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,11 @@ void	parse_redirections(t_cmd *cmd, char **args)
 {
 	int		i;
 	int		j;
-	int		k;
 	int		arg_count;
 	char	**clean_args;
 
 	i = 0;
 	j = 0;
-	k = 0;
 	arg_count = count_new_args_len(args);
 	clean_args = malloc(sizeof(char *) * (arg_count + 1));
 	if (!clean_args)
@@ -98,9 +96,8 @@ void	parse_redirections(t_cmd *cmd, char **args)
 	{
 		if (ft_strncmp(args[i], "<\0", 2) == 0 && args[i + 1])
 		{
-			if (cmd->limiter)
+			if (cmd->here_doc)
 			{
-				free(cmd->limiter);
 				close(cmd->fd_in);
 			}
 			if (cmd->infile)
@@ -163,12 +160,13 @@ void	parse_redirections(t_cmd *cmd, char **args)
 			{
 				close(cmd->fd_in);
 			}
+			cmd->here_doc += 1;
 			if (cmd->infile)
 			{
 				free(cmd->infile);
 				close(cmd->fd_in);
 			}
-			//cmd->fd_in = sh-> THINK!!!!!!!!!!!!!!!
+			cmd->fd_in = cmd->fd_heredoc[cmd->here_doc - 1];
 			i += 2;
 			continue ;
 		}

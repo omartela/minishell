@@ -6,13 +6,13 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/26 17:42:51 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/26 23:58:53 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_heredoc(char *input)
+int	is_heredoc(char *input)
 {
 	if (ft_strncmp(input, "<<", 2) == 0)
 		return (1);
@@ -60,24 +60,24 @@ static int	here_doc_input(char *delimiter, t_shell *sh)
 void	handle_here_doc(t_shell *sh, char *input)
 {
 	int		i;
-	int 	j;
 	char	**args;
 
 	i = 0;
-	j = 0;
-	while (sh->heredoc_fd[j])
-		j++;
-	args = split_args_remove_quotes(input, " ");
+	args = split_args_remove_quotes(input, ' ');
 	while (args[i])
 	{
 		if (ft_strncmp(args[i], "<<\0", 3) == 0 && args[i + 1])
 		{
-			sh->heredoc_fd = ft_realloc(sh->heredoc_fd, j, j + 1);
-			j += 1;
-			sh->heredoc_fd[j] = here_doc_input(args[i + 1], sh);
+			if (!sh->heredoc_fds)
+				sh->heredoc_fds = malloc(sizeof(int));
+			else
+				sh->heredoc_fds = ft_realloc(sh->heredoc_fds, sh->num_heredocs, sh->num_heredocs + 1);
+			sh->heredoc_fds[sh->num_heredocs] = here_doc_input(args[i + 1], sh);
+			sh->num_heredocs++;
 			i += 2;
-			continue ;
 		}
-		i++;
+		else
+			i++;
 	}
+	free_array(args);
 }

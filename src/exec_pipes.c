@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/15 14:48:32 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/26 23:35:23 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ int	execute_pipes(t_shell *sh)
 	}
 	while (sh->commands[i] != NULL)
 	{
-		if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
+		if (init_cmd(&cmd, sh->commands[i], sh->envp, sh) == 1)
 			return (1);
 		if (pipe_and_fork(sh, &pipes, i, cmd) != 0)
 		{

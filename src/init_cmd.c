@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/26 17:56:23 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/27 00:25:16 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,48 @@ void	init_num_cmds(t_shell *sh)
 	sh->num_cmds = i;
 }
 
-int	init_cmd(t_cmd **cmd, char *command, char **envp)
+int	init_heredocs(t_shell *sh, t_cmd *cmd)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (cmd->args[i])
+	{
+		if (ft_strncmp(cmd->args[i], "<<", 2) == 0)
+		{
+			if (!cmd->fd_heredoc)
+			{
+				cmd->fd_heredoc = malloc(sizeof(int));
+				if (!cmd->fd_heredoc)
+				{
+					error_sys("malloc failed\n");
+					return (1);
+				}
+			}
+			else
+			{
+				cmd->fd_heredoc = ft_realloc(cmd->fd_heredoc, j, j + 1);
+				if (!cmd->fd_heredoc)
+				{
+					error_sys("ft_realloc failed\n");
+					return (1);
+				}
+			}
+			cmd->fd_heredoc[j] = sh->heredoc_fds[sh->heredoc_index];
+			sh->heredoc_index++;
+			printf("fd_heredoc[%d] = %d\n", j, cmd->fd_heredoc[j]);
+			i += 2;
+			j++;
+		}
+		else
+			i++;
+	}
+	return (0);
+}
+
+int	init_cmd(t_cmd **cmd, char *command, char **envp, t_shell *sh)
 {
 	char	*temp;
 
@@ -61,6 +102,7 @@ int	init_cmd(t_cmd **cmd, char *command, char **envp)
 	(*cmd)->outfile = NULL;
 	(*cmd)->append = 0;
 	(*cmd)->here_doc = 0;
+	(*cmd)->fd_heredoc = NULL;
 	(*cmd)->args = NULL;
 	temp = ft_add_spaces(command);
 	if (!(temp))
@@ -70,12 +112,15 @@ int	init_cmd(t_cmd **cmd, char *command, char **envp)
 		return (1);
 	}
 	(*cmd)->args = split_args_remove_quotes(temp, ' ');
+	/* free(temp); */
 	if (!(*cmd)->args)
 	{
 		error_sys("ft_split_args failed\n"); //free all
 		free_cmd(*cmd);
 		return (1);
 	}
+	if (init_heredocs(sh, *cmd) == 1)
+		return (1);
 	if (path_init(*cmd, envp) == 1)
 	{
 		free_array((*cmd)->args);

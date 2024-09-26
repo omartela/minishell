@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/26 17:47:32 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/26 23:33:02 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <readline/history.h>
 # include <fcntl.h>
 # include <unistd.h>
-# include <linux/limits.h>
+# include <limits.h>
 
 typedef struct s_shell
 {
@@ -31,7 +31,9 @@ typedef struct s_shell
 	char	**envp;
 	char	**local_shellvars;
 	char	*homepath;
-	int		**heredoc_fd;
+	int		*heredoc_fds;
+	int		num_heredocs;
+	int 	heredoc_index;
 }	t_shell;
 
 typedef struct s_cmd
@@ -42,6 +44,7 @@ typedef struct s_cmd
 	char	*outfile;
 	int		append;
 	int		here_doc;
+	int		*fd_heredoc;
 	int		fd_in;
 	int		fd_out;
 }	t_cmd;
@@ -61,15 +64,16 @@ typedef struct s_split_opts
 // main functions
 char	*trim_spaces(char *str);
 int		check_syntax(char *input);
+int		is_heredoc(char *input);
 size_t	ft_strcounter(char *s, char c);
 void	process_quotes(char **s, int *in_quotes, char *quote_type);
 char	**split_args_remove_quotes(char *s, char c);
 char	**split_args_leave_quotes(char *s, char c);
 char	**split_args_general(char *s, char c, int keep_quotes);
-int		init_cmd(t_cmd **cmd, char *command, char **envp);
+int		init_cmd(t_cmd **cmd, char *command, char **envp, t_shell *sh);
 void	init_num_cmds(t_shell *sh);
 char	*ft_add_spaces(char *s);
-void	handle_here_doc(t_cmd *cmd);
+void	handle_here_doc(t_shell *sh, char *input);
 void	parse_redirections(t_cmd *cmd, char **args);
 int		init_pipes(t_pipes *pipes, int num_cmds);
 int		execute_pipes(t_shell *sh);
