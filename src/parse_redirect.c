@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/16 14:35:08 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/26 14:01:57 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ static int	count_new_args_len(char **args)
 	{
 		if ((ft_strncmp(args[i], "<\0", 2) == 0
 				|| ft_strncmp(args[i], ">\0", 2) == 0
-				|| ft_strncmp(args[i], ">>\0", 3) == 0) && args[i + 1])
+				|| ft_strncmp(args[i], ">>\0", 3) == 0
+				|| ft_strncmp(args[i], "<<\0", 3) == 0) && args[i + 1])
 		{
 			i = i + 2;
 			continue ;
@@ -95,6 +96,11 @@ void	parse_redirections(t_cmd *cmd, char **args)
 	{
 		if (ft_strncmp(args[i], "<\0", 2) == 0 && args[i + 1])
 		{
+			if (cmd->limiter)
+			{
+				free(cmd->limiter);
+				close(cmd->fd_in);
+			}
 			if (cmd->infile)
 			{
 				free(cmd->infile);
@@ -141,6 +147,29 @@ void	parse_redirections(t_cmd *cmd, char **args)
 			open_fdout(args[i + 1], cmd);
 			cmd->outfile = ft_strdup(args[i + 1]);
 			if (!cmd->outfile)
+			{
+				error_sys("ft_strdup failed\n");
+				free_array_back(clean_args, j);
+				exit (1);
+			}
+			i += 2;
+			continue ;
+		}
+		if (ft_strncmp(args[i], "<<\0", 2) == 0 && args[i + 1])
+		{
+			if (cmd->limiter)
+			{
+				free(cmd->limiter);
+				close(cmd->fd_in);
+			}
+			if (cmd->infile)
+			{
+				free(cmd->infile);
+				close(cmd->fd_in);
+			}
+			handle_here_doc(cmd);
+			cmd->limiter = ft_strdup(args[i + 1]);
+			if (!cmd->limiter)
 			{
 				error_sys("ft_strdup failed\n");
 				free_array_back(clean_args, j);

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/10 12:14:21 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/26 14:02:23 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ void	free_cmd(t_cmd *cmd)
 		free(cmd->infile);
 	if (cmd->outfile)
 		free(cmd->outfile);
+	if (cmd->limiter)
+		free(cmd->limiter);
 	free(cmd);
 }
 
