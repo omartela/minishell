@@ -1,37 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin-echo.c                                     :+:      :+:    :+:   */
+/*   builtin-unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/05 14:29:58 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/05 15:31:37 by omartela         ###   ########.fr       */
+/*   Created: 2024/09/23 16:05:55 by omartela          #+#    #+#             */
+/*   Updated: 2024/09/23 16:06:53 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../include/minishell.h"
 
-int	echo(char *argv[])
+int unset(t_shell *sh, char **args)
 {
-	int	i;
-	int	no_nl;
-
-	i = 1;
-	no_nl = 0;
-	if (ft_strncmp(argv[1], "-n\0", 3) == 0)
-	{
-		i = 2;
-		no_nl = 1;
-	}
-	while (argv[i])
-	{
-		ft_putstr_fd(argv[i], 1);
-		if (argv[i + 1])
-			write(1, " ", 1);
-		++i;
-	}
-	if (!no_nl)
-		write(1, "\n", 1);
-	return (0);
+    int argc;
+    int i;
+    /// add error checking for args
+    argc = 0;
+    i = 1;
+    while (args[argc])
+        ++argc;
+    if (argc >= 2)
+    {
+        while (i < argc)
+        {
+            remove_table(&sh->envp, args[i]);
+            remove_table(&sh->local_shellvars, args[i]);
+            ++i;
+        }
+    }
+    return (0);
 }
