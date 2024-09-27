@@ -100,14 +100,12 @@ int	remove_table(char ***table, const char *variable)
 	size_t	size;
 	size_t	index_to_remove;
 	size_t	i;
-	size_t	len;
 	int		found;
 
 	size = 0;
 	i = 0;
 	index_to_remove = 0;
 	found = 0;
-	len = ft_strlen(variable);
 	while ((*table)[size])
 	{
 		if (is_check_key_equal((*table)[size], variable))
@@ -135,16 +133,12 @@ int	remove_table(char ***table, const char *variable)
 int	append_table(char ***table, const char *variable, const char *value)
 {
 	size_t	size;
-	size_t	i;
 	int		index_to_modify;
-	size_t	len;
 	int		found;
 	char	*temp;
 
-	i = 0;
 	found = 0;
 	size = 0;
-	len = ft_strlen(variable);
 	while ((*table)[size])
 	{
 		if (is_check_key_equal((*table)[size], variable))
