@@ -75,7 +75,6 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 	{
 		parse_redirections(cmd, cmd->args);
 		child_io(cmd, pipes->fd, i, sh->num_cmds);
-		//execute_builtin_command(cmd, sh);
 		if (is_builtin(cmd))
 		{
 			if (execute_builtin(sh, cmd))

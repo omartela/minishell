@@ -25,7 +25,8 @@ SRCS = src/main.c src/split_args.c src/split_args_helper.c \
 		src/cd-command.c \
 		src/builtin-pwd.c \
 		src/builtin-unset.c \
-		src/builtin-echo.c
+		src/builtin-echo.c \
+		src/expand-dollar.c \
 
 OBJS = $(SRCS:src/%.c=src/%.o)
 

@@ -98,6 +98,7 @@ int		is_builtin(t_cmd *cmd);
 int		execute_builtin(t_shell *sh, t_cmd *cmd);
 char	*get_key(char *args);
 int		is_check_key_equal(char *args, const char *variable);
+char	*get_value(char *args);
 
 // environment.c
 void	copy_env(char **envp, t_shell *shell);
@@ -118,6 +119,9 @@ int		env(t_shell *shell, char **arguments);
 
 // pwd command
 int    pwd(void);
+
+// parse-dollar
+void    parse_dollar_sign(char ***args, char **envp);
 
 // unset command
 int unset(t_shell *sh, char **args);

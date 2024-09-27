@@ -69,6 +69,7 @@ int	init_cmd(t_cmd **cmd, char *command, char **envp)
 		return (1);
 	}
 	(*cmd)->args = split_args_remove_quotes(temp, ' ');
+	parse_dollar_sign(&(*cmd)->args, envp);
 	if (!(*cmd)->args)
 	{
 		error_sys("ft_split_args failed\n"); //free all
