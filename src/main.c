@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/26 23:34:06 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/27 13:36:18 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,16 @@ static void	process_input(t_shell *sh, char *input)
 			printf("Exit \n");
 			return ;//nor sure if this is the right way to exit
 		}
+		//Snippet for tester
+		/* if (isatty(fileno(stdin)))
+			next_input = readline("> ");
+		else
+		{
+			char *line;
+			line = get_next_line(fileno(stdin));
+			next_input = ft_strtrim(line, "\n");
+			free(line);
+		} */
 		if (is_heredoc(next_input))
 			handle_here_doc(sh, next_input); //I THINK CHECK_SYNTAX SHOULD BE HERE
 		//temp = input;
@@ -114,6 +124,16 @@ static void	userprompt(char **envp)
 	initialize_shell(&sh, envp);
 	while (1)
 	{
+		//Snippet for tester
+/* 		if (isatty(fileno(stdin)))
+			input = readline("minishell> ");
+		else
+		{
+			char *line;
+			line = get_next_line(fileno(stdin));
+			input = ft_strtrim(line, "\n");
+			free(line);
+		} */
 		input = readline("minishell> ");
 		if (input == NULL)
 		{
