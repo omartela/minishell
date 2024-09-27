@@ -96,6 +96,8 @@ int		echo(char *argv[]);
 char	*expand_tilde(t_shell *sh);
 int		is_builtin(t_cmd *cmd);
 int		execute_builtin(t_shell *sh, t_cmd *cmd);
+char	*get_key(char *args);
+int		is_check_key_equal(char *args, const char *variable);
 
 // environment.c
 void	copy_env(char **envp, t_shell *shell);
@@ -103,6 +105,7 @@ int		set_table(char ***table, const char *variable, const char *value);
 int		add_table(char ***table, const char *variable, const char *value);
 char	**sort_table(char **envp);
 int		remove_table(char ***table, const char *variable);
+int		append_table(char ***table, const char *variable, const char *value);
 
 //export command
 int		export(t_shell *shell, char **arguments);
