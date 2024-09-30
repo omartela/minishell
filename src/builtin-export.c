@@ -76,6 +76,8 @@ static int	is_last_plus_sign_and_remove(char *str)
 {
 	int	len;
 
+	if (!str)
+		return (0);
 	len = ft_strlen(str);
 	if (str[(len - 1)] == '+')
 	{
