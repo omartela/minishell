@@ -138,7 +138,7 @@ int	execute_pipes(t_shell *sh)
 	}
 	while (sh->commands[i] != NULL)
 	{
-		if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
+		if (init_cmd(&cmd, sh->commands[i], sh) == 1)
 			return (1);
 		if (pipe_and_fork(sh, &pipes, i, cmd) != 0)
 		{

@@ -39,7 +39,29 @@ static char    *expand(char **envp, char *variable)
     return (variable);
 }
 
-void    parse_dollar_sign(char ***args, char **envp)
+static char  *expand_exit_status(char *dollar, t_shell *sh)
+{
+    char    *temp;
+    char    *tempitoa;
+
+    tempitoa = ft_itoa(sh->exit_status);
+    if (!tempitoa)
+    {
+        ft_putstr_fd("Parse dollar failed \n", 2);
+        return (NULL);
+    }
+    temp = ft_strjoin(tempitoa, dollar + 1);
+    if (!temp)
+    {
+        free(tempitoa);
+        ft_putstr_fd("Parse dollar failed \n", 2);
+        return (NULL);
+    }
+    free(tempitoa);
+    return (temp);
+}
+
+void    parse_dollar_sign(char ***args, t_shell *sh)
 {
     int     i;
     char    *dollar;
@@ -53,6 +75,18 @@ void    parse_dollar_sign(char ***args, char **envp)
         if (is_check_dollar_sign((*args)[i]))
         {
             dollar = ft_strchr((*args)[i], '$');
+            if (*(dollar + 1) == '?')
+            {
+                temp = expand_exit_status(dollar, sh);
+                if (!temp)
+                {
+                    ft_putstr_fd("Parse dollar failed \n", 2);
+                    return ;
+                }
+                free((*args)[i]);
+                (*args)[i] = temp;
+                return ;
+            }
             counter = 0;
             while (ft_isalnum(dollar[counter + 1]) || dollar[counter + 1] == '_')
                 ++counter;
@@ -62,7 +96,7 @@ void    parse_dollar_sign(char ***args, char **envp)
                 ft_putstr_fd("Parse dollar failed \n", 2);
                 return ;
             }
-            temp = expand(envp, temp);
+            temp = expand(sh->envp, temp);
             if (!temp)
             {
                 ft_putstr_fd("Parse dollar failed \n", 2);

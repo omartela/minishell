@@ -45,7 +45,7 @@ void	init_num_cmds(t_shell *sh)
 	sh->num_cmds = i;
 }
 
-int	init_cmd(t_cmd **cmd, char *command, char **envp)
+int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 {
 	char	*temp;
 
@@ -69,14 +69,14 @@ int	init_cmd(t_cmd **cmd, char *command, char **envp)
 		return (1);
 	}
 	(*cmd)->args = split_args_remove_quotes(temp, ' ');
-	parse_dollar_sign(&(*cmd)->args, envp);
+	parse_dollar_sign(&(*cmd)->args, sh);
 	if (!(*cmd)->args)
 	{
 		error_sys("ft_split_args failed\n"); //free all
 		free_cmd(*cmd);
 		return (1);
 	}
-	if (path_init(*cmd, envp) == 1)
+	if (path_init(*cmd, sh->envp) == 1)
 	{
 		free_array((*cmd)->args);
 		free_cmd(*cmd);
