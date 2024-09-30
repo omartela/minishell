@@ -36,7 +36,7 @@ static char    *expand(char **envp, char *variable)
         }
         ++i;
     }
-    return (variable);
+    return (ft_strdup(""));
 }
 
 static char  *expand_exit_status(char *dollar, t_shell *sh)
@@ -61,31 +61,48 @@ static char  *expand_exit_status(char *dollar, t_shell *sh)
     return (temp);
 }
 
-void    parse_dollar_sign(char ***args, t_shell *sh)
+void is_expandable(t_cmd *cmd)
+{
+    int i;
+    int j;
+
+    i = 0;
+    j = 0;
+    while (cmd->args[i])
+    {
+        if (is_check_dollar_sign(cmd->args[i]) && cmd->args[i][0] != '\'')
+            cmd->expandable[i] = 1;
+        else
+            cmd->expandable[i] = 0;
+        ++i;
+    }
+}
+
+int parse_dollar_sign(t_cmd *cmd, t_shell *sh)
 {
     int     i;
     char    *dollar;
     int     counter;
     char    *temp;
 
-    i = 1;
+    i = 0;
     counter = 0;
-    while ((*args)[i])
+    while (cmd->args[i])
     {
-        if (is_check_dollar_sign((*args)[i]))
+        if (cmd->expandable[i])
         {
-            dollar = ft_strchr((*args)[i], '$');
+            dollar = ft_strchr(cmd->args[i], '$');
             if (*(dollar + 1) == '?')
             {
                 temp = expand_exit_status(dollar, sh);
                 if (!temp)
                 {
                     ft_putstr_fd("Parse dollar failed \n", 2);
-                    return ;
+                    return (1);
                 }
-                free((*args)[i]);
-                (*args)[i] = temp;
-                return ;
+                free(cmd->args[i]);
+                cmd->args[i] = temp;
+                return (1);
             }
             counter = 0;
             while (ft_isalnum(dollar[counter + 1]) || dollar[counter + 1] == '_')
@@ -94,20 +111,23 @@ void    parse_dollar_sign(char ***args, t_shell *sh)
             if (!temp)
             {
                 ft_putstr_fd("Parse dollar failed \n", 2);
-                return ;
+                return (1);
             }
             temp = expand(sh->envp, temp);
             if (!temp)
             {
                 ft_putstr_fd("Parse dollar failed \n", 2);
-                return ;
+                return (1);
             }
-            if (temp != (*args)[i])
+            if (ft_strncmp((dollar + 1), temp, counter) != 0)
             {
-                free((*args)[i]);
-                (*args)[i] = temp;
+                free(cmd->args[i]);
+                cmd->args[i] = temp;
             }
+            else
+                free(temp);
         }
         ++i;
     }
+    return (0);
 }

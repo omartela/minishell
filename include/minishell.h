@@ -42,6 +42,7 @@ typedef struct s_cmd
 	int		append;
 	int		fd_in;
 	int		fd_out;
+	int		*expandable;
 }	t_cmd;
 
 typedef struct s_pipes
@@ -121,7 +122,8 @@ int		env(t_shell *shell, char **arguments);
 int    pwd(void);
 
 // parse-dollar
-void    parse_dollar_sign(char ***args, t_shell *sh);
+int		parse_dollar_sign(t_cmd	*cmd, t_shell *sh);
+void	is_expandable(t_cmd *cmd);
 
 // unset command
 int unset(t_shell *sh, char **args);
