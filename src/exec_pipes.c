@@ -75,7 +75,6 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 	{
 		parse_redirections(cmd, cmd->args);
 		child_io(cmd, pipes->fd, i, sh->num_cmds);
-		//execute_builtin_command(cmd, sh);
 		if (is_builtin(cmd))
 		{
 			if (execute_builtin(sh, cmd))
@@ -139,7 +138,7 @@ int	execute_pipes(t_shell *sh)
 	}
 	while (sh->commands[i] != NULL)
 	{
-		if (init_cmd(&cmd, sh->commands[i], sh->envp) == 1)
+		if (init_cmd(&cmd, sh->commands[i], sh) == 1)
 			return (1);
 		if (pipe_and_fork(sh, &pipes, i, cmd) != 0)
 		{

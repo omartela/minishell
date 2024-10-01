@@ -45,7 +45,17 @@ void	init_num_cmds(t_shell *sh)
 	sh->num_cmds = i;
 }
 
-int	init_cmd(t_cmd **cmd, char *command, char **envp)
+static int count_arguments(t_cmd *cmd)
+{
+    int i;
+
+    i = 0;
+    while(cmd->args[i])
+        ++i;
+    return (i);
+}
+
+int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 {
 	char	*temp;
 
@@ -61,21 +71,28 @@ int	init_cmd(t_cmd **cmd, char *command, char **envp)
 	(*cmd)->outfile = NULL;
 	(*cmd)->append = 0;
 	(*cmd)->args = NULL;
+	(*cmd)->args = 0;
 	temp = ft_add_spaces(command);
+	(*cmd)->args = split_args_leave_quotes(temp, ' ');
+	(*cmd)->expandable = malloc(sizeof(int) * count_arguments(*cmd));
+	if (!(*cmd)->expandable)
+		return (1);
+	is_expandable(*cmd);
+	free_array((*cmd)->args);
 	if (!(temp))
 	{
 		error_sys("malloc failed\n"); //free all
 		free_cmd(*cmd);
 		return (1);
 	}
-	(*cmd)->args = split_args_remove_quotes(temp, ' ');
-	if (!(*cmd)->args)
+	(*cmd)->args = split_args_remove_quotes(temp, ' ');	
+	if (!(*cmd)->args || parse_dollar_sign(*cmd, sh))
 	{
 		error_sys("ft_split_args failed\n"); //free all
 		free_cmd(*cmd);
 		return (1);
 	}
-	if (path_init(*cmd, envp) == 1)
+	if (path_init(*cmd, sh->envp) == 1)
 	{
 		free_array((*cmd)->args);
 		free_cmd(*cmd);

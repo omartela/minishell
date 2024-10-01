@@ -12,10 +12,18 @@
 
 #include "../include/minishell.h"
 
-/* void	execute_builtin_command(t_cmd *cmd, t_shell *shell)
+char	*get_value(char *args)
 {
-	return ;
-} */
+	char	**split;
+	char	*value;
+
+	split = ft_split(args, '=');
+	if (!split)
+		return (NULL);
+	value = ft_strdup(split[1]);
+	free_array(split);
+	return (value);
+}
 
 char	*get_key(char *args)
 {
@@ -23,6 +31,8 @@ char	*get_key(char *args)
 	char	*key;
 
 	split= ft_split(args, '=');
+	if (!split)
+		return (NULL);
 	key = ft_strdup(split[0]);
 	free_array(split);
 	return (key);
@@ -34,6 +44,8 @@ int	is_check_key_equal(char *args, const char *variable)
 	size_t	len;
 
 	key = get_key(args);
+	if (!key)
+		return (0);
 	len = ft_strlen(key);
 	if (ft_strncmp(key, variable, len + 1) == 0)
 	{
@@ -89,7 +101,6 @@ int	execute_builtin(t_shell *sh, t_cmd *cmd)
 	}
 	if (ft_strncmp(cmd->args[0], "env\0", 4) == 0)
 	{
-		ft_printf("testing env \n");
 		if (env(sh, cmd->args))
 		{
 			sh->exit_status = 1;

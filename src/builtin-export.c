@@ -75,7 +75,9 @@ static int	is_valid_value(const char *value)
 static int	is_last_plus_sign_and_remove(char *str)
 {
 	int	len;
-
+ 
+	if (!str)
+		return (0);
 	len = ft_strlen(str);
 	if (str[(len - 1)] == '+')
 	{
@@ -172,11 +174,9 @@ int	export(t_shell *shell, char **args)
 {
 	int		argc;
 	int 	i;
-	int		append;
 
 	argc = 0;
 	i = 1;
-	append = 0;
 	while (args[argc])
 		argc++;
 	if (argc == 1)
