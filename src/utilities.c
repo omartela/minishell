@@ -12,10 +12,50 @@
 
 #include "../include/minishell.h"
 
-/* void	execute_builtin_command(t_cmd *cmd, t_shell *shell)
+char	*get_value(char *args)
 {
-	return ;
-} */
+	char	**split;
+	char	*value;
+
+	split = ft_split(args, '=');
+	if (!split)
+		return (NULL);
+	value = ft_strdup(split[1]);
+	free_array(split);
+	return (value);
+}
+
+char	*get_key(char *args)
+{
+	char	**split;
+	char	*key;
+
+	split= ft_split(args, '=');
+	if (!split)
+		return (NULL);
+	key = ft_strdup(split[0]);
+	free_array(split);
+	return (key);
+}
+
+int	is_check_key_equal(char *args, const char *variable)
+{
+	char	*key;
+	size_t	len;
+
+	key = get_key(args);
+	if (!key)
+		return (0);
+	len = ft_strlen(key);
+	if (ft_strncmp(key, variable, len + 1) == 0)
+	{
+		free(key);
+		return (1);
+	}
+	free(key);
+	return (0);
+}
+
 
 char	*expand_tilde(t_shell *sh)
 {
@@ -28,7 +68,7 @@ int	is_builtin(t_cmd *cmd)
 	int i;
 	int is_builtin;
 
-	str = ft_split("export,cd,unset,pwd,echo", ',');
+	str = ft_split("export,cd,env,unset,pwd,echo", ',');
 	i = 0;
 	is_builtin = 0;
 	while (str[i])
@@ -52,6 +92,16 @@ int	execute_builtin(t_shell *sh, t_cmd *cmd)
 	if (ft_strncmp(cmd->args[0], "export\0", 7) == 0)
 	{
 		if (export(sh, cmd->args))
+		{
+			sh->exit_status = 1;
+			return (1);
+		}
+		sh->exit_status = 0;
+		return (0);
+	}
+	if (ft_strncmp(cmd->args[0], "env\0", 4) == 0)
+	{
+		if (env(sh, cmd->args))
 		{
 			sh->exit_status = 1;
 			return (1);

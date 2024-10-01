@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/27 12:01:46 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/01 09:56:23 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,16 @@ void	init_num_cmds(t_shell *sh)
 	while (sh->commands[i] != NULL)
 		i++;
 	sh->num_cmds = i;
+}
+
+static int count_arguments(t_cmd *cmd)
+{
+	int i;
+
+	i = 0;
+	while(cmd->args[i])
+		++i;
+	return (i);
 }
 
 int	init_heredocs(t_shell *sh, t_cmd *cmd)
@@ -86,7 +96,8 @@ int	init_heredocs(t_shell *sh, t_cmd *cmd)
 	return (0);
 }
 
-int	init_cmd(t_cmd **cmd, char *command, char **envp, t_shell *sh)
+
+int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 {
 	char	*temp;
 
@@ -104,7 +115,14 @@ int	init_cmd(t_cmd **cmd, char *command, char **envp, t_shell *sh)
 	(*cmd)->here_doc = 0;
 	(*cmd)->fd_heredoc = NULL;
 	(*cmd)->args = NULL;
+	(*cmd)->args = 0;
 	temp = ft_add_spaces(command);
+	(*cmd)->args = split_args_leave_quotes(temp, ' ');
+	(*cmd)->expandable = malloc(sizeof(int) * count_arguments(*cmd));
+	if (!(*cmd)->expandable)
+		return (1);
+	is_expandable(*cmd);
+	free_array((*cmd)->args);
 	if (!(temp))
 	{
 		error_sys("malloc failed\n"); //free all
@@ -113,7 +131,7 @@ int	init_cmd(t_cmd **cmd, char *command, char **envp, t_shell *sh)
 	}
 	(*cmd)->args = split_args_remove_quotes(temp, ' ');
 	/* free(temp); */
-	if (!(*cmd)->args)
+	if (!(*cmd)->args || parse_dollar_sign(*cmd, sh))
 	{
 		error_sys("ft_split_args failed\n"); //free all
 		free_cmd(*cmd);
@@ -121,7 +139,7 @@ int	init_cmd(t_cmd **cmd, char *command, char **envp, t_shell *sh)
 	}
 	if (init_heredocs(sh, *cmd) == 1)
 		return (1);
-	if (path_init(*cmd, envp) == 1)
+	if (path_init(*cmd, sh->envp) == 1)
 	{
 		free_array((*cmd)->args);
 		free_cmd(*cmd);

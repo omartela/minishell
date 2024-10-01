@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/26 23:33:02 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/01 09:46:57 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_cmd
 	int		*fd_heredoc;
 	int		fd_in;
 	int		fd_out;
+	int		*expandable;
 }	t_cmd;
 
 typedef struct s_pipes
@@ -70,7 +71,7 @@ void	process_quotes(char **s, int *in_quotes, char *quote_type);
 char	**split_args_remove_quotes(char *s, char c);
 char	**split_args_leave_quotes(char *s, char c);
 char	**split_args_general(char *s, char c, int keep_quotes);
-int		init_cmd(t_cmd **cmd, char *command, char **envp, t_shell *sh);
+int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
 void	init_num_cmds(t_shell *sh);
 char	*ft_add_spaces(char *s);
 void	handle_here_doc(t_shell *sh, char *input);
@@ -103,6 +104,9 @@ int		echo(char *argv[]);
 char	*expand_tilde(t_shell *sh);
 int		is_builtin(t_cmd *cmd);
 int		execute_builtin(t_shell *sh, t_cmd *cmd);
+char	*get_key(char *args);
+int		is_check_key_equal(char *args, const char *variable);
+char	*get_value(char *args);
 
 // environment.c
 void	copy_env(char **envp, t_shell *shell);
@@ -110,6 +114,7 @@ int		set_table(char ***table, const char *variable, const char *value);
 int		add_table(char ***table, const char *variable, const char *value);
 char	**sort_table(char **envp);
 int		remove_table(char ***table, const char *variable);
+int		append_table(char ***table, const char *variable, const char *value);
 
 //export command
 int		export(t_shell *shell, char **arguments);
@@ -122,6 +127,10 @@ int		env(t_shell *shell, char **arguments);
 
 // pwd command
 int    pwd(void);
+
+// parse-dollar
+int		parse_dollar_sign(t_cmd	*cmd, t_shell *sh);
+void	is_expandable(t_cmd *cmd);
 
 // unset command
 int unset(t_shell *sh, char **args);
