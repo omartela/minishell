@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   expand-dollar.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 10:34:04 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/27 10:34:06 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/01 10:02:10 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 static int  is_check_dollar_sign(char *arg)
@@ -64,10 +65,10 @@ static char  *expand_exit_status(char *dollar, t_shell *sh)
 void is_expandable(t_cmd *cmd)
 {
     int i;
-    int j;
+/*     int j; */ //Commented unused variable
 
     i = 0;
-    j = 0;
+/*     j = 0; */
     while (cmd->args[i])
     {
         if (is_check_dollar_sign(cmd->args[i]) && cmd->args[i][0] != '\'')
