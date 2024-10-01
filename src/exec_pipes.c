@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/15 14:48:32 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/01 09:47:39 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	child_io(t_cmd *cmd, int **fd, int i, int num_cmds)
 {
-	if (cmd->infile)
+	if (cmd->infile || cmd->here_doc)
 	{
 		dup2(cmd->fd_in, STDIN_FILENO);
 		close(cmd->fd_in);
