@@ -60,6 +60,7 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	char	*temp;
 
 	*cmd = malloc(sizeof(t_cmd));
+	*cmd = ft_memset(*cmd, 0, sizeof(t_cmd));
 	if (!*cmd)
 	{
 		error_sys("malloc failed\n"); //free all
