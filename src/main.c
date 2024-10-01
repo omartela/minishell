@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/27 13:36:18 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/01 11:33:20 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,26 +32,29 @@ static void	initialize_shell(t_shell *sh, char **envp)
 static void	process_input(t_shell *sh, char *input)
 {
 	int		len;
-	//char	*temp;
+	char 	*split_input;
 	char	*next_input;
 
-	//temp = NULL;
 	next_input = NULL;
-//	printf("You have entered: %s\n", input);// Only for testing
+	split_input = NULL;
 	input = trim_spaces(input);
 	if (ft_strncmp(input, "echo $?\0", 8) == 0)
 	{
 		ft_printf("%d\n", sh->exit_status);
 		return ;
 	}
-	len = ft_strlen(input);
+	
 	if (check_syntax(input))
 	{
 		sh->exit_status = 2;
 		return ;
 	}
+	split_input = ft_add_spaces(input);
+	free(input);
+	input = split_input;
 	if (is_heredoc(input))
 		handle_here_doc(sh, input);
+	len = ft_strlen(input);
 	while (input[len - 1] == '|' || (len > 2 && input[len - 1] == '&' && input[len - 2] == '&'))
 	{
 		next_input = readline("> ");
@@ -71,9 +74,19 @@ static void	process_input(t_shell *sh, char *input)
 			next_input = ft_strtrim(line, "\n");
 			free(line);
 		} */
+		next_input = trim_spaces(next_input);
+		if (check_syntax(next_input))
+		{
+			free(input);
+			free(next_input);
+			sh->exit_status = 2;
+			return ;
+		}
+		split_input = ft_add_spaces(next_input);
+		free(next_input);
+		next_input = split_input;
 		if (is_heredoc(next_input))
-			handle_here_doc(sh, next_input); //I THINK CHECK_SYNTAX SHOULD BE HERE
-		//temp = input;
+			handle_here_doc(sh, next_input);
 		input = ft_strjoin(input, next_input);
 		if (!input)
 		{
@@ -82,17 +95,9 @@ static void	process_input(t_shell *sh, char *input)
 			free(next_input);
 			return ;
 		}
+		len = ft_strlen(input);
 		/* free(temp);
 		free(next_input); */ //SegFAULT if I free here. I should think
-		trim_spaces(input);
-		len = ft_strlen(input);
-		if (check_syntax(input))
-		{
-			free(input);
-			free(next_input);
-			sh->exit_status = 2;
-			return ;
-		}
 	}
 	if (*input)
 		add_history(input);
