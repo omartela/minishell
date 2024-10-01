@@ -42,10 +42,8 @@ static char    *expand(char **envp, char *variable)
 void is_expandable(t_cmd *cmd)
 {
     int i;
-    int j;
 
     i = 0;
-    j = 0;
     while (cmd->args[i])
     {
         if (is_check_dollar_sign(cmd->args[i]) && cmd->args[i][0] != '\'')
