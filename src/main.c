@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/01 15:33:44 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/01 22:55:58 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,6 @@ static void	process_input(t_shell *sh, char *input)
 	input = split_input;
 	if (is_heredoc(input))
 		handle_here_doc(sh, input);
-	if (ft_strncmp(input, "echo $?\0", 8) == 0)
-	{
-		ft_printf("%d\n", sh->exit_status);
-		return ;
-	}
 	len = ft_strlen(input);
 	while (input[len - 1] == '|' || (len > 2 && input[len - 1] == '&' && input[len - 2] == '&'))
 	{
@@ -60,7 +55,7 @@ static void	process_input(t_shell *sh, char *input)
 		if (!next_input)
 		{
 			free(input);
-			printf("Exit \n");
+			/* printf("Exit \n"); */
 			return ;//nor sure if this is the right way to exit
 		}
 		//Snippet for tester
@@ -142,7 +137,7 @@ static void	userprompt(char **envp)
 		input = readline("minishell> ");
 		if (input == NULL)
 		{
-			printf("Exit \n");
+			/* printf("Exit \n"); */
 			break ;
 		}
 		process_input(&sh, input);

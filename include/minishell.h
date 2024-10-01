@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/01 09:46:57 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/01 22:00:39 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,9 @@ int		add_table(char ***table, const char *variable, const char *value);
 char	**sort_table(char **envp);
 int		remove_table(char ***table, const char *variable);
 int		append_table(char ***table, const char *variable, const char *value);
+
+//exit command
+void	exit_shell(t_shell *sh, char **args);
 
 //export command
 int		export(t_shell *shell, char **arguments);

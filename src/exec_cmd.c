@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 17:58:11 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/16 14:14:41 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/01 21:33:08 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void	check_permissions(t_cmd *cmd, int is_abs_relative)
 		if (fd_test != -1)
 		{
 			close(fd_test);
-			show_error_free_cmd(126, cmd->args[0], "Is a directory", cmd);
+			show_error_free_cmd(126, cmd->args[0], "is a directory", cmd);
 		}
 	}
 	if ((access(cmd->args[0], F_OK) == -1) && is_abs_relative)
