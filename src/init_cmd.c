@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/01 09:56:23 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/01 10:18:53 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	init_heredocs(t_shell *sh, t_cmd *cmd)
 			}
 			else
 			{
-				cmd->fd_heredoc = ft_realloc(cmd->fd_heredoc, j, j + 1);
+				cmd->fd_heredoc = ft_realloc(cmd->fd_heredoc, sizeof(int) * j, sizeof(int) * (j + 1));
 				if (!cmd->fd_heredoc)
 				{
 					error_sys("ft_realloc failed\n");
