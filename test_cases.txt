@@ -1,3 +1,10 @@
 cat < /dev/urandom | head -n 1 | cat >>out Bash handles!!!! We don't
 cat < /dev/urandom | head -n 1 | cat >> out
 cat < /dev/urandom | head -n 1 | cat > out | < out cat >> out2 | ls > out3 | cat < out >> out4
+minishell> cat << e | cat > out
+> fsfsd
+minishell> ^C
+irychkov@c1r4p4 ~/Desktop/minishell
+ % ./minishell
+minishell> cat << e | cat << e | cat << e | cat > out
+> > > ^C

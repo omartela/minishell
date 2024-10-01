@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/16 14:35:08 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/09/30 19:23:59 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ static int	count_new_args_len(char **args)
 	{
 		if ((ft_strncmp(args[i], "<\0", 2) == 0
 				|| ft_strncmp(args[i], ">\0", 2) == 0
-				|| ft_strncmp(args[i], ">>\0", 3) == 0) && args[i + 1])
+				|| ft_strncmp(args[i], ">>\0", 3) == 0
+				|| ft_strncmp(args[i], "<<\0", 3) == 0) && args[i + 1])
 		{
 			i = i + 2;
 			continue ;
@@ -95,11 +96,13 @@ void	parse_redirections(t_cmd *cmd, char **args)
 	{
 		if (ft_strncmp(args[i], "<\0", 2) == 0 && args[i + 1])
 		{
-			if (cmd->infile)
+			if (cmd->fd_in != STDIN_FILENO)
 			{
-				free(cmd->infile);
 				close(cmd->fd_in);
+				cmd->fd_in = STDIN_FILENO;
 			}
+			if (cmd->infile)
+				free(cmd->infile);
 			open_fdin(args[i + 1], cmd);//set flag for is_exec?
 			cmd->infile = ft_strdup(args[i + 1]);
 			if (!cmd->infile)
@@ -146,6 +149,20 @@ void	parse_redirections(t_cmd *cmd, char **args)
 				free_array_back(clean_args, j);
 				exit (1);
 			}
+			i += 2;
+			continue ;
+		}
+		if (ft_strncmp(args[i], "<<\0", 3) == 0 && args[i + 1])
+		{
+			if (cmd->fd_in != STDIN_FILENO)
+			{
+				close(cmd->fd_in);
+				cmd->fd_in = STDIN_FILENO;
+			}
+			cmd->here_doc += 1;
+			if (cmd->infile)
+				free(cmd->infile);
+			cmd->fd_in = cmd->fd_heredoc[cmd->here_doc - 1];
 			i += 2;
 			continue ;
 		}
