@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/30 21:29:37 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/01 14:34:44 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ static int	here_doc_input(char *delimiter, t_shell *sh)
 	{
 		ft_putstr_fd("> ", 1);
 		line = get_next_line(0);
+		if (!line)
+			break;
 		if (!is_continue(line, delimiter))
 			break ;
 		write(pipe_fd[1], line, ft_strlen(line));
@@ -74,7 +76,7 @@ void	handle_here_doc(t_shell *sh, char *input)
 			if (!sh->heredoc_fds)
 				sh->heredoc_fds = malloc(sizeof(int));
 			else
-				sh->heredoc_fds = ft_realloc(sh->heredoc_fds, sizeof(int) * sh->num_heredocs, sizeof(int) * sh->num_heredocs + 1);
+				sh->heredoc_fds = ft_realloc(sh->heredoc_fds, sizeof(int) * sh->num_heredocs, sizeof(int) * (sh->num_heredocs + 1));
 			sh->heredoc_fds[sh->num_heredocs] = here_doc_input(args[i + 1], sh);
 			sh->num_heredocs++;
 			i += 2;

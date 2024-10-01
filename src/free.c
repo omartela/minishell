@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/26 23:36:51 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/01 15:25:02 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ void	free_shell(t_shell *sh)
 		free(sh->homepath);
 /* 	if (sh->envp)
 		free_array(sh->envp); */
+	if (sh->heredoc_fds)
+		free(sh->heredoc_fds);
 }
 
 void	free_pipes(t_pipes *pipes, int num_cmds)
