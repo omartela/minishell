@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/02 17:05:32 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 22:01:24 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ char	*ft_add_spaces(char *s);
 void	handle_here_doc(t_shell *sh, char *input);
 int		parse_redirections(t_cmd *cmd, char **args, int is_exit);
 int		init_pipes(t_pipes *pipes, int num_cmds);
-void		execute_pipes(t_shell *sh);
+void	execute_pipes(t_shell *sh);
 void	execute_command(t_cmd *cmd, char **envp);
 
 // free functions
@@ -119,25 +119,25 @@ int		remove_table(char ***table, const char *variable);
 int		append_table(char ***table, const char *variable, const char *value);
 
 //exit command
-void	exit_shell(t_shell *sh, char **args);
+int		exit_shell(t_shell *sh, char **args);
 
 //export command
 int		export(t_shell *shell, char **arguments);
 
 //cd command
-int	cd(t_shell *sh, char **args);
+int		cd(t_shell *sh, char **args);
 
 //env	command
 int		env(t_shell *shell, char **arguments);
 
 // pwd command
-int    pwd(void);
+int		pwd(void);
 
 // parse-dollar
 int		parse_dollar_sign(t_cmd	*cmd, t_shell *sh);
 void	is_expandable(t_cmd *cmd);
 
 // unset command
-int unset(t_shell *sh, char **args);
+int		unset(t_shell *sh, char **args);
 
 #endif

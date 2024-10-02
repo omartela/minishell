@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cd-command.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 16:06:06 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/05 12:06:28 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/02 22:22:52 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../include/minishell.h"
+
+#include "minishell.h"
 
 int	cd(t_shell *sh, char **args)
 {
@@ -33,11 +34,12 @@ int	cd(t_shell *sh, char **args)
 	}
 	else
 	{
-		if (chdir(args[1]))
-		{
-			ft_putstr_fd("Error when changing directory", 2);
-			return (1);
-		}
+		if (access(args[1], F_OK) == -1)
+			return (show_error_return(1, args[1], "No such file or directory"));
+		if (access(args[1], R_OK) == -1)
+			return (show_error_return(1, args[1], "Permission denied"));
+		if (chdir(args[1]) == -1)
+			return (show_error_return(1, args[1], "Not a directory"));
 		if (oldpwd)
 		{
 			set_table(&sh->envp, "OLDPWD", oldpwd);
