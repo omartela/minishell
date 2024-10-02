@@ -83,7 +83,7 @@ char    *insert_to_string(char *str, char *delimiter, char *insert)
 	result = NULL;
     while (str[i])
     {
-        if (ft_strncmp(str, delimiter, ft_strlen(delimiter)) == 0)
+        if (ft_strncmp(&str[i], delimiter, ft_strlen(delimiter)) == 0)
         {
             result = ft_strndup(str, i);
             if (!result)
@@ -206,9 +206,10 @@ char    *split_and_parse(char *str, t_shell *sh)
         }
         else if (table[i][0] != '\0')
         {
-            while (ft_isalnum(table[i][counter]) || table[i][counter] == '_')
+            while (ft_isalnum(table[i][counter]) || table[i][counter] == '_' || table[i][counter] == '{' || table[i][counter] == '}')
                 ++counter;
             key = ft_substr(table[i], 0, counter);
+            key = ft_strtrim(key, "{}");
             if (!key)
             {
                 ft_putstr_fd("Parse dollar failed \n", 2);
