@@ -80,6 +80,7 @@ char    *insert_to_string(char *str, char *delimiter, char *insert)
     char    *temp;
 
     i = 0;
+	result = NULL;
     while (str[i])
     {
         if (ft_strncmp(str, delimiter, ft_strlen(delimiter)) == 0)
@@ -103,7 +104,7 @@ char    *insert_to_string(char *str, char *delimiter, char *insert)
             }
             free(result);
             result = temp;
-            return (result);
+			return (result);
         }
         ++i;
     }
@@ -123,6 +124,31 @@ static char  *get_exit_code(t_shell *sh)
     return (tempitoa);
 }
 
+static int is_only_one_char(char *str, int c)
+{
+    while (*str)
+    {
+        if (*str != c)
+            return (0);
+        ++str;
+    }
+    return (1);
+}
+
+static int is_2_dollar_signs(char *str)
+{
+	int	counter;
+
+	counter = 0;
+	while (*str)
+	{
+		if (*str == '$' && *(str + 1) == '$')
+			return (1);
+		++str;
+	}
+	return (0);
+}
+
 char    *split_and_parse(char *str, t_shell *sh)
 {
     char    **table;
@@ -138,9 +164,23 @@ char    *split_and_parse(char *str, t_shell *sh)
     insert = NULL;
     newstr = NULL;
     result = NULL;
-    table = ft_split(str, '$');
-    if (!table)
-        return (NULL);
+	while (is_2_dollar_signs(str))
+	{
+		newstr = insert_to_string(str, "$$", "89867"); /// need to somehow implement get pid functionality but we cannot use get pid.
+		if (newstr)
+		{
+			str = newstr;
+			free(newstr);
+		}
+	}
+	if (str[0] != '$')
+	{
+		result = ft_substr(str, 0, (ft_strchr(str, '$') - str));
+		str = ft_strchr(str, '$');
+	}
+	table = ft_split(str, '$');
+	if (!table)
+		return (NULL);
     while (table[i])
     {
         counter = 0;
@@ -164,7 +204,7 @@ char    *split_and_parse(char *str, t_shell *sh)
             free(table[i]);
             table[i] = newstr;
         }
-        else
+        else if (table[i][0] != '\0')
         {
             while (ft_isalnum(table[i][counter]) || table[i][counter] == '_')
                 ++counter;
@@ -183,7 +223,8 @@ char    *split_and_parse(char *str, t_shell *sh)
                 ft_putstr_fd("Parse dollar failed \n", 2);
                 return (NULL);
             }
-            newstr = insert_to_string(&table[i][0], key, insert);
+            if (*insert)
+                newstr = insert_to_string(&table[i][0], key, insert);
             if (!newstr)
             {
                 free(key);
@@ -201,10 +242,14 @@ char    *split_and_parse(char *str, t_shell *sh)
         }
         ++i;
     }
-    i = 1;
+    i = 0;
     if (table[0])
     {
-        result = ft_strdup(table[0]);
+		if (!result)
+		{
+        	result = ft_strdup(table[0]);
+			++i;
+		}
         while (table[i])
         {
             result = ft_strjoin(result, table[i]);
@@ -225,11 +270,14 @@ int parse_dollar_sign(t_cmd *cmd, t_shell *sh)
     {
         if (cmd->expandable[i])
         {
-            result = split_and_parse(cmd->args[i], sh);
-            if (!result)
-                return (1);
-            free(cmd->args[i]);
-            cmd->args[i] = result;
+            if (!is_only_one_char(cmd->args[i], '$'))
+            {
+                result = split_and_parse(cmd->args[i], sh);
+                if (!result)
+                    return (1);
+                free(cmd->args[i]);
+                cmd->args[i] = result;
+            }
         }
         ++i;
     }
