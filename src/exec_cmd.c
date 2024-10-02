@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 17:58:11 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/01 21:33:08 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 13:57:51 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,16 @@ static void	check_permissions(t_cmd *cmd, int is_abs_relative)
 		if (fd_test != -1)
 		{
 			close(fd_test);
-			show_error_free_cmd(126, cmd->args[0], "is a directory", cmd);
+			show_error_free_cmd_exit(126, cmd->args[0], "Is a directory", cmd);
 		}
 	}
 	if ((access(cmd->args[0], F_OK) == -1) && is_abs_relative)
-		show_error_free_cmd(127, cmd->args[0],
+		show_error_free_cmd_exit(127, cmd->args[0],
 			"No such file or directory", cmd);
 	if ((access(cmd->args[0], X_OK) == -1) && is_abs_relative)
-		show_error_free_cmd(126, cmd->args[0], "Permission denied", cmd);
+		show_error_free_cmd_exit(126, cmd->args[0], "Permission denied", cmd);
 	if (!is_abs_relative)
-		show_error_free_cmd(127, cmd->args[0], "command not found", cmd);
+		show_error_free_cmd_exit(127, cmd->args[0], "command not found", cmd);
 	return ;
 }
 
@@ -77,7 +77,7 @@ void	execute_command(t_cmd *cmd, char **envp)
 	if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
 		execute_absolute_relative_command(cmd, envp);
 	if (!cmd->path)
-		show_error_free_cmd(1, cmd->args[0], "command not found", cmd);
+		show_error_free_cmd_exit(1, cmd->args[0], "command not found", cmd);
 	while (cmd->path[i])
 	{
 		full_path = get_full_command_path(cmd->path[i], cmd->args[0], cmd);

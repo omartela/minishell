@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/01 09:47:39 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:42:40 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,9 @@ static void	child_io(t_cmd *cmd, int **fd, int i, int num_cmds)
 
 static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 {
+	int	error_code;
+
+	error_code = 0;
 	if (i < sh->num_cmds - 1)
 	{
 		if (pipe(pipes->fd[i]) == -1)
@@ -50,7 +53,9 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 	}
 	if (sh->num_cmds == 1 && is_builtin(cmd))
 	{
-		parse_redirections(cmd, cmd->args);
+		error_code = parse_redirections(cmd, cmd->args, 0);
+		if (error_code)
+			return (error_code);
 		if (cmd->infile)
 		{
 			dup2(cmd->fd_in, STDIN_FILENO);
@@ -73,7 +78,7 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 	}
 	if (pipes->pid[i] == 0)
 	{
-		parse_redirections(cmd, cmd->args);
+		parse_redirections(cmd, cmd->args, 1);
 		child_io(cmd, pipes->fd, i, sh->num_cmds);
 		if (is_builtin(cmd))
 		{
@@ -90,7 +95,7 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 		close(pipes->fd[i - 1][0]);
 		close(pipes->fd[i - 1][1]);
 	}
-	return (0);
+	return (error_code);
 }
 
 /* static void	close_pipes_in_parent(t_pipes *pipes, int num_cmds)
@@ -123,27 +128,35 @@ static void	wait_for_children(t_pipes *pipes, t_shell *sh)
 	}
 }
 
-int	execute_pipes(t_shell *sh)
+void	execute_pipes(t_shell *sh)
 {
 	int		i;
 	t_cmd	*cmd;
 	t_pipes	pipes;
+	int	error_code;
 
 	i = 0;
+	error_code = 0;
 	cmd = NULL;
 	if (init_pipes(&pipes, sh->num_cmds) == 1)
 	{
 		error_sys("malloc failed\n");
-		return (1);
+		sh->exit_status = 1;
+		return ;
 	}
 	while (sh->commands[i] != NULL)
 	{
 		if (init_cmd(&cmd, sh->commands[i], sh) == 1)
-			return (1);
-		if (pipe_and_fork(sh, &pipes, i, cmd) != 0)
+		{
+			sh->exit_status = 1;
+			return ;
+		}
+		error_code = pipe_and_fork(sh, &pipes, i, cmd);
+		if (error_code)
 		{
 			free_cmd(cmd);
-			return (1);
+			sh->exit_status = error_code;
+			return ;
 		}
 		free_cmd(cmd);
 		i++;
@@ -151,5 +164,5 @@ int	execute_pipes(t_shell *sh)
 	/* close_pipes_in_parent(&pipes, sh->num_cmds); */
 	wait_for_children(&pipes, sh);
 	free_pipes(&pipes, sh->num_cmds);
-	return (0);
+	return ;
 }

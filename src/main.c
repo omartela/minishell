@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/01 22:55:58 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:40:29 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,7 @@ static void	process_input(t_shell *sh, char *input)
 	{
 		init_num_cmds(sh);
 /* 		printf("Number of commands: %d\n", sh->num_cmds); // Only for testingd */
-		if (execute_pipes(sh) == 1)
-			perror("comment"); //TBH we don't care about the return value
+		execute_pipes(sh);
 		//free_array(sh->commands);
 	}
 	else

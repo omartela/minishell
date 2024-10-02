@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/30 19:23:59 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:37:47 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,34 +35,61 @@ static int	count_new_args_len(char **args)
 	return (arg_count);
 }
 
-static void	open_fdin(char *infile, t_cmd *cmd)
+static int	open_fdin(char *infile, t_cmd *cmd, int is_exit)
 {
 	if (access(infile, F_OK) == -1)
-		show_error_free_cmd(1, infile, "No such file or directory", NULL); //free cmd?
+	{
+		if (is_exit)
+			show_error_free_cmd_exit(1, infile, "No such file or directory", NULL); //free cmd?
+		else
+			return (show_error_free_cmd_return(1, infile, "No such file or directory", NULL));
+	}
 	if (access(infile, R_OK) == -1)
-		show_error_free_cmd(126, infile, "Permission denied", NULL);
+	{
+		if (is_exit)
+			show_error_free_cmd_exit(126, infile, "Permission denied", NULL);
+		else
+			return (show_error_free_cmd_return(126, infile, "Permission denied", NULL));
+	}
 	cmd->fd_in = open(infile, O_RDONLY);
 	if (cmd->fd_in == -1)
 	{
 		error_sys("open failed\n");
-		exit (1);
+		if (is_exit)
+			exit (1);
+		else
+			return(1);
 	}
+	return (0);
 }
 
-static void	open_fdout(char *outfile, t_cmd *cmd)
+static int	open_fdout(char *outfile, t_cmd *cmd, int is_exit)
 {
 	cmd->fd_out = open(outfile, O_DIRECTORY);
 	if (cmd->fd_out != -1)
-		show_error_free_cmd(126, outfile, "Is a directory", NULL);
+	{
+		if (is_exit)
+			show_error_free_cmd_exit(126, outfile, "Is a directory", NULL);
+		else
+			return (show_error_free_cmd_return(126, outfile, "Is a directory", NULL));
+	}
 	if (access(outfile, F_OK) == 0 && access(outfile, W_OK) == -1)
-		show_error_free_cmd(1, outfile, "Permission denied", NULL);
+	{
+		if (is_exit)
+			show_error_free_cmd_exit(1, outfile, "Permission denied", NULL);
+		else
+			return (show_error_free_cmd_return(1, outfile, "Permission denied", NULL));
+	}
 	if (cmd->append)
 	{
 		cmd->fd_out = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (cmd->fd_out == -1)
 		{
 			error_sys("open failed\n");
-			exit (1);
+			if (is_exit)
+				exit (1);
+			else
+				return(1);
 		}
 	}
 	else
@@ -71,20 +98,26 @@ static void	open_fdout(char *outfile, t_cmd *cmd)
 		if (cmd->fd_out == -1)
 		{
 			error_sys("open failed\n");
-			exit (1);
+			if (is_exit)
+				exit (1);
+			else
+				return(1);
 		}
 	}
+	return (0);
 }
 
-void	parse_redirections(t_cmd *cmd, char **args)
+int	parse_redirections(t_cmd *cmd, char **args, int is_exit)
 {
 	int		i;
 	int		j;
 	int		arg_count;
 	char	**clean_args;
+	int		error_code;
 
 	i = 0;
 	j = 0;
+	error_code = 0;
 	arg_count = count_new_args_len(args);
 	clean_args = malloc(sizeof(char *) * (arg_count + 1));
 	if (!clean_args)
@@ -103,7 +136,9 @@ void	parse_redirections(t_cmd *cmd, char **args)
 			}
 			if (cmd->infile)
 				free(cmd->infile);
-			open_fdin(args[i + 1], cmd);//set flag for is_exec?
+			error_code = open_fdin(args[i + 1], cmd, is_exit);
+			if (error_code)
+				return (error_code);
 			cmd->infile = ft_strdup(args[i + 1]);
 			if (!cmd->infile)
 			{
@@ -122,7 +157,9 @@ void	parse_redirections(t_cmd *cmd, char **args)
 				free(cmd->outfile);
 				close(cmd->fd_out);
 			}
-			open_fdout(args[i + 1], cmd);
+			error_code = open_fdout(args[i + 1], cmd, is_exit);
+			if (error_code)
+				return (error_code);
 			cmd->outfile = ft_strdup(args[i + 1]);
 			if (!cmd->outfile)
 			{
@@ -141,7 +178,9 @@ void	parse_redirections(t_cmd *cmd, char **args)
 				free(cmd->outfile);
 				close(cmd->fd_out);
 			}
-			open_fdout(args[i + 1], cmd);
+			error_code = open_fdout(args[i + 1], cmd, is_exit);
+			if (error_code)
+				return (error_code);
 			cmd->outfile = ft_strdup(args[i + 1]);
 			if (!cmd->outfile)
 			{
@@ -179,4 +218,5 @@ void	parse_redirections(t_cmd *cmd, char **args)
 	clean_args[j] = NULL;
 	free_array(cmd->args);
 	cmd->args = clean_args;
+	return (error_code);
 }

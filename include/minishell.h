@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/01 22:00:39 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:43:08 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,9 @@ int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
 void	init_num_cmds(t_shell *sh);
 char	*ft_add_spaces(char *s);
 void	handle_here_doc(t_shell *sh, char *input);
-void	parse_redirections(t_cmd *cmd, char **args);
+int		parse_redirections(t_cmd *cmd, char **args, int is_exit);
 int		init_pipes(t_pipes *pipes, int num_cmds);
-int		execute_pipes(t_shell *sh);
+void		execute_pipes(t_shell *sh);
 void	execute_command(t_cmd *cmd, char **envp);
 
 // free functions
@@ -88,7 +88,8 @@ void	free_cmd(t_cmd *cmd);
 void	free_pipes(t_pipes *pipes, int num_cmds);
 
 // errors
-void	show_error_free_cmd(int code, char *name, char *msg, t_cmd *cmd);
+void	show_error_free_cmd_exit(int code, char *name, char *msg, t_cmd *cmd);
+int		show_error_free_cmd_return(int code, char *name, char *msg, t_cmd *cmd);
 void	error_sys(char *msg);
 
 // test functions
