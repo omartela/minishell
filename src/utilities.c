@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:06:00 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/01 21:59:33 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 21:47:50 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	is_builtin(t_cmd *cmd)
 int	execute_builtin(t_shell *sh, t_cmd *cmd)
 {
 	if (ft_strncmp(cmd->args[0], "exit\0", 5) == 0)
-		exit_shell(sh, cmd->args);
+		return (exit_shell(sh, cmd->args));
 	if (ft_strncmp(cmd->args[0], "export\0", 7) == 0)
 	{
 		if (export(sh, cmd->args))

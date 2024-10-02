@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 12:19:32 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/01 22:58:37 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 21:29:19 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	is_numeric(char *str)
 	return (1);
 }
 
-void	exit_shell(t_shell *sh, char **args)
+int	exit_shell(t_shell *sh, char **args)
 {
 	int	exit_code;
 
@@ -37,7 +37,7 @@ void	exit_shell(t_shell *sh, char **args)
 	{
 		ft_putstr_fd("exit: too many arguments\n", 2);
 		sh->exit_status = 1;
-		return ;//think about this
+		return (1);//think about this
 	}
 	if (args[1] && !is_numeric(args[1]))
 	{

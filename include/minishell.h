@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/02 17:05:32 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 21:32:34 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,10 @@ char	*ft_add_spaces(char *s);
 void	handle_here_doc(t_shell *sh, char *input);
 int		parse_redirections(t_cmd *cmd, char **args, int is_exit);
 int		init_pipes(t_pipes *pipes, int num_cmds);
-void		execute_pipes(t_shell *sh);
+void	execute_pipes(t_shell *sh);
 void	execute_command(t_cmd *cmd, char **envp);
+int		setup_fds_for_builtin(t_cmd *cmd, int *saved_stdin, int *saved_stdout);
+int		execute_builtin_with_fds(t_shell *sh, t_cmd *cmd, int saved_stdin, int saved_stdout);
 
 // free functions
 void	free_array_back(char **array, size_t i);
@@ -119,7 +121,7 @@ int		remove_table(char ***table, const char *variable);
 int		append_table(char ***table, const char *variable, const char *value);
 
 //exit command
-void	exit_shell(t_shell *sh, char **args);
+int	exit_shell(t_shell *sh, char **args);
 
 //export command
 int		export(t_shell *shell, char **arguments);

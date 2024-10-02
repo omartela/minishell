@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/02 17:43:00 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 20:38:21 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	free_array(char **array)
 		i++;
 	}
 	free(array);
+	array = NULL;
 }
 
 void	free_array_back(char **array, size_t i)
@@ -33,6 +34,7 @@ void	free_array_back(char **array, size_t i)
 		free(array[i]);
 	}
 	free(array);
+	array = NULL;
 }
 
 void	free_cmd(t_cmd *cmd)
@@ -50,6 +52,7 @@ void	free_cmd(t_cmd *cmd)
 	if (cmd->fd_heredoc)
 		free(cmd->fd_heredoc);
 	free(cmd);
+	cmd = NULL;
 }
 
 void	free_shell(t_shell *sh)
@@ -75,5 +78,7 @@ void	free_pipes(t_pipes *pipes, int num_cmds)
 		i++;
 	}
 	free(pipes->fd);
+	pipes->fd = NULL;
 	free(pipes->pid);
+	pipes->pid = NULL;
 }

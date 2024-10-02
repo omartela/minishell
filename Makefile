@@ -6,7 +6,7 @@
 #    By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 22:33:20 by irychkov          #+#    #+#              #
-#    Updated: 2024/10/01 22:01:02 by irychkov         ###   ########.fr        #
+#    Updated: 2024/10/02 21:24:28 by irychkov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ SRCS = src/main.c src/split_args.c src/split_args_helper.c \
 		src/ft_update_args.c src/parse_redirect.c \
 		src/check_syntax.c src/trim_spaces.c \
 		src/exec_cmd.c src/exec_pipes.c \
+		src/handle_builtin_single.c \
 		src/errors.c src/sys_errors.c\
 		src/free.c \
 		src/test_split.c src/test_parse_redirect.c \

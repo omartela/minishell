@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/02 20:26:54 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 21:15:12 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,12 @@ static void	child_io(t_cmd *cmd, int **fd, int i, int num_cmds)
 static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 {
 	int	error_code;
+	int saved_stdin;
+	int saved_stdout;
 
 	error_code = 0;
+	saved_stdin = 0;
+	saved_stdout = 0;
 	if (i < sh->num_cmds - 1)
 	{
 		if (pipe(pipes->fd[i]) == -1)
@@ -56,66 +60,9 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 		error_code = parse_redirections(cmd, cmd->args, 0);
 		if (error_code)
 			return (error_code);
-		int saved_stdout = dup(STDOUT_FILENO);
-		if (saved_stdout == -1)
-		{
-			error_sys("dup failed\n");
+		if (setup_fds_for_builtin(cmd, &saved_stdin, &saved_stdout))
 			return (1);
-		}
-
-		int saved_stdin = dup(STDIN_FILENO);
-		if (saved_stdin == -1)
-		{
-			error_sys("dup failed\n");
-			close(saved_stdout);
-			return (1);
-		}
-		if (cmd->infile)
-		{
-			if (dup2(cmd->fd_in, STDIN_FILENO) == -1)
-			{
-				error_sys("dup2 failed\n");
-				close(saved_stdout);
-				close(saved_stdin);
-				return (1);
-			}
-			close(cmd->fd_in);
-		}
-		if (cmd->outfile)
-		{
-			if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
-			{
-				error_sys("dup2 failed\n");
-				close(saved_stdout);
-				close(saved_stdin);
-				return (1);
-			}
-			close(cmd->fd_out);
-		}
-		if (execute_builtin(sh, cmd))
-		{
-			close(saved_stdout);
-			close(saved_stdin);
-			return (1);
-		}
-		if (dup2(saved_stdout, STDOUT_FILENO) == -1)
-		{
-			error_sys("dup2 failed\n");
-			close(saved_stdout);
-			close(saved_stdin);
-			return (1);
-		}
-		if (dup2(saved_stdin, STDIN_FILENO) == -1)
-		{
-			error_sys("dup2 failed\n");
-			close(saved_stdout);
-			close(saved_stdin);
-			return (1);
-		}
-		close(saved_stdout);
-		close(saved_stdin);
-		cmd->is_continue = 0;
-		return (0);
+		return (execute_builtin_with_fds(sh, cmd, saved_stdin, saved_stdout));
 	}
 	pipes->pid[i] = fork();
 	if (pipes->pid[i] == -1)
@@ -198,6 +145,7 @@ void	execute_pipes(t_shell *sh)
 		if (init_cmd(&cmd, sh->commands[i], sh) == 1)
 		{
 			sh->exit_status = 1;
+			free_pipes(&pipes, sh->num_cmds);
 			return ;
 		}
 		error_code = pipe_and_fork(sh, &pipes, i, cmd);
