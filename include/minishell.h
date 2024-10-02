@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/02 14:43:08 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 17:05:32 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_cmd
 	int		fd_in;
 	int		fd_out;
 	int		*expandable;
+	int		is_continue;
 }	t_cmd;
 
 typedef struct s_pipes
@@ -89,7 +90,7 @@ void	free_pipes(t_pipes *pipes, int num_cmds);
 
 // errors
 void	show_error_free_cmd_exit(int code, char *name, char *msg, t_cmd *cmd);
-int		show_error_free_cmd_return(int code, char *name, char *msg, t_cmd *cmd);
+int		show_error_return(int code, char *name, char *msg);
 void	error_sys(char *msg);
 
 // test functions

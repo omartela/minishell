@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/02 14:42:40 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 17:29:22 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 		}
 		if (execute_builtin(sh, cmd))
 			return (1);
+		cmd->is_continue = 0;
 		return (0);
 	}
 	pipes->pid[i] = fork();
@@ -119,6 +120,7 @@ static void	wait_for_children(t_pipes *pipes, t_shell *sh)
 	int	status;
 
 	i = 0;
+	status = 0;
 	while (i < sh->num_cmds)
 	{
 		waitpid(pipes->pid[i], &status, 0);
@@ -135,6 +137,7 @@ void	execute_pipes(t_shell *sh)
 	t_pipes	pipes;
 	int	error_code;
 
+	ft_memset(&pipes, 0, sizeof(t_pipes));
 	i = 0;
 	error_code = 0;
 	cmd = NULL;
@@ -152,9 +155,10 @@ void	execute_pipes(t_shell *sh)
 			return ;
 		}
 		error_code = pipe_and_fork(sh, &pipes, i, cmd);
-		if (error_code)
+		if (error_code || !cmd->is_continue)
 		{
 			free_cmd(cmd);
+			free_pipes(&pipes, sh->num_cmds);
 			sh->exit_status = error_code;
 			return ;
 		}
