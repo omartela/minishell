@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:04:53 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/09 23:13:04 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/03 19:18:59 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,10 @@ static size_t	ft_redirect_counter(char *s)
 			quote_type = *s;
 		}
 		else if (in_quotes && *s == quote_type)
+		{
 			in_quotes = 0;
+			/* spaces++; */
+		}
 		s++;
 	}
 	return (spaces);
@@ -43,6 +46,7 @@ static size_t	ft_redirect_counter(char *s)
 
 char	*ft_add_spaces(char *s)
 {
+/* 	int		flag; */
 	size_t	len;
 	size_t	spaces_needed;
 	char	*new_str;
@@ -50,6 +54,7 @@ char	*ft_add_spaces(char *s)
 	int		in_quotes;
 	char	quote_type;
 
+/* 	flag = 0; */
 	in_quotes = 0;
 	len = ft_strlen(s);
 	spaces_needed = ft_redirect_counter(s);
@@ -75,8 +80,16 @@ char	*ft_add_spaces(char *s)
 				quote_type = *s;
 			}
 			else if (in_quotes && *s == quote_type)
+			{
 				in_quotes = 0;
+				/* flag = 1; */
+			}
 			*dest++ = *s;
+/* 			if (flag == 1)
+			{
+				*dest++ = ' ';
+				flag = 0;
+			} */
 		}
 		s++;
 	}
