@@ -96,7 +96,7 @@ char    *insert_to_string(char *str, char *delimiter, char *insert)
             }
             free(result);
             result = temp;
-            temp = ft_strjoin(result, str + ft_strlen(delimiter));
+            temp = ft_strjoin(result, &str[i] + ft_strlen(delimiter));
             if (!temp)
             {
                 free(result);
@@ -124,7 +124,7 @@ static char  *get_exit_code(t_shell *sh)
     return (tempitoa);
 }
 
-static int is_only_one_char(char *str, int c)
+/* static int is_only_one_char(char *str, int c)
 {
     while (*str)
     {
@@ -133,7 +133,7 @@ static int is_only_one_char(char *str, int c)
         ++str;
     }
     return (1);
-}
+} */
 
 static int is_2_dollar_signs(char *str)
 {
@@ -161,21 +161,17 @@ char    *split_and_parse(char *str, t_shell *sh)
     insert = NULL;
     newstr = NULL;
     result = NULL;
-	while (is_2_dollar_signs(str))
-	{
-		newstr = insert_to_string(str, "$$", "89867"); /// need to somehow implement get pid functionality but we cannot use get pid.
-		if (newstr)
-		{
-			str = newstr;
-			free(newstr);
-		}
-	}
-	if (str[0] != '$')
+	if (str[0] != '$' && ft_strchr(str, '$'))
 	{
 		result = ft_substr(str, 0, (ft_strchr(str, '$') - str));
 		str = ft_strchr(str, '$');
 	}
-	table = ft_split(str, '$');
+    if (ft_strchr(str, '$'))
+	    table = ft_split(str, '$');
+    else
+    {
+        return (ft_strdup(str));
+    }
 	if (!table)
 		return (NULL);
     while (table[i])
@@ -262,13 +258,24 @@ int parse_dollar_sign(t_cmd *cmd, t_shell *sh)
 {
     int     i;
     char    *result;
+    char    *newstr;
 
     i = 0;
     while (cmd->args[i])
     {
         if (cmd->expandable[i])
         {
-            if (!is_only_one_char(cmd->args[i], '$'))
+            while (is_2_dollar_signs(cmd->args[i]))
+	        {
+		        newstr = insert_to_string(cmd->args[i], "$$", "89867"); /// need to somehow implement get pid functionality but we cannot use get pid.
+		        if (newstr)
+		        {
+                    free(cmd->args[i]);
+			        cmd->args[i] = ft_strdup(newstr);
+			        free(newstr);
+		        }
+	        }
+            if (ft_strchr(cmd->args[i], '$'))
             {
                 result = split_and_parse(cmd->args[i], sh);
                 if (!result)
