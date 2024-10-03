@@ -219,6 +219,8 @@ char    *split_and_parse(char *str, t_shell *sh)
             }
             if (*insert)
                 newstr = insert_to_string(&table[i][0], key, insert);
+            else
+                newstr = ft_strdup("");
             if (!newstr)
             {
                 free(key);
