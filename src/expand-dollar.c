@@ -137,9 +137,6 @@ static int is_only_one_char(char *str, int c)
 
 static int is_2_dollar_signs(char *str)
 {
-	int	counter;
-
-	counter = 0;
 	while (*str)
 	{
 		if (*str == '$' && *(str + 1) == '$')
