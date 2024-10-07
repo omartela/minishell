@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   expand-dollar.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 10:34:04 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/07 10:28:36 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/07 13:42:29 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static int  is_check_dollar_sign(char *arg)
+/* static int  is_check_dollar_sign(char *arg)
 {
     if (ft_strchr(arg, '$'))
         return (1);
     else
         return (0);
-}
+} */
 
 static char    *expand(char **envp, char *variable)
 {
@@ -40,7 +40,7 @@ static char    *expand(char **envp, char *variable)
     return (ft_strdup(""));
 }
 
-void is_expandable(t_cmd *cmd)
+/* void is_expandable(t_cmd *cmd)
 {
     int i;
 
@@ -53,7 +53,7 @@ void is_expandable(t_cmd *cmd)
             cmd->expandable[i] = 0;
         ++i;
     }
-}
+} */
 
 char	*ft_strndup(const char *s1, size_t n)
 {
@@ -148,6 +148,7 @@ static char  *get_exit_code(t_shell *sh)
 
 char *split_and_parse(char *str, t_shell *sh)
 {
+    int		in_single_quotes;
     char    *result;
     char    *insert;
     char    *key;
@@ -156,13 +157,16 @@ char *split_and_parse(char *str, t_shell *sh)
     char    *temp;
 
     i = 0;
+	in_single_quotes = 0;
     result = ft_strdup(""); // Start with an empty string to build the result dynamically
     if (!result)
         return (NULL);
 
     while (str[i])
     {
-        if (str[i] == '$') // We found a '$' sign
+        if (str[i] == '\'')
+			in_single_quotes = !in_single_quotes;
+        if (str[i] == '$' && !in_single_quotes) // We found a '$' sign
         {
             if (str[i + 1] == '$') // Handle `$$` for special case (like a PID)
             {
@@ -231,7 +235,7 @@ char *split_and_parse(char *str, t_shell *sh)
     return result;
 }
 
-int parse_dollar_sign(t_cmd *cmd, t_shell *sh)
+/* int parse_dollar_sign(t_cmd *cmd, t_shell *sh)
 {
     int     i;
     char    *result;
@@ -250,4 +254,4 @@ int parse_dollar_sign(t_cmd *cmd, t_shell *sh)
         ++i;
     }
     return (0);
-}
+} */

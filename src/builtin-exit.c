@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 12:19:32 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/02 22:02:50 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/03 18:49:00 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	exit_shell(t_shell *sh, char **args)
 		ft_putstr_fd(args[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
 		free_shell(sh);
-		exit(255);
+		exit(2);
 	}
 	if (args[1])
 		exit_code = ft_atoi(args[1]);

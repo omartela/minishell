@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/02 22:01:24 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/07 13:26:20 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int		check_syntax(char *input);
 int		is_heredoc(char *input);
 size_t	ft_strcounter(char *s, char c);
 void	process_quotes(char **s, int *in_quotes, char *quote_type);
+char *split_and_parse(char *str, t_shell *sh);
 char	**split_args_remove_quotes(char *s, char c);
 char	**split_args_leave_quotes(char *s, char c);
 char	**split_args_general(char *s, char c, int keep_quotes);
