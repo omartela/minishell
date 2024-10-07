@@ -6,19 +6,19 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 10:34:04 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/07 13:30:07 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/07 13:42:29 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static int  is_check_dollar_sign(char *arg)
+/* static int  is_check_dollar_sign(char *arg)
 {
     if (ft_strchr(arg, '$'))
         return (1);
     else
         return (0);
-}
+} */
 
 static char    *expand(char **envp, char *variable)
 {
@@ -40,7 +40,7 @@ static char    *expand(char **envp, char *variable)
     return (ft_strdup(""));
 }
 
-void is_expandable(t_cmd *cmd)
+/* void is_expandable(t_cmd *cmd)
 {
     int i;
 
@@ -53,7 +53,7 @@ void is_expandable(t_cmd *cmd)
             cmd->expandable[i] = 0;
         ++i;
     }
-}
+} */
 
 char	*ft_strndup(const char *s1, size_t n)
 {
@@ -235,7 +235,7 @@ char *split_and_parse(char *str, t_shell *sh)
     return result;
 }
 
-int parse_dollar_sign(t_cmd *cmd, t_shell *sh)
+/* int parse_dollar_sign(t_cmd *cmd, t_shell *sh)
 {
     int     i;
     char    *result;
@@ -254,4 +254,4 @@ int parse_dollar_sign(t_cmd *cmd, t_shell *sh)
         ++i;
     }
     return (0);
-}
+} */
