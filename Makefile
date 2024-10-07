@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+         #
+#    By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 22:33:20 by irychkov          #+#    #+#              #
-#    Updated: 2024/10/01 22:01:02 by irychkov         ###   ########.fr        #
+#    Updated: 2024/10/07 16:51:26 by omartela         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRCS = src/main.c src/split_args.c src/split_args_helper.c \
 		src/builtin-echo.c \
 		src/builtin-exit.c \
 		src/expand-dollar.c \
+		src/get_pid.c \
 
 OBJS = $(SRCS:src/%.c=src/%.o)
 

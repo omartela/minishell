@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 10:34:04 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/07 13:42:29 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/07 17:16:17 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
         return (0);
 } */
 
-static char    *expand(char **envp, char *variable)
+static char	*expand(char **envp, char *variable)
 {
     int     i;
     char    *value;
@@ -28,6 +28,13 @@ static char    *expand(char **envp, char *variable)
     i = 0;
     while (envp[i])
     {
+		if (ft_strncmp("BASHPID", variable, ft_strlen(variable) + 1) == 0)
+		{
+			value = ft_get_pid();
+			if (!value)
+				return (NULL);
+			return (value);
+		}
         if (is_check_key_equal(envp[i], variable))
         {
             value = get_value(envp[i]);
@@ -171,7 +178,7 @@ char *split_and_parse(char *str, t_shell *sh)
             if (str[i + 1] == '$') // Handle `$$` for special case (like a PID)
             {
                 // Replace $$ with a placeholder value, e.g., "89867" for now
-                insert = ft_strdup("89867");  // This should eventually be replaced by get_pid() or similar
+                insert = ft_strdup(sh->pid); // This should eventually be replaced by get_pid() or similar
                 if (!insert)
                     return (NULL);
                 temp = ft_strjoin(result, insert);

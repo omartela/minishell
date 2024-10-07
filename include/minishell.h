@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/07 13:26:20 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/07 17:15:35 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_shell
 	int		*heredoc_fds;
 	int		num_heredocs;
 	int 	heredoc_index;
+	char	*pid;
 }	t_shell;
 
 typedef struct s_cmd
@@ -140,5 +141,8 @@ void	is_expandable(t_cmd *cmd);
 
 // unset command
 int		unset(t_shell *sh, char **args);
+
+// get_pid.c
+char	*ft_get_pid();
 
 #endif
