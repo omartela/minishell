@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/07 20:56:11 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/07 21:04:37 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,6 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	is_expandable(*cmd);
 	free_array((*cmd)->args); */
 	(*cmd)->args = split_args_remove_quotes(temp1, ' ');
-	test_split_args_remove_quotes(temp1, ' ');
 	/* free(temp); */
 	if (!(*cmd)->args /* || parse_dollar_sign(*cmd, sh) */)
 	{
