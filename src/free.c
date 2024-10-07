@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/02 17:43:00 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/07 21:00:38 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	free_cmd(t_cmd *cmd)
 {
 /* 	if (!cmd)
 		return ; */
+	if (cmd->args_withquotes)
+		free_array(cmd->args_withquotes);
 	if (cmd->args)
 		free_array(cmd->args);
 	if (cmd->path)

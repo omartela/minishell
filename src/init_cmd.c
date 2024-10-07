@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/07 14:20:19 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/07 20:56:11 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	init_heredocs(t_shell *sh, t_cmd *cmd)
 	j = 0;
 	while (cmd->args[i])
 	{
-		if (ft_strncmp(cmd->args[i], "<<", 2) == 0)
+		if (ft_strncmp(cmd->args[i], "<<\0", 3) == 0)
 		{
 			if (!cmd->fd_heredoc)
 			{
@@ -117,6 +117,7 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	(*cmd)->append = 0;
 	(*cmd)->here_doc = 0;
 	(*cmd)->fd_heredoc = NULL;
+	(*cmd)->args_withquotes = NULL;
 	(*cmd)->args = NULL;
 	(*cmd)->args = 0;
 	temp = ft_add_spaces(command);
@@ -133,6 +134,7 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 		free_cmd(*cmd);
 		return (1);
 	}
+	free(temp);
 /* 	(*cmd)->args = split_args_leave_quotes(temp1, ' ');
 	(*cmd)->expandable = malloc(sizeof(int) * count_arguments(*cmd));
 	if (!(*cmd)->expandable)
@@ -140,6 +142,7 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	is_expandable(*cmd);
 	free_array((*cmd)->args); */
 	(*cmd)->args = split_args_remove_quotes(temp1, ' ');
+	test_split_args_remove_quotes(temp1, ' ');
 	/* free(temp); */
 	if (!(*cmd)->args /* || parse_dollar_sign(*cmd, sh) */)
 	{
@@ -147,6 +150,14 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 		free_cmd(*cmd);
 		return (1);
 	}
+	(*cmd)->args_withquotes = split_args_leave_quotes(temp1, ' ');
+	if (!(*cmd)->args_withquotes)
+	{
+		error_sys("ft_split_args failed\n"); //free all
+		free_cmd(*cmd);
+		return (1);
+	}
+	free(temp1);
 	if (init_heredocs(sh, *cmd) == 1)
 		return (1);
 	if (path_init(*cmd, sh->envp) == 1)
