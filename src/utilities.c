@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:06:00 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/02 22:00:38 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/07 15:49:10 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	is_builtin(t_cmd *cmd)
 	is_builtin = 0;
 	while (str[i])
 	{
-		if (ft_strncmp(cmd->args[0], str[i], ft_strlen(str[i]) + 1) == 0)
+		if (cmd->args[0] && ft_strncmp(cmd->args[0], str[i], ft_strlen(str[i]) + 1) == 0)
 			is_builtin = 1;
 		i++;
 	}
