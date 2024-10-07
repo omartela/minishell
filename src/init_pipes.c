@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 23:28:36 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/11 16:52:52 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 16:33:48 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,10 @@ static void	free_fds_on_failure(int **fd, int i)
 int	init_pipes(t_pipes *pipes, int num_cmds)
 {
 	int	i;
+	int z;
 
 	i = 0;
+	z = 0;
 	pipes->fd = malloc((num_cmds) * sizeof(int *)); //pipes->fd = malloc((num_cmds - 1) * sizeof(int *));
 	if (!pipes->fd)
 		return (1);
@@ -59,6 +61,11 @@ int	init_pipes(t_pipes *pipes, int num_cmds)
 	{
 		free_fds_on_failure(pipes->fd, i);
 		return (1);
+	}
+	while (z < num_cmds)
+	{
+		ft_memset(&pipes->pid[z], 0, sizeof(pid_t));
+		++z;
 	}
 	init_fds(pipes->fd, num_cmds);
 	return (0);

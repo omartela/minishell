@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/01 09:46:57 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 22:01:24 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_cmd
 	int		fd_in;
 	int		fd_out;
 	int		*expandable;
+	int		is_continue;
 }	t_cmd;
 
 typedef struct s_pipes
@@ -75,9 +76,9 @@ int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
 void	init_num_cmds(t_shell *sh);
 char	*ft_add_spaces(char *s);
 void	handle_here_doc(t_shell *sh, char *input);
-void	parse_redirections(t_cmd *cmd, char **args);
+int		parse_redirections(t_cmd *cmd, char **args, int is_exit);
 int		init_pipes(t_pipes *pipes, int num_cmds);
-int		execute_pipes(t_shell *sh);
+void	execute_pipes(t_shell *sh);
 void	execute_command(t_cmd *cmd, char **envp);
 
 // free functions
@@ -88,7 +89,8 @@ void	free_cmd(t_cmd *cmd);
 void	free_pipes(t_pipes *pipes, int num_cmds);
 
 // errors
-void	show_error_free_cmd(int code, char *name, char *msg, t_cmd *cmd);
+void	show_error_free_cmd_exit(int code, char *name, char *msg, t_cmd *cmd);
+int		show_error_return(int code, char *name, char *msg);
 void	error_sys(char *msg);
 
 // test functions
@@ -116,23 +118,26 @@ char	**sort_table(char **envp);
 int		remove_table(char ***table, const char *variable);
 int		append_table(char ***table, const char *variable, const char *value);
 
+//exit command
+int		exit_shell(t_shell *sh, char **args);
+
 //export command
 int		export(t_shell *shell, char **arguments);
 
 //cd command
-int	cd(t_shell *sh, char **args);
+int		cd(t_shell *sh, char **args);
 
 //env	command
 int		env(t_shell *shell, char **arguments);
 
 // pwd command
-int    pwd(void);
+int		pwd(void);
 
 // parse-dollar
 int		parse_dollar_sign(t_cmd	*cmd, t_shell *sh);
 void	is_expandable(t_cmd *cmd);
 
 // unset command
-int unset(t_shell *sh, char **args);
+int		unset(t_shell *sh, char **args);
 
 #endif
