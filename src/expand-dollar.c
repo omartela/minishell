@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand-dollar.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 10:34:04 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/01 10:02:10 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/07 10:28:36 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ static char  *get_exit_code(t_shell *sh)
     return (1);
 } */
 
-static int is_2_dollar_signs(char *str)
+/* static int is_2_dollar_signs(char *str)
 {
 	while (*str)
 	{
@@ -144,147 +144,108 @@ static int is_2_dollar_signs(char *str)
 		++str;
 	}
 	return (0);
-}
+} */
 
-char    *split_and_parse(char *str, t_shell *sh)
+char *split_and_parse(char *str, t_shell *sh)
 {
-    char    **table;
-    int     i;
-    char    *key;
-    char    *insert;
-    char    *newstr;
     char    *result;
-    int    counter;
+    char    *insert;
+    char    *key;
+    int     i;
+    int     key_len;
+    char    *temp;
 
     i = 0;
-    key = NULL;
-    insert = NULL;
-    newstr = NULL;
-    result = NULL;
-	if (str[0] != '$' && ft_strchr(str, '$'))
-	{
-		result = ft_substr(str, 0, (ft_strchr(str, '$') - str));
-		str = ft_strchr(str, '$');
-	}
-    if (ft_strchr(str, '$'))
-	    table = ft_split(str, '$');
-    else
+    result = ft_strdup(""); // Start with an empty string to build the result dynamically
+    if (!result)
+        return (NULL);
+
+    while (str[i])
     {
-        return (ft_strdup(str));
-    }
-	if (!table)
-		return (NULL);
-    while (table[i])
-    {
-        counter = 0;
-        if (table[i][0] == '?')
+        if (str[i] == '$') // We found a '$' sign
         {
-            insert = get_exit_code(sh);
-            if (!insert)
+            if (str[i + 1] == '$') // Handle `$$` for special case (like a PID)
             {
-                ft_putstr_fd("Parse dollar failed \n", 2);
-                free_array(table);
-                return (NULL);
-            }
-            newstr = insert_to_string(&table[i][0], "?", insert);
-            if (!newstr)
-            {
+                // Replace $$ with a placeholder value, e.g., "89867" for now
+                insert = ft_strdup("89867");  // This should eventually be replaced by get_pid() or similar
+                if (!insert)
+                    return (NULL);
+                temp = ft_strjoin(result, insert);
                 free(insert);
-                free_array(table);
-                return (NULL);
+                free(result);
+                result = temp;
+                i += 2; // Skip the two $$ signs
             }
-            free(insert);
-            free(table[i]);
-            table[i] = newstr;
-        }
-        else if (table[i][0] != '\0')
-        {
-            while (ft_isalnum(table[i][counter]) || table[i][counter] == '_' || table[i][counter] == '{' || table[i][counter] == '}')
-                ++counter;
-            key = ft_substr(table[i], 0, counter);
-            key = ft_strtrim(key, "{}");
-            if (!key)
+            else if (str[i + 1] == '?') // Handle $? (exit code)
             {
-                ft_putstr_fd("Parse dollar failed \n", 2);
-                free_array(table);
-                return (NULL);
-            }
-            insert = expand(sh->envp, key);
-            if (!insert)
-            {
-                free(key);
-                free_array(table);
-                ft_putstr_fd("Parse dollar failed \n", 2);
-                return (NULL);
-            }
-            if (*insert)
-                newstr = insert_to_string(&table[i][0], key, insert);
-            else
-                newstr = ft_strdup("");
-            if (!newstr)
-            {
-                free(key);
+                insert = get_exit_code(sh);
+                if (!insert)
+                    return (NULL);
+                temp = ft_strjoin(result, insert);
                 free(insert);
-                free_array(table);
-                return (NULL);
+                free(result);
+                result = temp;
+                i += 2; // Skip the $ and ?
+            }
+            else if (ft_isalpha(str[i + 1]) || str[i + 1] == '_') // Handle $VAR_NAME
+            {
+                i++;
+                key_len = 0;
+                while (ft_isalnum(str[i + key_len]) || str[i + key_len] == '_') // Get the length of the variable name
+                    key_len++;
+
+                key = ft_substr(str, i, key_len); // Extract the variable name
+                if (!key)
+                    return (NULL);
+
+                insert = expand(sh->envp, key); // Expand the variable
+                free(key);
+                if (!insert)
+                    return (NULL);
+
+                temp = ft_strjoin(result, insert); // Append the expanded value to result
+                free(insert);
+                free(result);
+                result = temp;
+                i += key_len; // Move the index past the variable name
             }
             else
             {
-                free(insert);
-                free(key);
-                free(table[i]);
-                table[i] = newstr;
+                // If we encounter just a single '$' with no valid variable, append it as is
+                temp = ft_strjoin(result, "$");
+                free(result);
+                result = temp;
+                i++;
             }
         }
-        ++i;
-    }
-    i = 0;
-    if (table[0])
-    {
-		if (!result)
-		{
-        	result = ft_strdup(table[0]);
-			++i;
-		}
-        while (table[i])
+        else
         {
-            result = ft_strjoin(result, table[i]);
-            ++i;
+            // Append regular characters to the result
+            char temp_str[2] = {str[i], '\0'}; // Create a string with one character
+            temp = ft_strjoin(result, temp_str);
+            free(result);
+            result = temp;
+            i++;
         }
     }
-    free_array(table);
-    return (result);
+    return result;
 }
 
 int parse_dollar_sign(t_cmd *cmd, t_shell *sh)
 {
     int     i;
     char    *result;
-    char    *newstr;
 
     i = 0;
     while (cmd->args[i])
     {
         if (cmd->expandable[i])
         {
-            while (is_2_dollar_signs(cmd->args[i]))
-	        {
-		        newstr = insert_to_string(cmd->args[i], "$$", "89867"); /// need to somehow implement get pid functionality but we cannot use get pid.
-		        if (newstr)
-		        {
-                    free(cmd->args[i]);
-			        cmd->args[i] = ft_strdup(newstr);
-			        free(newstr);
-		        }
-	        }
-            if (ft_strchr(cmd->args[i], '$'))
-            {
-                result = split_and_parse(cmd->args[i], sh);
-                if (!result)
-                    return (1);
-                free(cmd->args[i]);
-                cmd->args[i] = result;
-            }
+            result = split_and_parse(cmd->args[i], sh);
+            if (!result)
+                return (1);
+            free(cmd->args[i]);
+            cmd->args[i] = result;
         }
         ++i;
     }
