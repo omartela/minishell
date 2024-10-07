@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin-echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:29:58 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/05 15:31:37 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/02 16:19:07 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@ int	echo(char *argv[])
 
 	i = 1;
 	no_nl = 0;
+	if (!argv[1])
+	{
+		write(1, "\n", 1);
+		return (0);
+	}
 	if (ft_strncmp(argv[1], "-n\0", 3) == 0)
 	{
 		i = 2;

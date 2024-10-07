@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/01 10:18:53 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 17:06:56 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 		error_sys("malloc failed\n"); //free all
 		return (1);
 	}
+	(*cmd)->is_continue = 1;
 	(*cmd)->fd_in = STDIN_FILENO;
 	(*cmd)->fd_out = STDOUT_FILENO;
 	(*cmd)->infile = NULL;

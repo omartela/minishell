@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:36:54 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/01 11:12:55 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/02 20:16:06 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,38 @@ static void	trim_leading_trailing_spaces(char *str)
 	str[len] = '\0';
 }
 
+static void	handle_quotes(char c, int *in_single_quote, int *in_double_quote)
+{
+	if (c == '\'' && !(*in_double_quote))
+		*in_single_quote = !(*in_single_quote);
+	else if (c == '\"' && !(*in_single_quote))
+		*in_double_quote = !(*in_double_quote);
+}
+
 static void	reduce_multiple_spaces(char *str)
 {
-	int i = 0;
-	int j = 0;
+	int	i;
+	int	j;
+	int	in_single_quote;
+	int	in_double_quote;
 
+	i = 0;
+	j = 0;
+	in_single_quote = 0;
+	in_double_quote = 0;
 	while (str[i])
 	{
-		if (str[i] != ' ' && str[i] != '\t' && str[i] != '\n')
+		handle_quotes(str[i], &in_single_quote, &in_double_quote);
+		if (!in_single_quote && !in_double_quote)
+		{
+			if (str[i] != ' ' && str[i] != '\t' && str[i] != '\n')
+				str[j++] = str[i];
+			else if ((str[i] == ' ' || str[i] == '\t' || str[i] == '\n')
+				&& (j == 0 || str[j - 1] != ' '))
+				str[j++] = ' ';
+		}
+		else
 			str[j++] = str[i];
-		else if ((str[i] == ' ' || str[i] == '\t' || str[i] == '\n')
-			&& (j == 0 || str[j - 1] != ' '))
-			str[j++] = ' ';
 		i++;
 	}
 	str[j] = '\0';
