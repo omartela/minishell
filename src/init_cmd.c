@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/02 17:06:56 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/07 13:26:45 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	init_num_cmds(t_shell *sh)
 	sh->num_cmds = i;
 }
 
-static int count_arguments(t_cmd *cmd)
+/* static int count_arguments(t_cmd *cmd)
 {
 	int i;
 
@@ -53,7 +53,7 @@ static int count_arguments(t_cmd *cmd)
 	while(cmd->args[i])
 		++i;
 	return (i);
-}
+} */
 
 int	init_heredocs(t_shell *sh, t_cmd *cmd)
 {
@@ -100,6 +100,7 @@ int	init_heredocs(t_shell *sh, t_cmd *cmd)
 int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 {
 	char	*temp;
+	char	*temp1;
 
 	*cmd = malloc(sizeof(t_cmd));
 	*cmd = ft_memset(*cmd, 0, sizeof(t_cmd));
@@ -119,21 +120,22 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	(*cmd)->args = NULL;
 	(*cmd)->args = 0;
 	temp = ft_add_spaces(command);
-	(*cmd)->args = split_args_leave_quotes(temp, ' ');
+	temp1 = split_and_parse(temp, sh);
+/* 	(*cmd)->args = split_args_leave_quotes(temp1, ' ');
 	(*cmd)->expandable = malloc(sizeof(int) * count_arguments(*cmd));
 	if (!(*cmd)->expandable)
 		return (1);
 	is_expandable(*cmd);
-	free_array((*cmd)->args);
+	free_array((*cmd)->args); */
 	if (!(temp))
 	{
 		error_sys("malloc failed\n"); //free all
 		free_cmd(*cmd);
 		return (1);
 	}
-	(*cmd)->args = split_args_remove_quotes(temp, ' ');
+	(*cmd)->args = split_args_remove_quotes(temp1, ' ');
 	/* free(temp); */
-	if (!(*cmd)->args || parse_dollar_sign(*cmd, sh))
+	if (!(*cmd)->args /* || parse_dollar_sign(*cmd, sh) */)
 	{
 		error_sys("ft_split_args failed\n"); //free all
 		free_cmd(*cmd);

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/02 14:40:29 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/07 12:52:23 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	process_input(t_shell *sh, char *input)
 		if (!next_input)
 		{
 			free(input);
-			/* printf("Exit \n"); */
+			//printf("Exit \n");
 			return ;//nor sure if this is the right way to exit
 		}
 		//Snippet for tester
@@ -136,7 +136,7 @@ static void	userprompt(char **envp)
 		input = readline("minishell> ");
 		if (input == NULL)
 		{
-			/* printf("Exit \n"); */
+			//printf("Exit \n");
 			break ;
 		}
 		process_input(&sh, input);
