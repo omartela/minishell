@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   builtin-env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 17:40:47 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/11 17:45:25 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:11:33 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 int	env(t_shell *shell, char **args)
@@ -24,7 +25,7 @@ int	env(t_shell *shell, char **args)
 	{
 		while (shell->envp[i])
 		{
-			ft_printf("%s \n", shell->envp[i]);
+			ft_printf("%s\n", shell->envp[i]);
 			++i;
 		}
 	}
