@@ -1,0 +1,95 @@
+/bin/echo $"HOME"$USER
+
+/bin/echo $"HOM"E$USER
+
+/bin/echo $"HOME"
+
+/bin/echo $"42$"
+
+/bin/echo \$USER
+
+/bin/echo \\$USER
+
+/bin/echo \\\$USER
+
+/bin/echo \\\\$USER
+
+/bin/echo \\\\\$USER
+
+/bin/echo \\\\\\\\\$USER
+
+/bin/echo \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\$USER \$PATH \\$PWD
+
+">>" asd
+
+
+cat << $USER
+why
+not
+$USER
+
+export T=">>"
+$T lol
+
+cat << "$USER"
+why
+not
+$USER
+
+cat << "$US"E"R"
+because
+we
+love
+bash
+$USER
+
+export T=n
+echo "-"$T$T
+
+export T=nnnnnnnn
+echo "-""$T"nnnnnnnnnnnnn -nnnnnnnn"$T" '-'"$T"
+
+export T=nnnnnnnn
+echo "-""$T"nnnnnnnnnnnnn -nnnnnnnn"$T" '-''$T'
+
+export T=e E=c S=h L=o
+$T$E$S$L -nn
+
+
+echo cd ~
+
+echo -n -n test1
+
+echo -n -n -n -n -n test1
+
+echo -n -n -nasd
+
+echo -n -n -n-nnnnn
+
+echo -n -nnnnnnn -n -nnn -nnnnn -n-n
+
+echo -n -nnnnnnn -n -nnn -nnnnn -n feel my pain
+
+echo -n -n -n-n
+
+cd '/////' 2>/dev/null
+
+cd "doesntexist" 2>/dev/null 
+
+cd "wtf" 2>/dev/null 
+
+cd ../../
+cd -
+cd -
+
+exit ""
+
+exit 1 2
+
+exit 1 2 3
+
+exit A 2 3
+
+/bin/env | grep "_="
+
+env | sort | grep -v SHLVL | grep -v ^_
