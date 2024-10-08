@@ -172,19 +172,7 @@ char *split_and_parse(char *str, t_shell *sh)
 			in_single_quotes = !in_single_quotes;
         if (str[i] == '$' && !in_single_quotes) // We found a '$' sign
         {
-            if (str[i + 1] == '$') // Handle `$$` for special case (like a PID)
-            {
-                // Replace $$ with a placeholder value, e.g., "89867" for now
-                insert = ft_strdup("89867");  // This should eventually be replaced by get_pid() or similar
-                if (!insert)
-                    return (NULL);
-                temp = ft_strjoin(result, insert);
-                free(insert);
-                free(result);
-                result = temp;
-                i += 2; // Skip the two $$ signs
-            }
-            else if (str[i + 1] == '?') // Handle $? (exit code)
+            if (str[i + 1] == '?') // Handle $? (exit code)
             {
                 insert = get_exit_code(sh);
                 if (!insert)
@@ -194,6 +182,13 @@ char *split_and_parse(char *str, t_shell *sh)
                 free(result);
                 result = temp;
                 i += 2; // Skip the $ and ?
+            }
+            else if (ft_isdigit(str[i + 1]))
+            {
+                temp = ft_strjoin(result, str + i + 2);
+                free(result);
+                result = temp;
+                i += 2;
             }
             else if (ft_isalpha(str[i + 1]) || str[i + 1] == '_') // Handle $VAR_NAME
             {
