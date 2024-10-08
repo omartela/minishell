@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/02 17:39:56 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/07 20:51:14 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ static int	open_fdout(char *outfile, t_cmd *cmd, int is_exit)
 	return (0);
 }
 
-int	parse_redirections(t_cmd *cmd, char **args, int is_exit)
+int	parse_redirections(t_cmd *cmd, char **args, char **args_withquotes, int is_exit)
 {
 	int		i;
 	int		j;
@@ -115,7 +115,7 @@ int	parse_redirections(t_cmd *cmd, char **args, int is_exit)
 	i = 0;
 	j = 0;
 	error_code = 0;
-	arg_count = count_new_args_len(args);
+	arg_count = count_new_args_len(args_withquotes);
 	clean_args = malloc(sizeof(char *) * (arg_count + 1));
 	if (!clean_args)
 	{
@@ -124,7 +124,7 @@ int	parse_redirections(t_cmd *cmd, char **args, int is_exit)
 	}
 	while (args[i])
 	{
-		if (ft_strncmp(args[i], "<\0", 2) == 0 && args[i + 1])
+		if (ft_strncmp(args_withquotes[i], "<\0", 2) == 0 && args[i + 1])
 		{
 			if (cmd->fd_in != STDIN_FILENO)
 			{
@@ -149,7 +149,7 @@ int	parse_redirections(t_cmd *cmd, char **args, int is_exit)
 			i += 2;
 			continue ;
 		}
-		if (ft_strncmp(args[i], ">\0", 2) == 0 && args[i + 1])
+		if (ft_strncmp(args_withquotes[i], ">\0", 2) == 0 && args[i + 1])
 		{
 			cmd->append = 0;
 			if (cmd->outfile)
@@ -171,7 +171,7 @@ int	parse_redirections(t_cmd *cmd, char **args, int is_exit)
 			i += 2;
 			continue ;
 		}
-		if (ft_strncmp(args[i], ">>\0", 3) == 0 && args[i + 1])
+		if (ft_strncmp(args_withquotes[i], ">>\0", 3) == 0 && args[i + 1])
 		{
 			cmd->append = 1;
 			if (cmd->outfile)
@@ -193,7 +193,7 @@ int	parse_redirections(t_cmd *cmd, char **args, int is_exit)
 			i += 2;
 			continue ;
 		}
-		if (ft_strncmp(args[i], "<<\0", 3) == 0 && args[i + 1])
+		if (ft_strncmp(args_withquotes[i], "<<\0", 3) == 0 && args[i + 1])
 		{
 			if (cmd->fd_in != STDIN_FILENO)
 			{

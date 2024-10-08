@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/07 13:26:20 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/07 20:34:50 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_shell
 
 typedef struct s_cmd
 {
+	char	**args_withquotes;
 	char	**args;
 	char	**path;
 	char	*infile;
@@ -77,7 +78,7 @@ int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
 void	init_num_cmds(t_shell *sh);
 char	*ft_add_spaces(char *s);
 void	handle_here_doc(t_shell *sh, char *input);
-int		parse_redirections(t_cmd *cmd, char **args, int is_exit);
+int		parse_redirections(t_cmd *cmd, char **args, char **args_withquotes, int is_exit);
 int		init_pipes(t_pipes *pipes, int num_cmds);
 void	execute_pipes(t_shell *sh);
 void	execute_command(t_cmd *cmd, char **envp);
