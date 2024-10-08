@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/02 20:26:54 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/07 20:34:16 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 	}
 	if (sh->num_cmds == 1 && is_builtin(cmd))
 	{
-		error_code = parse_redirections(cmd, cmd->args, 0);
+		error_code = parse_redirections(cmd, cmd->args, cmd->args_withquotes, 0);
 		if (error_code)
 			return (error_code);
 		int saved_stdout = dup(STDOUT_FILENO);
@@ -125,7 +125,7 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 	}
 	if (pipes->pid[i] == 0)
 	{
-		parse_redirections(cmd, cmd->args, 1);
+		parse_redirections(cmd, cmd->args, cmd->args_withquotes, 1);
 		child_io(cmd, pipes->fd, i, sh->num_cmds);
 		if (is_builtin(cmd))
 		{

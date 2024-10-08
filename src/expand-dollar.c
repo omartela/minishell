@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 10:34:04 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/07 13:42:29 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:28:20 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,7 @@ static char  *get_exit_code(t_shell *sh)
 char *split_and_parse(char *str, t_shell *sh)
 {
     int		in_single_quotes;
+    int     in_double_quotes;
     char    *result;
     char    *insert;
     char    *key;
@@ -158,13 +159,16 @@ char *split_and_parse(char *str, t_shell *sh)
 
     i = 0;
 	in_single_quotes = 0;
+    in_double_quotes = 0;
     result = ft_strdup(""); // Start with an empty string to build the result dynamically
     if (!result)
         return (NULL);
 
     while (str[i])
     {
-        if (str[i] == '\'')
+        if (str[i] == '\"' && !in_single_quotes)
+			in_double_quotes = !in_double_quotes;
+        if (str[i] == '\'' && !in_double_quotes)
 			in_single_quotes = !in_single_quotes;
         if (str[i] == '$' && !in_single_quotes) // We found a '$' sign
         {
