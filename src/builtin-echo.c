@@ -12,6 +12,25 @@
 
 #include "../include/minishell.h"
 
+static int	check_dash_n(char *argv)
+{
+	if (*argv != '-')
+	{
+		return (1);
+	}
+	else
+		++argv;
+	while (*argv)
+	{
+		if (*argv != 'n')
+		{
+			return (1);
+		}
+		++argv;
+	}
+	return (0);
+}
+
 int	echo(char *argv[])
 {
 	int	i;
@@ -24,17 +43,22 @@ int	echo(char *argv[])
 		write(1, "\n", 1);
 		return (0);
 	}
-	if (ft_strncmp(argv[1], "-n\0", 3) == 0)
+	if (check_dash_n(argv[1]))
 	{
 		i = 2;
 		no_nl = 1;
 	}
 	while (argv[i])
 	{
-		ft_putstr_fd(argv[i], 1);
-		if (argv[i + 1])
-			write(1, " ", 1);
-		++i;
+		if (!check_dash_n(argv[i]))
+			++i;
+		else
+		{
+			ft_putstr_fd(argv[i], 1);
+			if (argv[i + 1])
+				write(1, " ", 1);
+			++i;
+		}
 	}
 	if (!no_nl)
 		write(1, "\n", 1);
