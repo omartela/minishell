@@ -22,6 +22,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 # include <limits.h>
+# include <signal.h>
 
 typedef struct s_shell
 {
@@ -34,6 +35,9 @@ typedef struct s_shell
 	int		*heredoc_fds;
 	int		num_heredocs;
 	int 	heredoc_index;
+	struct sigaction	org_sig_quit;
+	struct sigaction	org_sig_int;
+	
 }	t_shell;
 
 typedef struct s_cmd
@@ -142,4 +146,6 @@ void	is_expandable(t_cmd *cmd);
 // unset command
 int		unset(t_shell *sh, char **args);
 
+// signals.c
+int		init_signal(t_shell *sh);
 #endif
