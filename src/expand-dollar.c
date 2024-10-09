@@ -185,9 +185,6 @@ char *split_and_parse(char *str, t_shell *sh)
             }
             else if (ft_isdigit(str[i + 1]))
             {
-                temp = ft_strjoin(result, str + i + 2);
-                free(result);
-                result = temp;
                 i += 2;
             }
             else if (ft_isalpha(str[i + 1]) || str[i + 1] == '_') // Handle $VAR_NAME

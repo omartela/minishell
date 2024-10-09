@@ -43,7 +43,7 @@ int	echo(char *argv[])
 		write(1, "\n", 1);
 		return (0);
 	}
-	if (check_dash_n(argv[1]))
+	if (!check_dash_n(argv[1]))
 	{
 		i = 2;
 		no_nl = 1;
