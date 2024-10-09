@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin-export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 14:13:39 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/11 11:59:47 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:17:20 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,7 @@ int	export(t_shell *shell, char **args)
 		while (i < argc)
 		{
 			if (parse_export_arg_and_add(shell, args[i]))
-				return (1);
+				return (show_error_return(1, args[i], "not a valid identifier"));
 			++i;
 		}
 	}
