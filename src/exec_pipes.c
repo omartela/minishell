@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/07 20:34:16 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/09 23:28:56 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,26 @@ static void	child_io(t_cmd *cmd, int **fd, int i, int num_cmds)
 		dup2(fd[i][1], STDOUT_FILENO);
 		close(fd[i][1]);
 	}
+}
+
+static int	restore_fds(int saved_stdin, int saved_stdout)
+{
+	int	error;
+
+	error = 0;
+	if (dup2(saved_stdout, STDOUT_FILENO) == -1)
+	{
+		error_sys("dup2 failed to restore STDOUT\n");
+		error = 1;
+	}
+	if (dup2(saved_stdin, STDIN_FILENO) == -1)
+	{
+		error_sys("dup2 failed to restore STDIN\n");
+		error = 1;
+	}
+	close(saved_stdout);
+	close(saved_stdin);
+	return (error);
 }
 
 static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
@@ -75,8 +95,7 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 			if (dup2(cmd->fd_in, STDIN_FILENO) == -1)
 			{
 				error_sys("dup2 failed\n");
-				close(saved_stdout);
-				close(saved_stdin);
+				restore_fds(saved_stdin, saved_stdout);
 				return (1);
 			}
 			close(cmd->fd_in);
@@ -86,34 +105,18 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 			if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
 			{
 				error_sys("dup2 failed\n");
-				close(saved_stdout);
-				close(saved_stdin);
+				restore_fds(saved_stdin, saved_stdout);
 				return (1);
 			}
 			close(cmd->fd_out);
 		}
 		if (execute_builtin(sh, cmd))
 		{
-			close(saved_stdout);
-			close(saved_stdin);
+			restore_fds(saved_stdin, saved_stdout);
 			return (1);
 		}
-		if (dup2(saved_stdout, STDOUT_FILENO) == -1)
-		{
-			error_sys("dup2 failed\n");
-			close(saved_stdout);
-			close(saved_stdin);
+		if (restore_fds(saved_stdin, saved_stdout))
 			return (1);
-		}
-		if (dup2(saved_stdin, STDIN_FILENO) == -1)
-		{
-			error_sys("dup2 failed\n");
-			close(saved_stdout);
-			close(saved_stdin);
-			return (1);
-		}
-		close(saved_stdout);
-		close(saved_stdin);
 		cmd->is_continue = 0;
 		return (0);
 	}
