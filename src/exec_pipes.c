@@ -125,6 +125,7 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 	}
 	if (pipes->pid[i] == 0)
 	{
+		reset_signals(sh);
 		parse_redirections(cmd, cmd->args, cmd->args_withquotes, 1);
 		child_io(cmd, pipes->fd, i, sh->num_cmds);
 		if (is_builtin(cmd))

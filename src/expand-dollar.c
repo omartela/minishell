@@ -183,8 +183,12 @@ char *split_and_parse(char *str, t_shell *sh)
                 result = temp;
                 i += 2; // Skip the $ and ?
             }
-            else if (ft_isdigit(str[i + 1]))
+            else if ((ft_isdigit(str[i + 1]) || str[i + 1] == '\'' || str[i + 1] == '\"') && !in_double_quotes)
             {
+                if (str[i + 1] == '\"' && !in_single_quotes)
+			        in_double_quotes = !in_double_quotes;
+                if (str[i + 1] == '\'' && !in_double_quotes)
+			        in_single_quotes = !in_single_quotes;
                 i += 2;
             }
             else if (ft_isalpha(str[i + 1]) || str[i + 1] == '_') // Handle $VAR_NAME
@@ -197,7 +201,6 @@ char *split_and_parse(char *str, t_shell *sh)
                 key = ft_substr(str, i, key_len); // Extract the variable name
                 if (!key)
                     return (NULL);
-
                 insert = expand(sh->envp, key); // Expand the variable
                 free(key);
                 if (!insert)

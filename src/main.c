@@ -39,7 +39,9 @@ static void	process_input(t_shell *sh, char *input)
 
 	next_input = NULL;
 	split_input = NULL;
-	input = trim_spaces(input);
+	split_input = split_and_parse(input, sh);
+	free(input);
+	input = trim_spaces(split_input);
 	if (check_syntax(input))
 	{
 		sh->exit_status = 2;
@@ -53,15 +55,15 @@ static void	process_input(t_shell *sh, char *input)
 	len = ft_strlen(input);
 	while (input[len - 1] == '|' || (len > 2 && input[len - 1] == '&' && input[len - 2] == '&'))
 	{
-		next_input = readline("> ");
+/* 		next_input = readline("> ");
 		if (!next_input)
 		{
 			free(input);
 			//printf("Exit \n");
 			return ;//nor sure if this is the right way to exit
-		}
+		} */
 		//Snippet for tester
-		/* if (isatty(fileno(stdin)))
+		if (isatty(fileno(stdin)))
 			next_input = readline("> ");
 		else
 		{
@@ -69,7 +71,13 @@ static void	process_input(t_shell *sh, char *input)
 			line = get_next_line(fileno(stdin));
 			next_input = ft_strtrim(line, "\n");
 			free(line);
-		} */
+		}
+		if (!next_input)
+		{
+			free(input);
+			//printf("Exit \n");
+			return ;//nor sure if this is the right way to exit
+		} 
 		next_input = trim_spaces(next_input);
 		if (check_syntax(next_input))
 		{
@@ -128,7 +136,7 @@ static void	userprompt(char **envp)
 	while (1)
 	{
 		//Snippet for tester
-/* 		if (isatty(fileno(stdin)))
+		if (isatty(fileno(stdin)))
 			input = readline("minishell> ");
 		else
 		{
@@ -136,8 +144,8 @@ static void	userprompt(char **envp)
 			line = get_next_line(fileno(stdin));
 			input = ft_strtrim(line, "\n");
 			free(line);
-		} */
-		input = readline("minishell> ");
+		}
+		// input = readline("minishell> ");
 		if (input == NULL)
 		{
 			//printf("Exit \n");

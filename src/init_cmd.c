@@ -100,7 +100,6 @@ int	init_heredocs(t_shell *sh, t_cmd *cmd)
 int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 {
 	char	*temp;
-	char	*temp1;
 
 	*cmd = malloc(sizeof(t_cmd));
 	*cmd = ft_memset(*cmd, 0, sizeof(t_cmd));
@@ -127,21 +126,13 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 		free_cmd(*cmd);
 		return (1);
 	}
-	temp1 = split_and_parse(temp, sh);
-	if (!temp1)
-	{
-		error_sys("split_and_parse failed\n"); //free all
-		free_cmd(*cmd);
-		return (1);
-	}
-	free(temp);
 /* 	(*cmd)->args = split_args_leave_quotes(temp1, ' ');
 	(*cmd)->expandable = malloc(sizeof(int) * count_arguments(*cmd));
 	if (!(*cmd)->expandable)
 		return (1);
 	is_expandable(*cmd);
 	free_array((*cmd)->args); */
-	(*cmd)->args = split_args_remove_quotes(temp1, ' ');
+	(*cmd)->args = split_args_remove_quotes(temp, ' ');
 	/* free(temp); */
 	if (!(*cmd)->args /* || parse_dollar_sign(*cmd, sh) */)
 	{
@@ -149,14 +140,13 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 		free_cmd(*cmd);
 		return (1);
 	}
-	(*cmd)->args_withquotes = split_args_leave_quotes(temp1, ' ');
+	(*cmd)->args_withquotes = split_args_leave_quotes(temp, ' ');
 	if (!(*cmd)->args_withquotes)
 	{
 		error_sys("ft_split_args failed\n"); //free all
 		free_cmd(*cmd);
 		return (1);
 	}
-	free(temp1);
 	if (init_heredocs(sh, *cmd) == 1)
 		return (1);
 	if (path_init(*cmd, sh->envp) == 1)

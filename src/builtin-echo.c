@@ -35,7 +35,9 @@ int	echo(char *argv[])
 {
 	int	i;
 	int	no_nl;
+	int	check_options;
 
+	check_options = 1;
 	i = 1;
 	no_nl = 0;
 	if (!argv[1])
@@ -50,10 +52,11 @@ int	echo(char *argv[])
 	}
 	while (argv[i])
 	{
-		if (!check_dash_n(argv[i]))
+		if (!check_dash_n(argv[i]) && check_options)
 			++i;
 		else
 		{
+			check_options = 0;
 			ft_putstr_fd(argv[i], 1);
 			if (argv[i + 1])
 				write(1, " ", 1);
