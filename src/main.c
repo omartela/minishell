@@ -20,6 +20,8 @@ static void	initialize_shell(t_shell *sh, char **envp)
 	sh->heredoc_fds = NULL;
 	sh->num_heredocs = 0;
 	sh->heredoc_index = 0;
+	ft_memset(&sh->org_sig_int, 0, sizeof(sh->org_sig_int));
+	ft_memset(&sh->org_sig_quit, 0, sizeof(sh->org_sig_quit));
 	copy_env(envp, sh);
 	sh->homepath = ft_strdup(getenv("HOME"));
 	if (!sh->homepath)
@@ -121,6 +123,8 @@ static void	userprompt(char **envp)
 	char	*input;
 
 	initialize_shell(&sh, envp);
+	if (init_signal(&sh))
+			return ;
 	while (1)
 	{
 		//Snippet for tester
@@ -139,6 +143,8 @@ static void	userprompt(char **envp)
 			//printf("Exit \n");
 			break ;
 		}
+		if (init_signal(&sh))
+			return ;
 		process_input(&sh, input);
 	}
 	free_shell(&sh);
