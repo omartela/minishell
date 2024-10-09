@@ -1,0 +1,44 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Build minishell using Makefile",
+            "command": "make",
+            "args": [
+                "-C",
+                "${workspaceFolder}",
+                "all"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Runs the Makefile to build the project using the 'all' target."
+        },
+        {
+            "type": "shell",
+            "label": "Clean minishell build files",
+            "command": "make",
+            "args": [
+                "-C",
+                "${workspaceFolder}",
+                "clean"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "type": "shell",
+            "label": "Force clean and rebuild minishell",
+            "command": "make",
+            "args": [
+                "-C",
+                "${workspaceFolder}",
+                "re"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        }
+    ]
+}
