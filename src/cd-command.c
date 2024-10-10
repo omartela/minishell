@@ -61,21 +61,11 @@ int	cd(t_shell *sh, char **args)
 			set_table(&sh->envp, "OLDPWD", oldpwd);
 			set_table(&sh->local_shellvars, "OLDPWD", oldpwd);
 		}
-		else
-		{
-			ft_putstr_fd("Error when changing directory", 2);
-			return (1);
-		}
 		currentpwd = getcwd(cwd, sizeof(cwd));
 		if (currentpwd)
 		{
 			set_table(&sh->envp, "PWD", currentpwd);
 			set_table(&sh->local_shellvars, "PWD", currentpwd);
-		}
-		else
-		{
-			ft_putstr_fd("Error when changing directory", 2);
-			return (1);
 		}
 		return (0);
 	}
