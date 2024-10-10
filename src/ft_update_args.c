@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_update_args.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:04:53 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/03 19:18:59 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:14:40 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static size_t	ft_redirect_counter(char *s)
 	{
 		if (((*s == '<') || (*s == '>')) && !in_quotes)
 		{
-			spaces++;
+			spaces += 2;
 			while ((*s == '<') || (*s == '>'))
 				s++;
 			continue ;
