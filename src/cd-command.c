@@ -20,7 +20,9 @@ int	cd(t_shell *sh, char **args)
 	char    cwd[PATH_MAX];
     char    *oldpwd;
 	char	*currentpwd;
+	char	*path;
 
+	path = NULL;
     oldpwd = getcwd(cwd, sizeof(cwd));
 
 	if (args[1] == NULL)
@@ -38,8 +40,15 @@ int	cd(t_shell *sh, char **args)
 			return (show_error_return(1, args[0], "too many arguments"));
 		if (ft_strncmp(args[1], "-\0", 2) == 0)
 		{
-			if (chdir(oldpwd) == -1)
+			path = expand(sh->envp, "OLDPWD");
+			if (!path)
+				return (show_error_return(1, args[1], "cd - failed"));
+			if (chdir(path) == -1)
+			{
+				free(path);
 				return (show_error_return(1, args[1], "Not a directory"));
+			}
+			free(path);
 		}
 		else if (access(args[1], F_OK) == -1)
 			return (show_error_return(1, args[1], "No such file or directory"));

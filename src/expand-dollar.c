@@ -20,7 +20,7 @@
         return (0);
 } */
 
-static char    *expand(char **envp, char *variable)
+char    *expand(char **envp, char *variable)
 {
     int     i;
     char    *value;
