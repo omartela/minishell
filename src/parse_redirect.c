@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/07 20:51:14 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/10 11:31:18 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,9 @@ static int	open_fdout(char *outfile, t_cmd *cmd, int is_exit)
 	if (cmd->fd_out != -1)
 	{
 		if (is_exit)
-			show_error_free_cmd_exit(126, outfile, "Is a directory", NULL);
+			show_error_free_cmd_exit(1, outfile, "Is a directory", NULL);
 		else
-			return (show_error_return(126, outfile, "Is a directory"));
+			return (show_error_return(1, outfile, "Is a directory"));
 	}
 	if (access(outfile, F_OK) == 0 && access(outfile, W_OK) == -1)
 	{

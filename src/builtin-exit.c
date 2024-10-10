@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 12:19:32 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/03 18:49:00 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/10 11:02:09 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	exit_shell(t_shell *sh, char **args)
 {
 	int	exit_code;
 
-	ft_printf("exit\n");
+	/* ft_printf("exit\n"); */
 	if (args[1] && args[2])
 	{
 		ft_putstr_fd("exit: too many arguments\n", 2);

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:04:53 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/03 19:18:59 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/10 11:48:37 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static size_t	ft_redirect_counter(char *s)
 	{
 		if (((*s == '<') || (*s == '>')) && !in_quotes)
 		{
-			spaces++;
+			spaces += 2;
 			while ((*s == '<') || (*s == '>'))
 				s++;
 			continue ;
