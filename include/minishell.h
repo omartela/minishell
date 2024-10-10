@@ -74,7 +74,7 @@ int		check_syntax(char *input);
 int		is_heredoc(char *input);
 size_t	ft_strcounter(char *s, char c);
 void	process_quotes(char **s, int *in_quotes, char *quote_type);
-char *split_and_parse(char *str, t_shell *sh);
+char 	*split_and_parse(char *str, t_shell *sh);
 char	**split_args_remove_quotes(char *s, char c);
 char	**split_args_leave_quotes(char *s, char c);
 char	**split_args_general(char *s, char c, int keep_quotes);
@@ -139,9 +139,10 @@ int		env(t_shell *shell, char **arguments);
 // pwd command
 int		pwd(void);
 
-// parse-dollar
+// expand-dollar.c
 int		parse_dollar_sign(t_cmd	*cmd, t_shell *sh);
 void	is_expandable(t_cmd *cmd);
+char    *expand(char **envp, char *variable);
 
 // unset command
 int		unset(t_shell *sh, char **args);
