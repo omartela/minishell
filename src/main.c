@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/07 12:52:23 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/10 10:37:42 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,14 +125,14 @@ static void	process_input(t_shell *sh, char *input)
 	}
 }
 
-static void	userprompt(char **envp)
+static int	userprompt(int status, char **envp)
 {
 	t_shell	sh;
 	char	*input;
 
 	initialize_shell(&sh, envp);
 	if (init_signal(&sh))
-			return ;
+			return (1);
 	while (1)
 	{
 		//Snippet for tester
@@ -152,15 +152,20 @@ static void	userprompt(char **envp)
 			break ;
 		}
 		if (init_signal(&sh))
-			return ;
+			return (1);
 		process_input(&sh, input);
 	}
+	status = sh.exit_status;
 	free_shell(&sh);
+	return (status);
 }
 
 int	main(int ac, char **av, char **envp)
 {
+	int	status;
+
+	status = 0;
 	(void)ac;
 	(void)av;
-	userprompt(envp);
+	return (userprompt(status, envp));
 }
