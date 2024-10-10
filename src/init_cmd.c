@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/07 21:04:37 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/10 17:29:56 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	init_heredocs(t_shell *sh, t_cmd *cmd)
 	j = 0;
 	while (cmd->args[i])
 	{
-		if (ft_strncmp(cmd->args[i], "<<\0", 3) == 0)
+		if (ft_strncmp(cmd->args_withquotes[i], "<<\0", 3) == 0)
 		{
 			if (!cmd->fd_heredoc)
 			{

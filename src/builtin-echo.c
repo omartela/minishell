@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:29:58 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/02 16:19:07 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/10 19:44:27 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	check_dash_n(char *argv)
 {
-	if (*argv != '-')
+	if (*argv != '-' || ft_strncmp(argv, "-\0", 2) == 0)
 	{
 		return (1);
 	}
@@ -52,6 +52,13 @@ int	echo(char *argv[])
 	}
 	while (argv[i])
 	{
+		if (argv[i] && (ft_strncmp(argv[i], "-\0", 2) == 0))
+		{
+			ft_putstr_fd(argv[i], 1);
+			if (!no_nl)
+				write(1, "\n", 1);
+			return (0);
+		}
 		if (!check_dash_n(argv[i]) && check_options)
 			++i;
 		else

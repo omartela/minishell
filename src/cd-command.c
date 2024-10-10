@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd-command.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 16:06:06 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/09 23:29:39 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/10 18:38:31 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	cd(t_shell *sh, char **args)
 				free(path);
 				return (show_error_return(1, args[1], "Not a directory"));
 			}
+			ft_printf("%s\n", path);
 			free(path);
 		}
 		else if (access(args[1], F_OK) == -1)
