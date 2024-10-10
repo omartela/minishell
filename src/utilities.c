@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utilities.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:06:00 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/07 15:49:10 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:09:42 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,14 @@ char	*get_value(char *args)
 	char	**split;
 	char	*value;
 
+	value = NULL;
 	split = ft_split(args, '=');
 	if (!split)
 		return (NULL);
-	value = ft_strdup(split[1]);
+	if (split[1])
+		value = ft_strdup(split[1]);
+	else
+		value = ft_strdup("");
 	free_array(split);
 	return (value);
 }
