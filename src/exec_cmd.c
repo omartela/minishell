@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 17:58:11 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/07 20:59:27 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:37:33 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static void	execute_absolute_relative_command(t_cmd *cmd, char **envp)
 {
 	execve(cmd->args[0], cmd->args, envp);
 	check_permissions(cmd, 1);
-	free_cmd(cmd);
+	free_cmd(cmd); // CHECK
 	error_sys("execve failed\n");
 	exit(1);
 }
@@ -71,13 +71,21 @@ static void	execute_absolute_relative_command(t_cmd *cmd, char **envp)
 void	execute_command(t_cmd *cmd, char **envp)
 {
 	int		i;
+	char	*cur_path;
 	char	*full_path;
 
 	i = 0;
+	full_path = NULL;
+	cur_path = NULL;
 	if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
 		execute_absolute_relative_command(cmd, envp);
 	if (!cmd->path)
+	{
+		cur_path = ft_strjoin("./", cmd->args[0]);
+		execve(cmd->args[0], cmd->args, envp);
+		check_permissions(cmd, 1);
 		show_error_free_cmd_exit(1, cmd->args[0], "command not found", cmd);
+	}
 	while (cmd->path[i])
 	{
 		full_path = get_full_command_path(cmd->path[i], cmd->args[0], cmd);
