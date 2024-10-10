@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 10:34:04 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/07 16:28:20 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/10 18:53:40 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,16 +162,34 @@ char *split_and_parse(char *str, t_shell *sh)
     in_double_quotes = 0;
     result = ft_strdup(""); // Start with an empty string to build the result dynamically
     if (!result)
-        return (NULL);
+        return (NULL); 
     while (str[i])
     {
         if (str[i] == '\"' && !in_single_quotes)
 			in_double_quotes = !in_double_quotes;
         if (str[i] == '\'' && !in_double_quotes)
 			in_single_quotes = !in_single_quotes;
-        if (str[i + 1] == '~')
+        if (i == 0 && (ft_strncmp(str, "~\0", 2) == 0  || ft_strncmp(&str[i], "~/", 2) == 0) && !in_double_quotes && !in_single_quotes)
         {
-            if ((ft_strncmp(&str[i], " ~ ", 3) == 0 || ft_strncmp(&str[i], " ~\0", 3) == 0) && !in_double_quotes && !in_single_quotes)
+            if (*(sh->homepath) != '\0')
+            {
+                temp = ft_strjoin(result, sh->homepath);
+            }
+            else
+                temp = ft_strjoin(result, "~");
+            free(result);
+            result = temp;
+            if (ft_strncmp(&str[i], "~/", 2) == 0)
+            {
+                temp = ft_strjoin(result, &str[1]);
+                free(result);
+                result = temp;
+            }
+            return (result);
+        }
+        if (str[i + 1] == '~') 
+        {
+            if ((ft_strncmp(&str[i], " ~ ", 3) == 0 || ft_strncmp(&str[i], " ~\0", 3) == 0 || ft_strncmp(&str[i], " ~/", 3) == 0) && !in_double_quotes && !in_single_quotes)
                 {
                     if (*(sh->homepath) != '\0')
                     {
