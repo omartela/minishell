@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd-command.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 16:06:06 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/07 12:37:28 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/09 23:29:39 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,16 @@ int	cd(t_shell *sh, char **args)
 	{
 		if (args[2])
 			return (show_error_return(1, args[0], "too many arguments"));
-		if (access(args[1], F_OK) == -1)
+		if (ft_strncmp(args[1], "-\0", 2) == 0)
+		{
+			if (chdir(oldpwd) == -1)
+				return (show_error_return(1, args[1], "Not a directory"));
+		}
+		else if (access(args[1], F_OK) == -1)
 			return (show_error_return(1, args[1], "No such file or directory"));
-		if (access(args[1], R_OK) == -1)
+		else if (access(args[1], R_OK) == -1)
 			return (show_error_return(1, args[1], "Permission denied"));
-		if (chdir(args[1]) == -1)
+		else if (chdir(args[1]) == -1)
 			return (show_error_return(1, args[1], "Not a directory"));
 		if (oldpwd)
 		{
