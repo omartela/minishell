@@ -163,13 +163,30 @@ char *split_and_parse(char *str, t_shell *sh)
     result = ft_strdup(""); // Start with an empty string to build the result dynamically
     if (!result)
         return (NULL);
-
     while (str[i])
     {
         if (str[i] == '\"' && !in_single_quotes)
 			in_double_quotes = !in_double_quotes;
         if (str[i] == '\'' && !in_double_quotes)
 			in_single_quotes = !in_single_quotes;
+        if (str[i + 1] == '~')
+        {
+            if ((ft_strncmp(&str[i], " ~ ", 3) == 0 || ft_strncmp(&str[i], " ~\0", 3) == 0) && !in_double_quotes && !in_single_quotes)
+                {
+                    if (*(sh->homepath) != '\0')
+                    {
+                        temp = ft_strjoin(result, " ");
+                        free(result);
+                        result = temp;
+                        temp = ft_strjoin(result, sh->homepath);
+                    }
+                    else
+                        temp = ft_strjoin(result, " ~");
+                    free(result);
+                    result = temp;
+                    i += 2;
+                }
+        }
         if (str[i] == '$' && !in_single_quotes) // We found a '$' sign
         {
             if (str[i + 1] == '?') // Handle $? (exit code)

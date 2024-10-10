@@ -23,7 +23,7 @@ static void	initialize_shell(t_shell *sh, char **envp)
 	ft_memset(&sh->org_sig_int, 0, sizeof(sh->org_sig_int));
 	ft_memset(&sh->org_sig_quit, 0, sizeof(sh->org_sig_quit));
 	copy_env(envp, sh);
-	sh->homepath = ft_strdup(getenv("HOME"));
+	sh->homepath = expand(envp, "HOME");
 	if (!sh->homepath)
 	{
 		error_sys("ft_strdup failed for getenv\n");

@@ -25,7 +25,7 @@ int    pwd(void)
     }
     else
     {
-        ft_putstr_fd("pwd error \n", 2);
+        ft_putstr_fd("pwd error, unknown folder \n", 2);
         return (1);
     }
     return (0);
