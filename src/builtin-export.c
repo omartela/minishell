@@ -15,19 +15,26 @@
 static void	display_local_shellvars(t_shell *shell)
 {
 	int		i;
-	char	**temp;
+	char	*variable;
+	char	*equal;
 	i = 0;
+	equal = NULL;
+	variable = NULL;
 	while (shell->local_shellvars[i])
 	{
-		temp = ft_split(shell->local_shellvars[i], '=');
-		if (temp[1])
-			ft_printf("declare -x %s=\"%s\" \n", temp[0], temp[1]);
-		else if (ft_strchr(shell->local_shellvars[i], '='))
+		equal = ft_strchr(shell->local_shellvars[i], '=');
+		if (equal)
+			variable = ft_substr(shell->local_shellvars[i], 0, (equal - shell->local_shellvars[i]));
+		if (equal && *(equal + 1))
+			ft_printf("declare -x %s=\"%s\" \n", variable, (equal + 1));
+		else if (equal)
 			ft_printf("declare -x %s\"\" \n", shell->local_shellvars[i]);
 		else
 			ft_printf("declare -x %s \n", shell->local_shellvars[i]);
 		++i;
-		free_array(temp);
+		if (variable)
+			free(variable);
+		variable = NULL;
 	}
 }
 
@@ -91,7 +98,8 @@ static int	is_last_plus_sign_and_remove(char *str)
 static int	is_valid_export_argument(const char *arg)
 {
 	char	*equal_sign;
-	char	**variable_value;
+	char	*variable;
+	char	*value;
 	int		valid_value;
 	int		valid_name;
 	int		plus_sign;
@@ -100,19 +108,36 @@ static int	is_valid_export_argument(const char *arg)
 	plus_sign = 0;
 	if (equal_sign)
 	{
-		variable_value = ft_split(arg, '=');
-		if (!variable_value)
+		variable = ft_substr(arg, 0, (equal_sign - arg));
+		if (!variable)
 			return (0);
-		plus_sign = is_last_plus_sign_and_remove(variable_value[0]);
-		valid_value = is_valid_value(variable_value[1]);
-		valid_name = is_valid_argument_name(variable_value[0]);
-		free_array(variable_value);
-		if (valid_value && valid_name && !plus_sign)
+		value = ft_strdup(equal_sign + 1);
+		if (!value)
+		{
+			free(variable);
 			return (1);
+		}
+		plus_sign = is_last_plus_sign_and_remove(variable);
+		valid_value = is_valid_value(value);
+		valid_name = is_valid_argument_name(variable);
+		if (valid_value && valid_name && !plus_sign)
+		{
+			free(variable);
+			free(value);
+			return (1);
+		}
 		else if (valid_value && valid_name && plus_sign)
+		{
+			free(variable);
+			free(value);
 			return (3);
+		}
 		else
+		{
+			free(variable);
+			free(value);
 			return (0);
+		}
 	}
 	else
 	{
@@ -124,24 +149,30 @@ static int	is_valid_export_argument(const char *arg)
 
 static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 {
-	char	**var_value;
+	char	*variable;
+	char	*value;
+	char	*equal;
 
 	if (is_valid_export_argument(arg) == 1)
 	{
-		var_value = ft_split(arg, '=');
-		if (!var_value)
+		equal = ft_strchr(arg, '=');
+		if (!equal)
 			return (0);
-		if (var_value[1] == NULL)
-		{
-			set_variables(sh, var_value[0], "");
+		variable = ft_substr(arg, 0, (equal - arg));
+		if (!variable)
 			return (0);
-		}
-		if (set_variables(sh, var_value[0], var_value[1]))
+		value = ft_strdup(equal + 1);
+		if (!value)
 		{
-			free_array(var_value);
+			free(variable);
 			return (1);
 		}
-		free_array(var_value);
+		if (set_variables(sh, variable, value))
+		{
+			free(variable);
+			free(value);
+			return (1);
+		}
 		return (0);
 	}
 	else if (is_valid_export_argument(arg) == 2)
@@ -156,15 +187,34 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 	}
 	else if (is_valid_export_argument(arg) == 3)
 	{
-		var_value = ft_split(arg, '=');
-		if (!var_value)
+		equal = ft_strchr(arg, '=');
+		if (!equal)
+			return (0);
+		variable = ft_substr(arg, 0, (equal - arg));
+		if (!variable)
+			return (0);
+		value = ft_strdup(equal + 1);
+		if (!value)
+		{
+			free(variable);
 			return (1);
-		is_last_plus_sign_and_remove(var_value[0]);
-		if (append_table(&sh->envp, var_value[0], var_value[1]))
+		}
+		is_last_plus_sign_and_remove(variable);
+		if (append_table(&sh->envp, variable, value))
+		{
+			free(variable);
+			free(value);
 			return (1);
-		if (append_table(&sh->local_shellvars, var_value[0], var_value[1]))
+		}
+		if (append_table(&sh->local_shellvars, variable, value))
+		{
+			free(variable);
+			free(value);
 			return (1);
+		}
 		sort_table(sh->local_shellvars);
+		free(variable);
+		free(value);
 		return (0);
 	}
 	return (1);
