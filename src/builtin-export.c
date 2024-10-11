@@ -207,6 +207,7 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 	}
 	else if (result == 2)
 	{
+		free(value);
 		if (export_add_local(sh, variable))
 			return (1);
 		return (0);
@@ -217,6 +218,8 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 			return (1);
 		return (0);
 	}
+	free(value);
+	free(variable);
 	return (1);
 }
 
