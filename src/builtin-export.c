@@ -95,78 +95,61 @@ static int	is_last_plus_sign_and_remove(char *str)
 
 }
 
-static int	is_valid_export_argument(const char *arg)
+static int	is_valid_export_argument(char *variable, char *value, char *equal)
 {
-	char	*equal_sign;
-	char	*variable;
-	char	*value;
 	int		valid_value;
 	int		valid_name;
 	int		plus_sign;
 
-	equal_sign = ft_strchr(arg, '=');
 	plus_sign = 0;
-	if (equal_sign)
+	if (equal)
 	{
-		variable = ft_substr(arg, 0, (equal_sign - arg));
-		if (!variable)
-			return (0);
-		value = ft_strdup(equal_sign + 1);
-		if (!value)
-		{
-			free(variable);
-			return (1);
-		}
 		plus_sign = is_last_plus_sign_and_remove(variable);
 		valid_value = is_valid_value(value);
 		valid_name = is_valid_argument_name(variable);
 		if (valid_value && valid_name && !plus_sign)
-		{
-			free(variable);
-			free(value);
 			return (1);
-		}
 		else if (valid_value && valid_name && plus_sign)
-		{
-			free(variable);
-			free(value);
 			return (3);
-		}
 		else
-		{
-			free(variable);
-			free(value);
 			return (0);
-		}
 	}
 	else
 	{
-		if (is_valid_argument_name(arg))
+		if (is_valid_argument_name(variable))
 			return (2);
 	}
 	return (0);
 }
+
 
 static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 {
 	char	*variable;
 	char	*value;
 	char	*equal;
+	int		result;
 
-	if (is_valid_export_argument(arg) == 1)
+	variable = NULL;
+	value = NULL;
+	equal = ft_strchr(arg, '=');
+	if (equal)
 	{
-		equal = ft_strchr(arg, '=');
-		if (!equal)
-			return (0);
 		variable = ft_substr(arg, 0, (equal - arg));
 		if (!variable)
-			return (0);
+			return (1);
 		value = ft_strdup(equal + 1);
 		if (!value)
 		{
 			free(variable);
 			return (1);
 		}
+	}
+	else
+		variable = arg;
+	result = is_valid_export_argument(variable, value, equal);
+	if (result == 1)
+	{
 		if (set_variables(sh, variable, value))
 		{
 			free(variable);
@@ -175,7 +158,7 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 		}
 		return (0);
 	}
-	else if (is_valid_export_argument(arg) == 2)
+	else if (result == 2)
 	{
 		if (set_table(&sh->local_shellvars, arg, NULL))
 			return (1);
@@ -185,20 +168,8 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 			return (0);
 		}
 	}
-	else if (is_valid_export_argument(arg) == 3)
+	else if (result == 3)
 	{
-		equal = ft_strchr(arg, '=');
-		if (!equal)
-			return (0);
-		variable = ft_substr(arg, 0, (equal - arg));
-		if (!variable)
-			return (0);
-		value = ft_strdup(equal + 1);
-		if (!value)
-		{
-			free(variable);
-			return (1);
-		}
 		is_last_plus_sign_and_remove(variable);
 		if (append_table(&sh->envp, variable, value))
 		{
