@@ -122,6 +122,49 @@ static int	is_valid_export_argument(char *variable, char *value, char *equal)
 	return (0);
 }
 
+static int export_add_local(t_shell *sh, char *variable)
+{
+	if (set_table(&sh->local_shellvars, variable, NULL))
+			return (1);
+	else
+	{
+		sort_table(sh->local_shellvars);
+		return (0);
+	}
+}
+
+static int	export_add_both(t_shell *sh, char *variable, char *value)
+{
+	if (set_variables(sh, variable, value))
+	{
+		free(variable);
+		free(value);
+		return (1);
+	}
+	free(variable);
+	free(value);
+	return (0);
+}
+
+static int	export_append_both(t_shell *sh, char *variable, char *value)
+{
+	if (append_table(&sh->envp, variable, value))
+	{
+		free(variable);
+		free(value);
+		return (1);
+	}
+	if (append_table(&sh->local_shellvars, variable, value))
+	{
+		free(variable);
+		free(value);
+		return (1);
+	}
+	sort_table(sh->local_shellvars);
+	free(variable);
+	free(value);
+	return (0);
+}
 
 static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 {
@@ -150,42 +193,20 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 	result = is_valid_export_argument(variable, value, equal);
 	if (result == 1)
 	{
-		if (set_variables(sh, variable, value))
-		{
-			free(variable);
-			free(value);
+		if (export_add_both(sh, variable, value))
 			return (1);
-		}
 		return (0);
 	}
 	else if (result == 2)
 	{
-		if (set_table(&sh->local_shellvars, arg, NULL))
+		if (export_add_local(sh, variable))
 			return (1);
-		else
-		{
-			sort_table(sh->local_shellvars);
-			return (0);
-		}
+		return (0);
 	}
 	else if (result == 3)
 	{
-		is_last_plus_sign_and_remove(variable);
-		if (append_table(&sh->envp, variable, value))
-		{
-			free(variable);
-			free(value);
+		if (export_append_both(sh, variable, value))
 			return (1);
-		}
-		if (append_table(&sh->local_shellvars, variable, value))
-		{
-			free(variable);
-			free(value);
-			return (1);
-		}
-		sort_table(sh->local_shellvars);
-		free(variable);
-		free(value);
 		return (0);
 	}
 	return (1);
