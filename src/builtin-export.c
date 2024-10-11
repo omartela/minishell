@@ -125,12 +125,18 @@ static int	is_valid_export_argument(char *variable, char *value, char *equal)
 static int export_add_local(t_shell *sh, char *variable)
 {
 	if (set_table(&sh->local_shellvars, variable, NULL))
-			return (1);
+	{
+		free(variable);
+		return (1);
+	}
 	else
 	{
+		free(variable);
 		sort_table(sh->local_shellvars);
 		return (0);
 	}
+	free(variable);
+	return (0);
 }
 
 static int	export_add_both(t_shell *sh, char *variable, char *value)
@@ -182,7 +188,7 @@ static int	parse_export_argument(char **arg, char **variable, char **value, char
 		}
 	}
 	else
-		*variable = *arg;
+		*variable = ft_strdup(*arg);
 	return (0);
 }
 
@@ -218,8 +224,8 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 			return (1);
 		return (0);
 	}
-	free(value);
 	free(variable);
+	free(value);
 	return (1);
 }
 
