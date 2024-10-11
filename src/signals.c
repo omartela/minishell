@@ -20,14 +20,11 @@ static void sig_handler_sigint(int signum)
 
 int reset_signals(t_shell *sh) 
 {
-    // Restore original SIGINT handler
     if (sigaction(SIGINT, &sh->org_sig_int, NULL) == -1) 
     {
         perror("Error resetting SIGINT handler");
         return (1);
     }
-
-    // Restore original SIGQUIT handler
     if (sigaction(SIGQUIT, &sh->org_sig_quit, NULL) == -1) 
     {
         perror("Error resetting SIGQUIT handler");
@@ -35,6 +32,7 @@ int reset_signals(t_shell *sh)
     }
     return (0);
 }
+
 
 int init_signal(t_shell *sh)
 {

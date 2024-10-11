@@ -12,14 +12,6 @@
 
 #include "../include/minishell.h"
 
-/* static int  is_check_dollar_sign(char *arg)
-{
-    if (ft_strchr(arg, '$'))
-        return (1);
-    else
-        return (0);
-} */
-
 char    *expand(char **envp, char *variable)
 {
     int     i;
@@ -40,20 +32,6 @@ char    *expand(char **envp, char *variable)
     return (ft_strdup(""));
 }
 
-/* void is_expandable(t_cmd *cmd)
-{
-    int i;
-
-    i = 0;
-    while (cmd->args[i])
-    {
-        if (is_check_dollar_sign(cmd->args[i]) && cmd->args[i][0] != '\'')
-            cmd->expandable[i] = 1;
-        else
-            cmd->expandable[i] = 0;
-        ++i;
-    }
-} */
 
 char	*ft_strndup(const char *s1, size_t n)
 {
@@ -123,28 +101,6 @@ static char  *get_exit_code(t_shell *sh)
     }
     return (tempitoa);
 }
-
-/* static int is_only_one_char(char *str, int c)
-{
-    while (*str)
-    {
-        if (*str != c)
-            return (0);
-        ++str;
-    }
-    return (1);
-} */
-
-/* static int is_2_dollar_signs(char *str)
-{
-	while (*str)
-	{
-		if (*str == '$' && *(str + 1) == '$')
-			return (1);
-		++str;
-	}
-	return (0);
-} */
 
 char *split_and_parse(char *str, t_shell *sh)
 {
@@ -270,23 +226,3 @@ char *split_and_parse(char *str, t_shell *sh)
     return result;
 }
 
-/* int parse_dollar_sign(t_cmd *cmd, t_shell *sh)
-{
-    int     i;
-    char    *result;
-
-    i = 0;
-    while (cmd->args[i])
-    {
-        if (cmd->expandable[i])
-        {
-            result = split_and_parse(cmd->args[i], sh);
-            if (!result)
-                return (1);
-            free(cmd->args[i]);
-            cmd->args[i] = result;
-        }
-        ++i;
-    }
-    return (0);
-} */
