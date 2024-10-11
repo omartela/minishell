@@ -145,8 +145,10 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	{
 		error_sys("ft_split_args failed\n"); //free all
 		free_cmd(*cmd);
+		free(temp);
 		return (1);
 	}
+	free(temp);
 	if (init_heredocs(sh, *cmd) == 1)
 		return (1);
 	if (path_init(*cmd, sh->envp) == 1)

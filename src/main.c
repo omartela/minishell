@@ -117,7 +117,8 @@ static void	process_input(t_shell *sh, char *input)
 		init_num_cmds(sh);
 /* 		printf("Number of commands: %d\n", sh->num_cmds); // Only for testingd */
 		execute_pipes(sh);
-		//free_array(sh->commands);
+		free_array(sh->commands);
+		sh->commands = NULL;
 	}
 	else
 	{
