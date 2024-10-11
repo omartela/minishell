@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/11 14:46:43 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/11 17:14:40 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,12 @@ typedef struct s_heredoc
 	int		*heredoc_fds;
 }	t_heredoc;
 
+typedef struct s_pipes
+{
+	int		**fd;
+	pid_t	*pid;
+}	t_pipes;
+
 typedef struct s_shell
 {
 	int					exit_status;
@@ -39,6 +45,7 @@ typedef struct s_shell
 	char				**envp;
 	char				*homepath;
 	char				**local_shellvars;
+	struct s_pipes		*pipes;
 	struct s_heredoc	*hd;
 	struct sigaction	org_sig_quit;
 	struct sigaction	org_sig_int;
@@ -59,12 +66,6 @@ typedef struct s_cmd
 	int		*expandable;
 	int		is_continue;
 }	t_cmd;
-
-typedef struct s_pipes
-{
-	int		**fd;
-	pid_t	*pid;
-}	t_pipes;
 
 typedef struct s_split_opts
 {
@@ -96,7 +97,7 @@ void	free_array_back(char **array, size_t i);
 void	free_array(char **array);
 void	free_shell(t_shell *sh);
 void	free_cmd(t_cmd *cmd);
-void	free_pipes(t_pipes *pipes, int num_cmds);
+void	free_pipes(t_shell *sh);
 
 // errors
 void	show_error_free_cmd_exit(int code, char *name, char *msg, t_cmd *cmd);

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/11 13:28:57 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/11 17:03:01 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,12 @@ static void	initialize_shell(t_shell *sh, char **envp)
 {
 	t_heredoc	*hd;
 
-	hd = NULL;
+	hd = malloc(sizeof(t_heredoc));
+	if (!hd)
+	{
+		error_sys("malloc failed for t_heredoc\n");
+		exit(1);
+	}
 	sh->hd = hd;
 	sh->exit_status = 0;
 	sh->num_cmds = 0;

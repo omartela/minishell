@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/11 13:21:39 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/11 17:32:18 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,25 @@ void	free_cmd(t_cmd *cmd)
 	if (cmd->fd_heredoc)
 		free(cmd->fd_heredoc);
 	free(cmd);
+	cmd = NULL;
 }
+
+void	free_pipes(t_shell *sh)
+{
+	int	i;
+
+	i = 0;
+	while (i < sh->num_cmds - 1)
+	{
+		free(sh->pipes->fd[i]);
+		i++;
+	}
+	free(sh->pipes->fd);
+	free(sh->pipes->pid);
+	free(sh->pipes);
+	sh->pipes = NULL;
+}
+
 
 void	free_shell(t_shell *sh)
 {
@@ -66,18 +84,8 @@ void	free_shell(t_shell *sh)
 		free_array(sh->local_shellvars);
 	if (sh->hd->heredoc_fds)
 		free(sh->hd->heredoc_fds);
-}
-
-void	free_pipes(t_pipes *pipes, int num_cmds)
-{
-	int	i;
-
-	i = 0;
-	while (i < num_cmds - 1)
-	{
-		free(pipes->fd[i]);
-		i++;
-	}
-	free(pipes->fd);
-	free(pipes->pid);
+	if (sh->hd)
+		free(sh->hd);
+	if (sh->pipes)
+		free_pipes(sh);
 }

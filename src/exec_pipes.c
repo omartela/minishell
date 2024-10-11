@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/09 23:28:56 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/11 17:14:43 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,14 +184,22 @@ void	execute_pipes(t_shell *sh)
 {
 	int		i;
 	t_cmd	*cmd;
-	t_pipes	pipes;
+	t_pipes	*pipes;
 	int	error_code;
 
-	ft_memset(&pipes, 0, sizeof(t_pipes));
 	i = 0;
 	error_code = 0;
 	cmd = NULL;
-	if (init_pipes(&pipes, sh->num_cmds) == 1)
+	pipes = malloc(sizeof(t_pipes));
+	if (!pipes)
+	{
+		error_sys("malloc failed for t_pipes\n");
+		sh->exit_status = 1;
+		return;
+	}
+	ft_memset(pipes, 0, sizeof(t_pipes));
+	sh->pipes = pipes;
+	if (init_pipes(sh->pipes, sh->num_cmds) == 1)
 	{
 		error_sys("malloc failed\n");
 		sh->exit_status = 1;
@@ -204,11 +212,11 @@ void	execute_pipes(t_shell *sh)
 			sh->exit_status = 1;
 			return ;
 		}
-		error_code = pipe_and_fork(sh, &pipes, i, cmd);
+		error_code = pipe_and_fork(sh, sh->pipes, i, cmd);
 		if (error_code || !cmd->is_continue)
 		{
 			free_cmd(cmd);
-			free_pipes(&pipes, sh->num_cmds);
+			free_pipes(sh);
 			sh->exit_status = error_code;
 			return ;
 		}
@@ -216,7 +224,7 @@ void	execute_pipes(t_shell *sh)
 		i++;
 	}
 	/* close_pipes_in_parent(&pipes, sh->num_cmds); */
-	wait_for_children(&pipes, sh);
-	free_pipes(&pipes, sh->num_cmds);
+	wait_for_children(sh->pipes, sh);
+	free_pipes(sh);
 	return ;
 }
