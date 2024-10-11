@@ -162,7 +162,7 @@ char *split_and_parse(char *str, t_shell *sh)
     in_double_quotes = 0;
     result = ft_strdup(""); // Start with an empty string to build the result dynamically
     if (!result)
-        return (NULL); 
+        return (NULL);
     while (str[i])
     {
         if (str[i] == '\"' && !in_single_quotes)
@@ -203,6 +203,7 @@ char *split_and_parse(char *str, t_shell *sh)
                     free(result);
                     result = temp;
                     i += 2;
+                    continue;
                 }
         }
         if (str[i] == '$' && !in_single_quotes) // We found a '$' sign
