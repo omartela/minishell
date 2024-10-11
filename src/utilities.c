@@ -78,12 +78,7 @@ int	is_builtin(t_cmd *cmd)
 		i++;
 	}
 	i = 0;
-	while (str[i])
-	{
-		free(str[i]);
-		++i;
-	}
-	free(str);
+	free_array(str);
 	return (is_builtin);
 }
 
