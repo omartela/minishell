@@ -53,7 +53,7 @@ static void	process_input(t_shell *sh, char *input)
 	if (is_heredoc(input))
 		handle_here_doc(sh, input);
 	len = ft_strlen(input);
-	while (input[len - 1] == '|' || (len > 2 && input[len - 1] == '&' && input[len - 2] == '&'))
+	while ((len > 0 && input[len - 1] == '|') || (len > 2 && input[len - 1] == '&' && input[len - 2] == '&'))
 	{
 /* 		next_input = readline("> ");
 		if (!next_input)
