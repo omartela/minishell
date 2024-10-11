@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/10 17:42:10 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:31:53 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,12 @@ void	handle_here_doc(t_shell *sh, char *input)
 	{
 		if (ft_strncmp(args[i], "<<\0", 3) == 0 && args[i + 1])
 		{
-			if (!sh->heredoc_fds)
-				sh->heredoc_fds = malloc(sizeof(int));
+			if (!sh->hd->heredoc_fds)
+				sh->hd->heredoc_fds = malloc(sizeof(int));
 			else
-				sh->heredoc_fds = ft_realloc(sh->heredoc_fds, sizeof(int) * sh->num_heredocs, sizeof(int) * (sh->num_heredocs + 1));
-			sh->heredoc_fds[sh->num_heredocs] = here_doc_input(args[i + 1], sh);
-			sh->num_heredocs++;
+				sh->hd->heredoc_fds = ft_realloc(sh->hd->heredoc_fds, sizeof(int) * sh->hd->num_heredocs, sizeof(int) * (sh->hd->num_heredocs + 1));
+			sh->hd->heredoc_fds[sh->hd->num_heredocs] = here_doc_input(args[i + 1], sh);
+			sh->hd->num_heredocs++;
 			i += 2;
 		}
 		else
