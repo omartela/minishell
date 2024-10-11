@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/11 17:32:18 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/11 17:51:54 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void	free_pipes(t_shell *sh)
 	free(sh->pipes);
 	sh->pipes = NULL;
 }
-
 
 void	free_shell(t_shell *sh)
 {

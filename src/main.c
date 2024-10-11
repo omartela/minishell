@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/11 17:03:01 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/11 17:57:21 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static void	initialize_shell(t_shell *sh, char **envp)
 	sh->exit_status = 0;
 	sh->num_cmds = 0;
 	sh->commands = NULL;
+	sh->pipes = NULL;
 	hd->heredoc_fds = NULL;
 	hd->num_heredocs = 0;
 	hd->heredoc_index = 0;
