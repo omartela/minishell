@@ -11,6 +11,18 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
+static int	change_table_value(char ***table, size_t index, const char *value)
+{
+	char *temp;
+
+	temp = ft_strjoin((*table)[index], value);
+	if (!temp)
+		return (1);
+	free((*table)[index]);
+	(*table)[index] = temp;
+	return (0);
+}
+
 char	**sort_table(char **envp)
 {
 	char	*temp;
@@ -67,7 +79,6 @@ void	copy_env(char **envp, t_shell *shell)
 int	add_table(char ***table, const char *variable, const char *value)
 {
 	size_t	sarr;
-	char	*temp;
 	char	**temp_table;
 
 	sarr = 0;
@@ -80,15 +91,9 @@ int	add_table(char ***table, const char *variable, const char *value)
 	(*table)[sarr] = ft_strdup(variable);
 	if (value)
 	{
-		temp = (*table)[sarr];
-		(*table)[sarr] = ft_strjoin(temp, "=");
-		if (!(*table)[sarr])
+		if (change_table_value(table, sarr, "="))
 			return (1);
-		//free(temp);
-		temp = (*table)[sarr];
-		(*table)[sarr] = ft_strjoin(temp, value);
-		//free(temp);
-		if (!((*table))[sarr])
+		if (change_table_value(table, sarr, value))
 			return (1);
 	}
 	(*table)[sarr + 1] = NULL;
@@ -135,7 +140,6 @@ int	append_table(char ***table, const char *variable, const char *value)
 	size_t	size;
 	int		index_to_modify;
 	int		found;
-	char	*temp;
 
 	found = 0;
 	size = 0;
@@ -151,11 +155,13 @@ int	append_table(char ***table, const char *variable, const char *value)
 	}
 	if (found)
 	{
-		temp = (*table)[index_to_modify];
-		if (!(*table)[index_to_modify])
-			return (0);
-		(*table)[index_to_modify] = ft_strjoin((*table)[index_to_modify], value);
-		free(temp);
+		if (!ft_strchr((*table)[index_to_modify], '='))
+		{
+			if (change_table_value(table, index_to_modify, "="))
+				return (1);
+		}
+		if (change_table_value(table, index_to_modify, value))
+			return (1);
 		return (0);
 	}
 	else
