@@ -188,7 +188,11 @@ static int	parse_export_argument(char **arg, char **variable, char **value, char
 		}
 	}
 	else
+	{
 		*variable = ft_strdup(*arg);
+		if (!(*variable))
+			return (1);
+	}
 	return (0);
 }
 
