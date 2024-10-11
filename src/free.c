@@ -60,8 +60,10 @@ void	free_shell(t_shell *sh)
 		free_array(sh->commands);
 	if (sh->homepath)
 		free(sh->homepath);
-/* 	if (sh->envp)
-		free_array(sh->envp); */
+	if (sh->envp)
+		free_array(sh->envp);
+	if (sh->local_shellvars)
+		free_array(sh->local_shellvars);
 	if (sh->heredoc_fds)
 		free(sh->heredoc_fds);
 }
