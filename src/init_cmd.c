@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/10 17:29:56 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:24:55 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ int	init_heredocs(t_shell *sh, t_cmd *cmd)
 					return (1);
 				}
 			}
-			cmd->fd_heredoc[j] = sh->heredoc_fds[sh->heredoc_index];
-			sh->heredoc_index++;
+			cmd->fd_heredoc[j] = sh->hd->heredoc_fds[sh->hd->heredoc_index];
+			sh->hd->heredoc_index++;
 			/* printf("fd_heredoc[%d] = %d\n", j, cmd->fd_heredoc[j]); */
 			i += 2;
 			j++;
