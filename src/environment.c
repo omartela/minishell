@@ -140,7 +140,6 @@ int	append_table(char ***table, const char *variable, const char *value)
 	size_t	size;
 	int		index_to_modify;
 	int		found;
-	char	*temp;
 
 	found = 0;
 	size = 0;
@@ -156,17 +155,13 @@ int	append_table(char ***table, const char *variable, const char *value)
 	}
 	if (found)
 	{
-		temp = (*table)[index_to_modify];
-		if (!ft_strchr(temp, '='))
+		if (!ft_strchr((*table)[index_to_modify], '='))
 		{
-			(*table)[index_to_modify] = ft_strjoin((*table)[index_to_modify], "=");
-			if (!(*table)[index_to_modify])
-				return (0);
+			if (change_table_value(table, index_to_modify, "="))
+				return (1);
 		}
-		(*table)[index_to_modify] = ft_strjoin((*table)[index_to_modify], value);
-		if (!(*table)[index_to_modify])
-			return (0);
-		free(temp);
+		if (change_table_value(table, index_to_modify, value))
+			return (1);
 		return (0);
 	}
 	else
