@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/10 11:47:23 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:21:39 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 void	free_array(char **array)
 {
@@ -64,8 +64,8 @@ void	free_shell(t_shell *sh)
 		free_array(sh->envp);
 	if (sh->local_shellvars)
 		free_array(sh->local_shellvars);
-	if (sh->heredoc_fds)
-		free(sh->heredoc_fds);
+	if (sh->hd->heredoc_fds)
+		free(sh->hd->heredoc_fds);
 }
 
 void	free_pipes(t_pipes *pipes, int num_cmds)

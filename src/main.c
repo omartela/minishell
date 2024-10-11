@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/10 10:37:42 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:28:57 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,16 @@
 
 static void	initialize_shell(t_shell *sh, char **envp)
 {
+	t_heredoc	*hd;
+
+	hd = NULL;
+	sh->hd = hd;
 	sh->exit_status = 0;
 	sh->num_cmds = 0;
 	sh->commands = NULL;
-	sh->heredoc_fds = NULL;
-	sh->num_heredocs = 0;
-	sh->heredoc_index = 0;
+	hd->heredoc_fds = NULL;
+	hd->num_heredocs = 0;
+	hd->heredoc_index = 0;
 	ft_memset(&sh->org_sig_int, 0, sizeof(sh->org_sig_int));
 	ft_memset(&sh->org_sig_quit, 0, sizeof(sh->org_sig_quit));
 	copy_env(envp, sh);

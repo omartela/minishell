@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/07 20:34:50 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/11 14:46:43 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,24 @@
 # include <limits.h>
 # include <signal.h>
 
-typedef struct s_shell
+typedef struct s_heredoc
 {
-	int		exit_status;
-	int		num_cmds;
-	char	**commands;
-	char	**envp;
-	char	**local_shellvars;
-	char	*homepath;
-	int		*heredoc_fds;
 	int		num_heredocs;
 	int 	heredoc_index;
+	int		*heredoc_fds;
+}	t_heredoc;
+
+typedef struct s_shell
+{
+	int					exit_status;
+	int					num_cmds;
+	char				**commands;
+	char				**envp;
+	char				*homepath;
+	char				**local_shellvars;
+	struct s_heredoc	*hd;
 	struct sigaction	org_sig_quit;
 	struct sigaction	org_sig_int;
-	
 }	t_shell;
 
 typedef struct s_cmd
