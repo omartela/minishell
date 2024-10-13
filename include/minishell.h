@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/11 17:14:40 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/13 18:55:51 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ char	**split_args_general(char *s, char c, int keep_quotes);
 int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
 void	init_num_cmds(t_shell *sh);
 char	*ft_add_spaces(char *s);
-void	handle_here_doc(t_shell *sh, char *input);
+int		handle_here_doc(t_shell *sh, char *input);
 int		parse_redirections(t_cmd *cmd, char **args, char **args_withquotes, int is_exit);
 int		init_pipes(t_pipes *pipes, int num_cmds);
 void	execute_pipes(t_shell *sh);

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/13 15:22:07 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/13 21:16:29 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,10 @@ static void	initialize_shell(t_shell *sh, char **envp)
 {
 	t_heredoc	*hd;
 
-	hd = malloc(sizeof(t_heredoc));
-	if (!hd)
-	{
-		error_sys("malloc failed for t_heredoc\n");
-		exit(1);
-	}
-	sh->hd = hd;
 	sh->exit_status = 0;
 	sh->num_cmds = 0;
 	sh->commands = NULL;
 	sh->pipes = NULL;
-	hd->heredoc_fds = NULL;
-	hd->num_heredocs = 0;
-	hd->heredoc_index = 0;
-	ft_memset(&sh->org_sig_int, 0, sizeof(sh->org_sig_int));
-	ft_memset(&sh->org_sig_quit, 0, sizeof(sh->org_sig_quit));
 	copy_env(envp, sh);
 	sh->homepath = expand(envp, "HOME");
 	if (!sh->homepath)
@@ -39,6 +27,20 @@ static void	initialize_shell(t_shell *sh, char **envp)
 		error_sys("ft_strdup failed for getenv\n");
 		exit (1);
 	}
+	hd = malloc(sizeof(t_heredoc));
+	if (!hd)
+	{
+		error_sys("malloc failed for t_heredoc\n");
+		exit(1);
+	}
+	sh->hd = hd;
+	hd->heredoc_fds = NULL;
+	hd->num_heredocs = 0;
+	hd->heredoc_index = 0;
+	ft_memset(&sh->org_sig_int, 0, sizeof(sh->org_sig_int));
+	ft_memset(&sh->org_sig_quit, 0, sizeof(sh->org_sig_quit));
+	if (init_signal(sh))
+		exit (1);
 }
 
 static void	process_input(t_shell *sh, char *input)
@@ -49,20 +51,44 @@ static void	process_input(t_shell *sh, char *input)
 
 	next_input = NULL;
 	split_input = NULL;
-	split_input = split_and_parse(input, sh);
-	free(input);
-	input = trim_spaces(split_input);
-	if (check_syntax(input))
+
+	split_input = trim_spaces(input);
+	if (check_syntax(split_input))
 	{
-		free(input);
+		free(split_input);
 		sh->exit_status = 2;
 		return ;
 	}
+	input = split_and_parse(split_input, sh);
+	if (!input)
+	{
+		error_sys("split_and_parse failed\n");
+		free(split_input);
+		sh->exit_status = 1;
+		return ;
+	}
+	free(split_input);
+
+
 	split_input = ft_add_spaces(input);
+	if (!split_input)
+	{
+		error_sys("ft_add_spaces failed\n");
+		free(input);
+		sh->exit_status = 1;
+		return ;
+	}
 	free(input);
 	input = split_input;
 	if (is_heredoc(input))
-		handle_here_doc(sh, input);
+	{
+		if (handle_here_doc(sh, input))
+		{
+			error_sys("handle_here_doc failed\n");
+			free(input);
+			return ;
+		}
+	}
 	len = ft_strlen(input);
 	while ((len > 0 && input[len - 1] == '|') || (len > 2 && input[len - 1] == '&' && input[len - 2] == '&'))
 	{
@@ -71,7 +97,7 @@ static void	process_input(t_shell *sh, char *input)
 		{
 			free(input);
 			//printf("Exit \n");
-			return ;//nor sure if this is the right way to exit
+			return ;
 		} */
 		//Snippet for tester
 		if (isatty(fileno(stdin)))
@@ -87,9 +113,19 @@ static void	process_input(t_shell *sh, char *input)
 		{
 			free(input);
 			//printf("Exit \n");
-			return ;//nor sure if this is the right way to exit
-		} 
-		next_input = trim_spaces(next_input);
+			return ;
+		}
+		split_input = split_and_parse(next_input, sh);
+		if (!split_input)
+		{
+			error_sys("split_and_parse failed\n");
+			free(input);
+			free(next_input);
+			sh->exit_status = 1;
+			return ;
+		}
+		free(next_input);
+		next_input = trim_spaces(split_input);
 		if (check_syntax(next_input))
 		{
 			free(input);
@@ -98,21 +134,39 @@ static void	process_input(t_shell *sh, char *input)
 			return ;
 		}
 		split_input = ft_add_spaces(next_input);
+		if (!split_input)
+		{
+			error_sys("ft_add_spaces failed\n");
+			free(input);
+			free(next_input);
+			sh->exit_status = 1;
+			return ;
+		}
 		free(next_input);
 		next_input = split_input;
 		if (is_heredoc(next_input))
-			handle_here_doc(sh, next_input);
-		input = ft_strjoin(input, next_input);
-		if (!input)
+		{	
+			if (handle_here_doc(sh, next_input))
+			{
+				error_sys("handle_here_doc failed\n");
+				free(input);
+				free(next_input);
+				return ;
+			}
+		}
+		split_input = ft_strjoin(input, next_input);
+		if (!split_input)
 		{
 			error_sys("ft_strjoin failed\n");
-			sh->exit_status = 1;
+			free(input);
 			free(next_input);
+			sh->exit_status = 1;
 			return ;
 		}
+		free(input);
+		free(next_input);
+		input = split_input;
 		len = ft_strlen(input);
-		/* free(temp);
-		free(next_input); */ //SegFAULT if I free here. I should think
 	}
 	if (*input)
 		add_history(input);
@@ -120,7 +174,6 @@ static void	process_input(t_shell *sh, char *input)
 		free(temp); */
 	if (next_input)
 		free(next_input);
-/* 	test_split_args_leave_quotes(input , '|'); // Only for testing */
 	sh->commands = split_args_leave_quotes(input, '|');
 	free(input);
 	if (sh->commands)
@@ -143,8 +196,6 @@ static int	userprompt(int status, char **envp)
 	char	*input;
 
 	initialize_shell(&sh, envp);
-	if (init_signal(&sh))
-			return (1);
 	while (1)
 	{
 		//Snippet for tester

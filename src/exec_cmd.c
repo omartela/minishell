@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 17:58:11 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/10 20:26:27 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/13 21:29:25 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ void	execute_command(t_cmd *cmd, char **envp)
 
 	i = 0;
 	full_path = NULL;
+	if (cmd->args[0] == NULL)
+		exit(0);
 	if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
 		execute_absolute_relative_command(cmd, envp);
 	if (!cmd->path)
