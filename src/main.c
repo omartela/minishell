@@ -168,6 +168,7 @@ static int	userprompt(int status, char **envp)
 	}
 	status = sh.exit_status;
 	free_shell(&sh);
+	rl_clear_history();
 	return (status);
 }
 
