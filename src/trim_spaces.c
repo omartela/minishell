@@ -6,9 +6,10 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:36:54 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/13 21:15:02 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/13 21:37:57 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -27,6 +28,7 @@ static void	trim_leading_trailing_spaces(char *str)
 			|| str[end] == '\n'))
 		end--;
 	len = end - start + 1;
+	if (len > 0)
 	if (len > 0)
 		ft_memmove(str, str + start, len);
 	str[len] = '\0';
