@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/11 17:57:21 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/13 15:22:07 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ static void	process_input(t_shell *sh, char *input)
 	input = trim_spaces(split_input);
 	if (check_syntax(input))
 	{
+		free(input);
 		sh->exit_status = 2;
 		return ;
 	}
@@ -162,8 +163,6 @@ static int	userprompt(int status, char **envp)
 			//printf("Exit \n");
 			break ;
 		}
-		if (init_signal(&sh))
-			return (1);
 		process_input(&sh, input);
 	}
 	status = sh.exit_status;
