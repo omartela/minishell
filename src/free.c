@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/14 13:41:42 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 21:03:53 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,11 @@ void	free_shell(t_shell *sh)
 		free_pipes(sh);
 		sh->pipes = NULL;
 	}
+	if (sh->promt)
+	{
+		free(sh->promt);
+		sh->promt = NULL;
+	}
 }
 
 void	free_partial(t_shell *sh)
@@ -138,5 +143,10 @@ void	free_partial(t_shell *sh)
 	{
 		free_pipes(sh);
 		sh->pipes = NULL;
+	}
+	if (sh->promt)
+	{
+		free(sh->promt);
+		sh->promt = NULL;
 	}
 }

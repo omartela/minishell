@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/14 15:29:38 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 21:16:53 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_shell
 	int					num_cmds;
 	char				**commands;
 	char				**envp;
+	char				*promt;
 	char				*homepath;
 	char				**local_shellvars;
 	struct s_pipes		*pipes;
@@ -74,6 +75,7 @@ typedef struct s_split_opts
 }	t_split_opts;
 
 // main functions
+int		add_prompt(t_shell *sh, char *input);
 char	*trim_spaces(char *str);
 int		check_syntax(char *input);
 int		is_heredoc(char *input);

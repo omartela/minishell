@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/14 16:06:15 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 21:17:39 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,22 @@ static int	here_doc_input(char *delimiter, t_shell *sh)
 		error_sys("pipe failed\n"); // free
 		return (-1);
 	}
+	if (add_prompt(sh, "\n"))
+	{
+		error_sys("add_prompt failed\n");
+		return (-1);
+	}
 	while (1)
 	{
 		ft_putstr_fd("> ", 1);
 		line = get_next_line(0);
 		if (!line)
 			break;
+		if (add_prompt(sh, line))
+		{
+			error_sys("add_prompt failed\n");
+			return (-1);
+		}
 		temp = split_and_parse(line, sh);
 		free(line);
 		if (!temp)
@@ -108,7 +118,7 @@ int	handle_here_doc(t_shell *sh, char *input)
 				sh->hd->heredoc_fds = ft_realloc(sh->hd->heredoc_fds, sizeof(int) * sh->hd->num_heredocs, sizeof(int) * (sh->hd->num_heredocs + 1));
 			sh->hd->heredoc_fds[sh->hd->num_heredocs] = here_doc_input(args[i + 1], sh);
 			if (sh->hd->heredoc_fds[sh->hd->num_heredocs] == -1)
-				return (1);
+				return (1); // free args!!!!!!!
 			sh->hd->num_heredocs++;
 			i += 2;
 		}

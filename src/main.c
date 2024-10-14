@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/14 19:42:27 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 21:16:08 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static void	initialize_shell(t_shell *sh, char **envp)
 	sh->exit_status = 0;
 	sh->num_cmds = 0;
 	sh->commands = NULL;
+	sh->promt = NULL;
 	sh->pipes = NULL;
 	copy_env(envp, sh);
 	sh->homepath = expand(envp, "HOME");
@@ -41,6 +42,33 @@ static void	initialize_shell(t_shell *sh, char **envp)
 	ft_memset(&sh->org_sig_quit, 0, sizeof(sh->org_sig_quit));
 	if (init_signal(sh))
 		exit (1);
+}
+
+int	add_prompt(t_shell *sh, char *input)
+{
+	char *temp;
+
+	if (sh->promt)
+	{
+		temp = ft_strjoin(sh->promt, input);
+		if (!temp)
+		{
+			error_sys("ft_strjoin failed\n");
+			return (1);
+		}
+		free(sh->promt);
+		sh->promt = temp;
+	}
+	else
+	{
+		sh->promt = ft_strdup(input);
+		if (!sh->promt)
+		{
+			error_sys("ft_strdup failed\n");
+			return (1);
+		}
+	}
+	return (0);
 }
 
 static void	process_input(t_shell *sh, char *input)
@@ -109,6 +137,13 @@ static void	process_input(t_shell *sh, char *input)
 			//printf("Exit \n");
 			return ;
 		}
+		if (add_prompt(sh, next_input))
+		{
+			error_sys("add_prompt failed\n");
+			free(input);
+			free(next_input);
+			return ;
+		}
 		split_input = split_and_parse(next_input, sh);
 		free(next_input);
 		if (!split_input)
@@ -158,8 +193,8 @@ static void	process_input(t_shell *sh, char *input)
 		input = split_input;
 		len = ft_strlen(input);
 	}
-	if (*input)
-		add_history(input);
+	if (sh->promt && sh->promt[0] != '\0')
+		add_history(sh->promt);
 	if (next_input)
 		free(next_input);
 	sh->commands = split_args_leave_quotes(input, '|');
@@ -205,6 +240,12 @@ static int	userprompt(int status, char **envp)
 		{
 			//printf("Exit \n");
 			break ;
+		}
+		if (add_prompt(&sh, input))
+		{
+			error_sys("add_prompt failed\n");
+			free(input);
+			exit(1);
 		}
 		process_input(&sh, input);
 		free_partial(&sh);
