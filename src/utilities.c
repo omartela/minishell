@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:06:00 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/14 15:35:13 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 15:41:17 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,53 +94,98 @@ int	execute_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 	}
 	if (ft_strncmp(cmd->args[0], "export\0", 7) == 0)
 	{
-		if (export(sh, cmd->args))
+		if (!is_in_pipe)
 		{
-			sh->exit_status = 1;
-			return (1);
+			if (export(sh, cmd->args))
+			{
+				sh->exit_status = 1;
+				return (1);
+			}
+			sh->exit_status = 0;
+			return (0);
 		}
-		sh->exit_status = 0;
-		return (0);
+		else
+		{
+			if (export(sh, cmd->args))
+				exit_and_free(sh, cmd, 1);
+			exit_and_free(sh, cmd, 0);
+		}
 	}
 	if (ft_strncmp(cmd->args[0], "env\0", 4) == 0)
 	{
-		if (env(sh, cmd->args))
+		if (!is_in_pipe)
 		{
-			sh->exit_status = 1;
-			return (1);
+			if (env(sh, cmd->args))
+			{
+				sh->exit_status = 1;
+				return (1);
+			}
+			sh->exit_status = 0;
+			return (0);
 		}
-		sh->exit_status = 0;
-		return (0);
+		else
+		{
+			if (env(sh, cmd->args))
+				exit_and_free(sh, cmd, 1);
+			exit_and_free(sh, cmd, 0);
+		}
 	}
 	if (ft_strncmp(cmd->args[0], "cd\0", 3) == 0)
 	{
-		if (cd(sh, cmd->args))
+		if (!is_in_pipe)
 		{
-			sh->exit_status = 1;
-			return (1);
+			if (cd(sh, cmd->args))
+			{
+				sh->exit_status = 1;
+				return (1);
+			}
+			sh->exit_status = 0;
+			return (0);
 		}
-		sh->exit_status = 0;
-		return (0);
+		else
+		{
+			if (cd(sh, cmd->args))
+				exit_and_free(sh, cmd, 1);
+			exit_and_free(sh, cmd, 0);
+		}
 	}
 	if (ft_strncmp(cmd->args[0], "unset\0", 6) == 0)
 	{
-		if (unset(sh, cmd->args))
+		if (!is_in_pipe)
 		{
-			sh->exit_status = 1;
-			return (1);
+			if (unset(sh, cmd->args))
+			{
+				sh->exit_status = 1;
+				return (1);
+			}
+			sh->exit_status = 0;
+			return (0);
 		}
-		sh->exit_status = 0;
-		return (0);
+		else
+		{
+			if (unset(sh, cmd->args))
+				exit_and_free(sh, cmd, 1);
+			exit_and_free(sh, cmd, 0);
+		}
 	}
 	if (ft_strncmp(cmd->args[0], "pwd\0", 4) == 0)
 	{
-		if (pwd())
+		if (!is_in_pipe)
 		{
-			sh->exit_status = 1;
-			return (1);
+			if (pwd())
+			{
+				sh->exit_status = 1;
+				return (1);
+			}
+			sh->exit_status = 0;
+			return (0);
 		}
-		sh->exit_status = 0;
-		return (0);
+		else
+		{
+			if (pwd())
+				exit_and_free(sh, cmd, 1);
+			exit_and_free(sh, cmd, 0);
+		}
 	}
 	if (ft_strncmp(cmd->args[0], "echo\0", 5) == 0)
 	{
