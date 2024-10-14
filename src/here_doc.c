@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/14 13:46:24 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:06:15 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,12 @@ static int	here_doc_input(char *delimiter, t_shell *sh)
 		if (!line)
 			break;
 		temp = split_and_parse(line, sh);
+		free(line);
 		if (!temp)
 		{
 			error_sys("split_and_parse failed\n");
 			return (-1);
 		}
-		free(line);
 		line = temp;
 		if (!is_continue(line, delimiter))
 			break ;
