@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/11 17:14:43 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 11:50:40 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 	}
 	if (sh->num_cmds == 1 && is_builtin(cmd))
 	{
-		error_code = parse_redirections(cmd, cmd->args, cmd->args_withquotes, 0);
+		error_code = parse_redirections(sh ,cmd, 0);
 		if (error_code)
 			return (error_code);
 		int saved_stdout = dup(STDOUT_FILENO);
@@ -110,7 +110,7 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 			}
 			close(cmd->fd_out);
 		}
-		if (execute_builtin(sh, cmd))
+		if (execute_builtin(sh, cmd, 0))
 		{
 			restore_fds(saved_stdin, saved_stdout);
 			return (1);
@@ -129,16 +129,16 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 	if (pipes->pid[i] == 0)
 	{
 		reset_signals(sh);
-		parse_redirections(cmd, cmd->args, cmd->args_withquotes, 1);
+		parse_redirections(sh, cmd, 1);
 		child_io(cmd, pipes->fd, i, sh->num_cmds);
 		if (is_builtin(cmd))
 		{
-			if (execute_builtin(sh, cmd))
+			if (execute_builtin(sh, cmd, 1))
 				exit(1);
 			else
 				exit(0);
 		}
-		execute_command(cmd, sh->envp);
+		execute_command(sh, cmd, sh->envp);
 		exit(1);
 	}
 	if (i > 0)
@@ -148,21 +148,6 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 	}
 	return (error_code);
 }
-
-/* static void	close_pipes_in_parent(t_pipes *pipes, int num_cmds)
-{
-	int	i;
-
-	i = 0;
-	while (i < num_cmds - 1)
-	{
-		if (pipes->fd[i][0] != -1)
-			close(pipes->fd[i][0]);
-		if (pipes->fd[i][1] != -1)
-			close(pipes->fd[i][1]);
-		i++;
-	}
-} */
 
 static void	wait_for_children(t_pipes *pipes, t_shell *sh)
 {
@@ -216,15 +201,12 @@ void	execute_pipes(t_shell *sh)
 		if (error_code || !cmd->is_continue)
 		{
 			free_cmd(cmd);
-			free_pipes(sh);
 			sh->exit_status = error_code;
 			return ;
 		}
 		free_cmd(cmd);
 		i++;
 	}
-	/* close_pipes_in_parent(&pipes, sh->num_cmds); */
 	wait_for_children(sh->pipes, sh);
-	free_pipes(sh);
 	return ;
 }

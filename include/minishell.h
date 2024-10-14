@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/13 18:55:51 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 13:42:56 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,19 +87,22 @@ int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
 void	init_num_cmds(t_shell *sh);
 char	*ft_add_spaces(char *s);
 int		handle_here_doc(t_shell *sh, char *input);
-int		parse_redirections(t_cmd *cmd, char **args, char **args_withquotes, int is_exit);
+int		parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit);
 int		init_pipes(t_pipes *pipes, int num_cmds);
 void	execute_pipes(t_shell *sh);
-void	execute_command(t_cmd *cmd, char **envp);
+void	execute_command(t_shell *sh, t_cmd *cmd, char **envp);
 
 // free functions
 void	free_array_back(char **array, size_t i);
-void	free_array(char **array);
+void	free_array(char ***array);
 void	free_shell(t_shell *sh);
+void	free_partial(t_shell *sh);
 void	free_cmd(t_cmd *cmd);
 void	free_pipes(t_shell *sh);
+void	exit_and_free(t_shell *sh, t_cmd *cmd, int status);
 
 // errors
+void	show_error(char *name, char *msg);
 void	show_error_free_cmd_exit(int code, char *name, char *msg, t_cmd *cmd);
 int		show_error_return(int code, char *name, char *msg);
 void	error_sys(char *msg);
@@ -116,7 +119,7 @@ int		echo(char *argv[]);
 // utilities.c
 char	*expand_tilde(t_shell *sh);
 int		is_builtin(t_cmd *cmd);
-int		execute_builtin(t_shell *sh, t_cmd *cmd);
+int		execute_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
 char	*get_key(char *args);
 int		is_check_key_equal(char *args, const char *variable);
 char	*get_value(char *args);

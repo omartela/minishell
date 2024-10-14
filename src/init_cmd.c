@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/11 13:24:55 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 13:45:35 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 		return (1);
 	if (path_init(*cmd, sh->envp) == 1)
 	{
-		free_array((*cmd)->args);
+		free_array(&(*cmd)->args);
 		free_cmd(*cmd);
 		return (1);
 	}

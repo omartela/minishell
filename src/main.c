@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/13 21:16:29 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:24:28 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,25 +60,21 @@ static void	process_input(t_shell *sh, char *input)
 		return ;
 	}
 	input = split_and_parse(split_input, sh);
+	free(split_input);
 	if (!input)
 	{
 		error_sys("split_and_parse failed\n");
-		free(split_input);
 		sh->exit_status = 1;
 		return ;
 	}
-	free(split_input);
-
-
 	split_input = ft_add_spaces(input);
+	free(input);
 	if (!split_input)
 	{
 		error_sys("ft_add_spaces failed\n");
-		free(input);
 		sh->exit_status = 1;
 		return ;
 	}
-	free(input);
 	input = split_input;
 	if (is_heredoc(input))
 	{
@@ -116,15 +112,14 @@ static void	process_input(t_shell *sh, char *input)
 			return ;
 		}
 		split_input = split_and_parse(next_input, sh);
+		free(next_input);
 		if (!split_input)
 		{
 			error_sys("split_and_parse failed\n");
 			free(input);
-			free(next_input);
 			sh->exit_status = 1;
 			return ;
 		}
-		free(next_input);
 		next_input = trim_spaces(split_input);
 		if (check_syntax(next_input))
 		{
@@ -134,15 +129,14 @@ static void	process_input(t_shell *sh, char *input)
 			return ;
 		}
 		split_input = ft_add_spaces(next_input);
+		free(next_input);
 		if (!split_input)
 		{
 			error_sys("ft_add_spaces failed\n");
 			free(input);
-			free(next_input);
 			sh->exit_status = 1;
 			return ;
 		}
-		free(next_input);
 		next_input = split_input;
 		if (is_heredoc(next_input))
 		{	
@@ -155,23 +149,19 @@ static void	process_input(t_shell *sh, char *input)
 			}
 		}
 		split_input = ft_strjoin(input, next_input);
+		free(input);
+		free(next_input);
 		if (!split_input)
 		{
 			error_sys("ft_strjoin failed\n");
-			free(input);
-			free(next_input);
 			sh->exit_status = 1;
 			return ;
 		}
-		free(input);
-		free(next_input);
 		input = split_input;
 		len = ft_strlen(input);
 	}
 	if (*input)
 		add_history(input);
-	/* if (temp)// think about this, we free it in userprompt
-		free(temp); */
 	if (next_input)
 		free(next_input);
 	sh->commands = split_args_leave_quotes(input, '|');
@@ -179,14 +169,13 @@ static void	process_input(t_shell *sh, char *input)
 	if (sh->commands)
 	{
 		init_num_cmds(sh);
-/* 		printf("Number of commands: %d\n", sh->num_cmds); // Only for testingd */
 		execute_pipes(sh);
-		free_array(sh->commands);
-		sh->commands = NULL;
+		free_partial(sh);
 	}
 	else
 	{
 		error_sys("ft_split failed\n"); //do we need to return something?
+		sh->exit_status = 1;
 	}
 }
 

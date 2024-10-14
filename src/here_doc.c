@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/13 20:31:36 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 13:46:24 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,6 @@ int	handle_here_doc(t_shell *sh, char *input)
 		else
 			i++;
 	}
-	free_array(args);
+	free_array(&args);
 	return (0);
 }
