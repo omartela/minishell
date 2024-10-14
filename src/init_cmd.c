@@ -124,6 +124,7 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	{
 		error_sys("malloc failed\n"); //free all
 		free_cmd(*cmd);
+		free(temp);
 		return (1);
 	}
 /* 	(*cmd)->args = split_args_leave_quotes(temp1, ' ');
@@ -138,6 +139,7 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	{
 		error_sys("ft_split_args failed\n"); //free all
 		free_cmd(*cmd);
+		free(temp);
 		return (1);
 	}
 	(*cmd)->args_withquotes = split_args_leave_quotes(temp, ' ');
@@ -150,7 +152,10 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	}
 	free(temp);
 	if (init_heredocs(sh, *cmd) == 1)
+	{
+		free(*cmd);
 		return (1);
+	}
 	if (path_init(*cmd, sh->envp) == 1)
 	{
 		free_array((*cmd)->args);
