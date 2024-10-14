@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:57:46 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/13 21:40:50 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 15:46:01 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,13 @@ static int	change_table_value(char ***table, size_t index, const char *value)
 		return (1);
 	free((*table)[index]);
 	(*table)[index] = temp;
+	return (0);
+}
+
+static int	change_table_value(char ***table, size_t index, char *value)
+{
+	free((*table)[index]);
+	(*table)[index] = value;
 	return (0);
 }
 
@@ -138,22 +145,11 @@ int	remove_table(char ***table, const char *variable)
 
 int	append_table(char ***table, const char *variable, const char *value)
 {
-	size_t	size;
-	int		index_to_modify;
+	size_t	index_to_modify;
 	int		found;
 
 	found = 0;
-	size = 0;
-	while ((*table)[size])
-	{
-		if (is_check_key_equal((*table)[size], variable))
-		{
-			index_to_modify = size;
-			found = 1;
-			break;
-		}
-		++size;
-	}
+	find_index_to_modify(table, variable, &found, &index_to_modify);
 	if (found)
 	{
 		if (!ft_strchr((*table)[index_to_modify], '='))
