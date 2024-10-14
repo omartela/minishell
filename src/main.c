@@ -6,12 +6,34 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/14 21:16:08 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 22:35:32 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+/* int is_open_quote(char *str)
+{
+	int i;
+	int in_single_quotes;
+	int in_double_quotes;
+
+	i = 0;
+	in_single_quotes = 0;
+	in_double_quotes = 0;
+	while (str[i])
+	{
+		if (str[i] == '\"' && !in_single_quotes)
+			in_double_quotes = !in_double_quotes;
+		if (str[i] == '\'' && !in_double_quotes)
+			in_single_quotes = !in_single_quotes;
+		i++;
+	}
+	if (in_single_quotes || in_double_quotes)
+		return (1);
+	return (0);
+}
+ */
 static void	initialize_shell(t_shell *sh, char **envp)
 {
 	t_heredoc	*hd;
@@ -112,7 +134,7 @@ static void	process_input(t_shell *sh, char *input)
 		}
 	}
 	len = ft_strlen(input);
-	while ((len > 0 && input[len - 1] == '|') || (len > 2 && input[len - 1] == '&' && input[len - 2] == '&'))
+	while ((len > 0 && input[len - 1] == '|') || (len > 2 && input[len - 1] == '&' && input[len - 2] == '&')/*  || (len > 0 && is_open_quote(input)) */)
 	{
 /* 		next_input = readline("> ");
 		if (!next_input)
