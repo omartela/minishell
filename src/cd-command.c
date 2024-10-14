@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd-command.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 16:06:06 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/09 23:29:39 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/10 18:38:31 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ int	cd(t_shell *sh, char **args)
 	char    cwd[PATH_MAX];
     char    *oldpwd;
 	char	*currentpwd;
+	char	*path;
 
+	path = NULL;
     oldpwd = getcwd(cwd, sizeof(cwd));
 
 	if (args[1] == NULL)
@@ -38,8 +40,16 @@ int	cd(t_shell *sh, char **args)
 			return (show_error_return(1, args[0], "too many arguments"));
 		if (ft_strncmp(args[1], "-\0", 2) == 0)
 		{
-			if (chdir(oldpwd) == -1)
+			path = expand(sh->envp, "OLDPWD");
+			if (!path)
+				return (show_error_return(1, args[1], "cd - failed"));
+			if (chdir(path) == -1)
+			{
+				free(path);
 				return (show_error_return(1, args[1], "Not a directory"));
+			}
+			ft_printf("%s\n", path);
+			free(path);
 		}
 		else if (access(args[1], F_OK) == -1)
 			return (show_error_return(1, args[1], "No such file or directory"));
@@ -52,21 +62,11 @@ int	cd(t_shell *sh, char **args)
 			set_table(&sh->envp, "OLDPWD", oldpwd);
 			set_table(&sh->local_shellvars, "OLDPWD", oldpwd);
 		}
-		else
-		{
-			ft_putstr_fd("Error when changing directory", 2);
-			return (1);
-		}
 		currentpwd = getcwd(cwd, sizeof(cwd));
 		if (currentpwd)
 		{
 			set_table(&sh->envp, "PWD", currentpwd);
 			set_table(&sh->local_shellvars, "PWD", currentpwd);
-		}
-		else
-		{
-			ft_putstr_fd("Error when changing directory", 2);
-			return (1);
 		}
 		return (0);
 	}

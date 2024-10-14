@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/07 20:34:50 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/11 17:14:40 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,31 @@
 # include <limits.h>
 # include <signal.h>
 
-typedef struct s_shell
+typedef struct s_heredoc
 {
-	int		exit_status;
-	int		num_cmds;
-	char	**commands;
-	char	**envp;
-	char	**local_shellvars;
-	char	*homepath;
-	int		*heredoc_fds;
 	int		num_heredocs;
 	int 	heredoc_index;
+	int		*heredoc_fds;
+}	t_heredoc;
+
+typedef struct s_pipes
+{
+	int		**fd;
+	pid_t	*pid;
+}	t_pipes;
+
+typedef struct s_shell
+{
+	int					exit_status;
+	int					num_cmds;
+	char				**commands;
+	char				**envp;
+	char				*homepath;
+	char				**local_shellvars;
+	struct s_pipes		*pipes;
+	struct s_heredoc	*hd;
 	struct sigaction	org_sig_quit;
 	struct sigaction	org_sig_int;
-	
 }	t_shell;
 
 typedef struct s_cmd
@@ -56,12 +67,6 @@ typedef struct s_cmd
 	int		is_continue;
 }	t_cmd;
 
-typedef struct s_pipes
-{
-	int		**fd;
-	pid_t	*pid;
-}	t_pipes;
-
 typedef struct s_split_opts
 {
 	int		keep_quotes;
@@ -74,7 +79,7 @@ int		check_syntax(char *input);
 int		is_heredoc(char *input);
 size_t	ft_strcounter(char *s, char c);
 void	process_quotes(char **s, int *in_quotes, char *quote_type);
-char *split_and_parse(char *str, t_shell *sh);
+char 	*split_and_parse(char *str, t_shell *sh);
 char	**split_args_remove_quotes(char *s, char c);
 char	**split_args_leave_quotes(char *s, char c);
 char	**split_args_general(char *s, char c, int keep_quotes);
@@ -92,7 +97,7 @@ void	free_array_back(char **array, size_t i);
 void	free_array(char **array);
 void	free_shell(t_shell *sh);
 void	free_cmd(t_cmd *cmd);
-void	free_pipes(t_pipes *pipes, int num_cmds);
+void	free_pipes(t_shell *sh);
 
 // errors
 void	show_error_free_cmd_exit(int code, char *name, char *msg, t_cmd *cmd);
@@ -139,9 +144,10 @@ int		env(t_shell *shell, char **arguments);
 // pwd command
 int		pwd(void);
 
-// parse-dollar
+// expand-dollar.c
 int		parse_dollar_sign(t_cmd	*cmd, t_shell *sh);
 void	is_expandable(t_cmd *cmd);
+char    *expand(char **envp, char *variable);
 
 // unset command
 int		unset(t_shell *sh, char **args);

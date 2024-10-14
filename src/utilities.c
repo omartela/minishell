@@ -11,21 +11,17 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
 char	*get_value(char *args)
 {
-	char	**split;
 	char	*value;
+	char	*equal;
 
 	value = NULL;
-	split = ft_split(args, '=');
-	if (!split)
-		return (NULL);
-	if (split[1])
-		value = ft_strdup(split[1]);
+	equal = ft_strchr(args, '=');
+	if (equal)
+		value = ft_strdup((equal + 1));
 	else
 		value = ft_strdup("");
-	free_array(split);
 	return (value);
 }
 
@@ -82,12 +78,7 @@ int	is_builtin(t_cmd *cmd)
 		i++;
 	}
 	i = 0;
-	while (str[i])
-	{
-		free(str[i]);
-		++i;
-	}
-	free(str);
+	free_array(str);
 	return (is_builtin);
 }
 

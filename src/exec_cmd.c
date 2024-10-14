@@ -6,7 +6,11 @@
 /*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 17:58:11 by irychkov          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/10/10 13:35:24 by omartela         ###   ########.fr       */
+=======
+/*   Updated: 2024/10/10 20:26:27 by omartela         ###   ########.fr       */
+>>>>>>> 9d84232854d60e10bec0c62c020c90526b713684
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +65,10 @@ static void	check_permissions(t_cmd *cmd, int is_abs_relative)
 
 static void	execute_absolute_relative_command(t_cmd *cmd, char **envp)
 {
+	if (ft_strncmp(cmd->args[0], ".\0", 2) == 0)
+		show_error_free_cmd_exit(2, cmd->args[0], "filename argument required", cmd);
+	if (ft_strncmp(cmd->args[0], "..\0", 3) == 0)
+		show_error_free_cmd_exit(127, cmd->args[0], "command not found", cmd);
 	execve(cmd->args[0], cmd->args, envp);
 	check_permissions(cmd, 1);
 	free_cmd(cmd); // CHECK

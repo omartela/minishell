@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/01 14:34:44 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:31:53 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,27 @@
 
 int	is_heredoc(char *input)
 {
-	char *needle;
+	int	i;
+	int	in_single_quotes;
+	int	in_double_quotes;
 
-	needle = ft_strnstr(input, "<<", ft_strlen(input));
-	if (!needle)
-		return (0);
-	return (1);
+	i = 0;
+	in_single_quotes = 0;
+	in_double_quotes = 0;
+	while (input[i])
+	{
+		if (input[i] == '\"' && !in_single_quotes)
+			in_double_quotes = !in_double_quotes;
+		if (input[i] == '\'' && !in_double_quotes)
+			in_single_quotes = !in_single_quotes;
+		if (input[i] == '<' && !in_double_quotes && !in_single_quotes)
+		{
+			if (input[i + 1] && input[i + 1 ]== '<')
+				return (1);
+		}
+		i++;
+	}
+	return (0);
 }
 
 static int	is_continue(char *line, char *delimiter)
@@ -73,12 +88,12 @@ void	handle_here_doc(t_shell *sh, char *input)
 	{
 		if (ft_strncmp(args[i], "<<\0", 3) == 0 && args[i + 1])
 		{
-			if (!sh->heredoc_fds)
-				sh->heredoc_fds = malloc(sizeof(int));
+			if (!sh->hd->heredoc_fds)
+				sh->hd->heredoc_fds = malloc(sizeof(int));
 			else
-				sh->heredoc_fds = ft_realloc(sh->heredoc_fds, sizeof(int) * sh->num_heredocs, sizeof(int) * (sh->num_heredocs + 1));
-			sh->heredoc_fds[sh->num_heredocs] = here_doc_input(args[i + 1], sh);
-			sh->num_heredocs++;
+				sh->hd->heredoc_fds = ft_realloc(sh->hd->heredoc_fds, sizeof(int) * sh->hd->num_heredocs, sizeof(int) * (sh->hd->num_heredocs + 1));
+			sh->hd->heredoc_fds[sh->hd->num_heredocs] = here_doc_input(args[i + 1], sh);
+			sh->hd->num_heredocs++;
 			i += 2;
 		}
 		else

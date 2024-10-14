@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/07 21:04:37 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:24:55 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	init_heredocs(t_shell *sh, t_cmd *cmd)
 	j = 0;
 	while (cmd->args[i])
 	{
-		if (ft_strncmp(cmd->args[i], "<<\0", 3) == 0)
+		if (ft_strncmp(cmd->args_withquotes[i], "<<\0", 3) == 0)
 		{
 			if (!cmd->fd_heredoc)
 			{
@@ -84,8 +84,8 @@ int	init_heredocs(t_shell *sh, t_cmd *cmd)
 					return (1);
 				}
 			}
-			cmd->fd_heredoc[j] = sh->heredoc_fds[sh->heredoc_index];
-			sh->heredoc_index++;
+			cmd->fd_heredoc[j] = sh->hd->heredoc_fds[sh->hd->heredoc_index];
+			sh->hd->heredoc_index++;
 			/* printf("fd_heredoc[%d] = %d\n", j, cmd->fd_heredoc[j]); */
 			i += 2;
 			j++;
@@ -145,8 +145,10 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	{
 		error_sys("ft_split_args failed\n"); //free all
 		free_cmd(*cmd);
+		free(temp);
 		return (1);
 	}
+	free(temp);
 	if (init_heredocs(sh, *cmd) == 1)
 		return (1);
 	if (path_init(*cmd, sh->envp) == 1)

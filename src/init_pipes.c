@@ -23,7 +23,8 @@ static void	init_fds(int **fd, int num_cmds)
 		fd[i][1] = -1;
 		i++;
 	}
-	fd[i] = NULL; // empty
+	if (i > 0)
+		fd[i] = NULL; // empty
 }
 
 static void	free_fds_on_failure(int **fd, int i)

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/10 10:37:42 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/11 17:57:21 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,26 @@
 
 static void	initialize_shell(t_shell *sh, char **envp)
 {
+	t_heredoc	*hd;
+
+	hd = malloc(sizeof(t_heredoc));
+	if (!hd)
+	{
+		error_sys("malloc failed for t_heredoc\n");
+		exit(1);
+	}
+	sh->hd = hd;
 	sh->exit_status = 0;
 	sh->num_cmds = 0;
 	sh->commands = NULL;
-	sh->heredoc_fds = NULL;
-	sh->num_heredocs = 0;
-	sh->heredoc_index = 0;
+	sh->pipes = NULL;
+	hd->heredoc_fds = NULL;
+	hd->num_heredocs = 0;
+	hd->heredoc_index = 0;
 	ft_memset(&sh->org_sig_int, 0, sizeof(sh->org_sig_int));
 	ft_memset(&sh->org_sig_quit, 0, sizeof(sh->org_sig_quit));
 	copy_env(envp, sh);
-	sh->homepath = ft_strdup(getenv("HOME"));
+	sh->homepath = expand(envp, "HOME");
 	if (!sh->homepath)
 	{
 		error_sys("ft_strdup failed for getenv\n");
@@ -53,7 +63,7 @@ static void	process_input(t_shell *sh, char *input)
 	if (is_heredoc(input))
 		handle_here_doc(sh, input);
 	len = ft_strlen(input);
-	while (input[len - 1] == '|' || (len > 2 && input[len - 1] == '&' && input[len - 2] == '&'))
+	while ((len > 0 && input[len - 1] == '|') || (len > 2 && input[len - 1] == '&' && input[len - 2] == '&'))
 	{
 /* 		next_input = readline("> ");
 		if (!next_input)
@@ -117,7 +127,8 @@ static void	process_input(t_shell *sh, char *input)
 		init_num_cmds(sh);
 /* 		printf("Number of commands: %d\n", sh->num_cmds); // Only for testingd */
 		execute_pipes(sh);
-		//free_array(sh->commands);
+		free_array(sh->commands);
+		sh->commands = NULL;
 	}
 	else
 	{
@@ -157,6 +168,7 @@ static int	userprompt(int status, char **envp)
 	}
 	status = sh.exit_status;
 	free_shell(&sh);
+	rl_clear_history();
 	return (status);
 }
 
