@@ -93,7 +93,7 @@ void	execute_pipes(t_shell *sh);
 void	execute_command(t_cmd *cmd, char **envp);
 
 // free functions
-void	free_array_back(char **array, size_t i);
+void	free_array_back(char ***array, size_t i);
 void	free_array(char **array);
 void	free_shell(t_shell *sh);
 void	free_cmd(t_cmd *cmd);
@@ -130,7 +130,7 @@ int		remove_table(char ***table, const char *variable);
 int		append_table(char ***table, const char *variable, const char *value);
 
 //exit command
-int		exit_shell(t_shell *sh, char **args);
+int		exit_shell(t_shell *sh, t_cmd *cmd);
 
 //export command
 int		export(t_shell *shell, char **arguments);

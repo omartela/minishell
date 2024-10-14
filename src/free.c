@@ -25,7 +25,7 @@ void	free_array(char **array)
 	free(array);
 }
 
-void	free_array_back(char **array, size_t i)
+void	free_array_back(char ***array, size_t i)
 {
 	while (i > 0)
 	{
@@ -33,6 +33,7 @@ void	free_array_back(char **array, size_t i)
 		free(array[i]);
 	}
 	free(array);
+	array = NULL;
 }
 
 void	free_cmd(t_cmd *cmd)

@@ -143,7 +143,7 @@ int	parse_redirections(t_cmd *cmd, char **args, char **args_withquotes, int is_e
 			if (!cmd->infile)
 			{
 				error_sys("ft_strdup failed\n");
-				free_array_back(clean_args, j);
+				free_array_back(&clean_args, j);
 				exit (1);
 			}
 			i += 2;
@@ -165,7 +165,7 @@ int	parse_redirections(t_cmd *cmd, char **args, char **args_withquotes, int is_e
 			if (!cmd->outfile)
 			{
 				error_sys("ft_strdup failed\n");
-				free_array_back(clean_args, j);
+				free_array_back(&clean_args, j);
 				exit (1);
 			}
 			i += 2;
@@ -187,7 +187,7 @@ int	parse_redirections(t_cmd *cmd, char **args, char **args_withquotes, int is_e
 			if (!cmd->outfile)
 			{
 				error_sys("ft_strdup failed\n");
-				free_array_back(clean_args, j);
+				free_array_back(&clean_args, j);
 				exit (1);
 			}
 			i += 2;
@@ -214,7 +214,7 @@ int	parse_redirections(t_cmd *cmd, char **args, char **args_withquotes, int is_e
 		if (!clean_args[j])
 		{
 			error_sys("ft_strdup failed\n");
-			free_array_back(clean_args, j);
+			free_array_back(&clean_args, j);
 			exit (1);
 		}
 		j++;

@@ -85,7 +85,7 @@ int	is_builtin(t_cmd *cmd)
 int	execute_builtin(t_shell *sh, t_cmd *cmd)
 {
 	if (ft_strncmp(cmd->args[0], "exit\0", 5) == 0)
-		return (exit_shell(sh, cmd->args));
+		return (exit_shell(sh, cmd));
 	if (ft_strncmp(cmd->args[0], "export\0", 7) == 0)
 	{
 		if (export(sh, cmd->args))

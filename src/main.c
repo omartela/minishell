@@ -36,6 +36,7 @@ static void	initialize_shell(t_shell *sh, char **envp)
 	sh->homepath = expand(envp, "HOME");
 	if (!sh->homepath)
 	{
+		free_array(sh->envp);
 		error_sys("ft_strdup failed for getenv\n");
 		exit (1);
 	}

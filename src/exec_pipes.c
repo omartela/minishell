@@ -209,6 +209,7 @@ void	execute_pipes(t_shell *sh)
 	{
 		if (init_cmd(&cmd, sh->commands[i], sh) == 1)
 		{
+			free_cmd(cmd);
 			sh->exit_status = 1;
 			return ;
 		}

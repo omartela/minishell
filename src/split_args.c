@@ -120,7 +120,7 @@ static char	**ft_helper(char *s, size_t i, char **result, t_split_opts *opts)
 		result[i] = copy_string(start, s - start, opts);
 		if (!result[i])
 		{
-			free_array_back(result, i);
+			free_array_back(&result, i);
 			return (NULL);
 		}
 		i++;
