@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/14 14:24:28 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 17:43:05 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,10 @@ static void	process_input(t_shell *sh, char *input)
 	split_input = trim_spaces(input);
 	if (check_syntax(split_input))
 	{
-		free(split_input);
 		sh->exit_status = 2;
 		return ;
 	}
 	input = split_and_parse(split_input, sh);
-	free(split_input);
 	if (!input)
 	{
 		error_sys("split_and_parse failed\n");
@@ -88,14 +86,14 @@ static void	process_input(t_shell *sh, char *input)
 	len = ft_strlen(input);
 	while ((len > 0 && input[len - 1] == '|') || (len > 2 && input[len - 1] == '&' && input[len - 2] == '&'))
 	{
-/* 		next_input = readline("> ");
+		next_input = readline("> ");
 		if (!next_input)
 		{
 			free(input);
 			//printf("Exit \n");
 			return ;
-		} */
-		//Snippet for tester
+		}
+/* 		//Snippet for tester
 		if (isatty(fileno(stdin)))
 			next_input = readline("> ");
 		else
@@ -104,7 +102,7 @@ static void	process_input(t_shell *sh, char *input)
 			line = get_next_line(fileno(stdin));
 			next_input = ft_strtrim(line, "\n");
 			free(line);
-		}
+		} */
 		if (!next_input)
 		{
 			free(input);
@@ -169,13 +167,19 @@ static void	process_input(t_shell *sh, char *input)
 	if (sh->commands)
 	{
 		init_num_cmds(sh);
+		if (sh->num_cmds == 0)
+		{
+			sh->exit_status = 0;
+			return ;
+		}
 		execute_pipes(sh);
 		free_partial(sh);
 	}
 	else
 	{
-		error_sys("ft_split failed\n"); //do we need to return something?
+		error_sys("ft_split failed\n");
 		sh->exit_status = 1;
+		return ;
 	}
 }
 
@@ -188,7 +192,7 @@ static int	userprompt(int status, char **envp)
 	while (1)
 	{
 		//Snippet for tester
-		if (isatty(fileno(stdin)))
+/* 		if (isatty(fileno(stdin)))
 			input = readline("minishell> ");
 		else
 		{
@@ -196,14 +200,15 @@ static int	userprompt(int status, char **envp)
 			line = get_next_line(fileno(stdin));
 			input = ft_strtrim(line, "\n");
 			free(line);
-		}
-		// input = readline("minishell> ");
+		} */
+		input = readline("minishell> ");
 		if (input == NULL)
 		{
 			//printf("Exit \n");
 			break ;
 		}
 		process_input(&sh, input);
+		free(input);
 	}
 	status = sh.exit_status;
 	free_shell(&sh);

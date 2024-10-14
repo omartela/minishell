@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/14 15:25:38 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:28:31 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit)
 	clean_args = malloc(sizeof(char *) * (arg_count + 1));
 	if (!clean_args)
 	{
-		error_sys("malloc failed\n"); //free all
+		error_sys("malloc failed for clean_args\n"); //free all
 		exit (1);
 	}
 	while (cmd->args[i])

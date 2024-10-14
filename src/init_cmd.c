@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/14 13:45:35 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:28:10 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	init_heredocs(t_shell *sh, t_cmd *cmd)
 				cmd->fd_heredoc = malloc(sizeof(int));
 				if (!cmd->fd_heredoc)
 				{
-					error_sys("malloc failed\n");
+					error_sys("malloc failed for fd_heredoc\n");
 					return (1);
 				}
 			}
@@ -105,7 +105,7 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	*cmd = ft_memset(*cmd, 0, sizeof(t_cmd));
 	if (!*cmd)
 	{
-		error_sys("malloc failed\n"); //free all
+		error_sys("malloc failed for cmd\n"); //free all
 		return (1);
 	}
 	(*cmd)->is_continue = 1;
@@ -122,7 +122,7 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	temp = ft_add_spaces(command);
 	if (!(temp))
 	{
-		error_sys("malloc failed\n"); //free all
+		error_sys("malloc failed for add_spaces\n"); //free all
 		free_cmd(*cmd);
 		return (1);
 	}

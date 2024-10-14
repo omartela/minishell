@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/14 11:50:40 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:26:57 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ void	execute_pipes(t_shell *sh)
 	sh->pipes = pipes;
 	if (init_pipes(sh->pipes, sh->num_cmds) == 1)
 	{
-		error_sys("malloc failed\n");
+		error_sys("malloc failed for init_pipes\n");
 		sh->exit_status = 1;
 		return ;
 	}
