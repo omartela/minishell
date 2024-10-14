@@ -25,9 +25,6 @@ static int	append_table_value(char ***table, size_t index, const char *value)
 
 static int	change_table_value(char ***table, size_t index, char *value)
 {
-	char	*temp;
-
-	temp = (*table)[index];
 	free((*table)[index]);
 	(*table)[index] = value;
 	return (0);
@@ -164,12 +161,10 @@ int	remove_table(char ***table, const char *variable)
 
 int	append_table(char ***table, const char *variable, const char *value)
 {
-	size_t	size;
 	size_t	index_to_modify;
 	int		found;
 
 	found = 0;
-	size = 0;
 	find_index_to_modify(table, variable, &found, &index_to_modify);
 	if (found)
 	{
