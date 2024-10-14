@@ -6,15 +6,15 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:57:46 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/14 15:46:01 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:10:51 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static int	change_table_value(char ***table, size_t index, const char *value)
+static int	append_table_value(char ***table, size_t index, const char *value)
 {
-	char *temp;
+	char	*temp;
 
 	temp = ft_strjoin((*table)[index], value);
 	if (!temp)
@@ -84,14 +84,23 @@ void	copy_env(char **envp, t_shell *shell)
 	shell->local_shellvars = local_shellvars;
 }
 
+static size_t	calculate_table_size(char ***table)
+{
+	size_t	size;
+
+	size = 0;
+	while (((*table)[size]))
+		++size;
+	return (size);
+}
+
 int	add_table(char ***table, const char *variable, const char *value)
 {
 	size_t	sarr;
 	char	**temp_table;
 
 	sarr = 0;
-	while ((*table)[sarr])
-		sarr++;
+	sarr = calculate_table_size(table);
 	temp_table = ft_realloc(*table, sarr * sizeof(char *), (sarr + 2) * sizeof(char *));
 	if (!temp_table)
 		return (1);
@@ -99,35 +108,44 @@ int	add_table(char ***table, const char *variable, const char *value)
 	(*table)[sarr] = ft_strdup(variable);
 	if (value)
 	{
-		if (change_table_value(table, sarr, "="))
+		if (append_table_value(table, sarr, "="))
 			return (1);
-		if (change_table_value(table, sarr, value))
+		if (append_table_value(table, sarr, value))
 			return (1);
 	}
 	(*table)[sarr + 1] = NULL;
 	return (0);
 }
 
-int	remove_table(char ***table, const char *variable)
+void	find_index_to_modify(char ***table, const char *variable, int *found, size_t *index_to_modify)
 {
 	size_t	size;
-	size_t	index_to_remove;
-	size_t	i;
-	int		found;
 
 	size = 0;
-	i = 0;
-	index_to_remove = 0;
-	found = 0;
 	while ((*table)[size])
 	{
 		if (is_check_key_equal((*table)[size], variable))
 		{
-			index_to_remove = size;
-			found = 1;
+			*index_to_modify = size;
+			*found = 1;
+			break;
 		}
 		++size;
 	}
+}
+
+int	remove_table(char ***table, const char *variable)
+{
+	size_t	index_to_remove;
+	size_t	i;
+	size_t	size;
+	int		found;
+
+	i = 0;
+	index_to_remove = 0;
+	found = 0;
+	find_index_to_modify(table, variable, &found, &index_to_remove);
+	size = calculate_table_size(table);
 	if (found)
 	{
 		free((*table)[index_to_remove]);
@@ -137,7 +155,6 @@ int	remove_table(char ***table, const char *variable)
 			(*table)[i] = (*table)[i + 1];
 			++i;
 		}
-    	// Null-terminate the new table
     	(*table)[size - 1] = NULL;
 	}
 	return (0);
@@ -154,10 +171,10 @@ int	append_table(char ***table, const char *variable, const char *value)
 	{
 		if (!ft_strchr((*table)[index_to_modify], '='))
 		{
-			if (change_table_value(table, index_to_modify, "="))
+			if (append_table_value(table, index_to_modify, "="))
 				return (1);
 		}
-		if (change_table_value(table, index_to_modify, value))
+		if (append_table_value(table, index_to_modify, value))
 			return (1);
 		return (0);
 	}
@@ -184,18 +201,14 @@ int	set_table(char ***table, const char *variable, const char *value)
 			return (0);
 		if (ft_strncmp((*table)[i], variable, len) == 0 && ((*table)[i][len] == '=' || (*table)[i][len] == '\0'))
 		{
-			temp = (*table)[i];
-			(*table)[i] = ft_strjoin(variable, "=");
-			if (!(*table)[i])
+			temp = ft_strjoin(variable, "=");
+			if (!temp)
 				return (1);
-			free(temp);
+			change_table_value(table, i, temp);
 			if (value)
 			{
-				temp = (*table)[i];
-				(*table)[i] = ft_strjoin((*table)[i], value);
-				if (!(*table)[i])
+				if (append_table_value(table, i, value))
 					return (1);
-				free(temp);
 				return (0);
 			}
 			return (0);
