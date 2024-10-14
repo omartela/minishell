@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/14 13:52:36 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 15:25:38 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,92 +35,36 @@ static int	count_new_args_len(char **args)
 	return (arg_count);
 }
 
-static int	open_fdin(char *infile, t_shell *sh, t_cmd *cmd, int is_exit)
+static int	open_fdin(char *infile, t_cmd *cmd)
 {
 	if (access(infile, F_OK) == -1)
-	{
-		if (is_exit)
-		{
-			show_error(infile, "No such file or directory");
-			exit_and_free(sh, cmd, 1);
-		}
-		else
-			return (show_error_return(1, infile, "No such file or directory"));
-	}
+		return (show_error_return(1, infile, "No such file or directory"));
 	if (access(infile, R_OK) == -1)
-	{
-		if (is_exit)
-		{
-			show_error(infile, "Permission denied");
-			exit_and_free(sh, cmd, 126);
-		}
-		else
-			return (show_error_return(126, infile, "Permission denied"));
-	}
+		return (show_error_return(126, infile, "Permission denied"));
 	cmd->fd_in = open(infile, O_RDONLY);
 	if (cmd->fd_in == -1)
-	{
-		if (is_exit)
-		{
-			show_error(infile, "No such file or directory");
-			exit_and_free(sh, cmd, 1);
-		}
-		else
-			return (show_error_return(1, infile, "No such file or directory"));
-	}
+		return (show_error_return(1, infile, "No such file or directory"));
 	return (0);
 }
 
-static int	open_fdout(char *outfile, t_shell *sh, t_cmd *cmd, int is_exit)
+static int	open_fdout(char *outfile, t_cmd *cmd)
 {
 	cmd->fd_out = open(outfile, O_DIRECTORY);
 	if (cmd->fd_out != -1)
-	{
-		if (is_exit)
-		{
-			show_error(outfile, "Is a directory");
-			exit_and_free(sh, cmd, 1);
-		}
-		else
-			return (show_error_return(1, outfile, "Is a directory"));
-	}
+		return (show_error_return(1, outfile, "Is a directory"));
 	if (access(outfile, F_OK) == 0 && access(outfile, W_OK) == -1)
-	{
-		if (is_exit)
-		{
-			show_error(outfile, "Permission denied");
-			exit_and_free(sh, cmd, 1);
-		}
-		else
-			return (show_error_return(1, outfile, "Permission denied"));
-	}
+		return (show_error_return(1, outfile, "Permission denied"));
 	if (cmd->append)
 	{
 		cmd->fd_out = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (cmd->fd_out == -1)
-		{
-			if (is_exit)
-			{
-				show_error(outfile, "No such file or directory");
-				exit_and_free(sh, cmd, 1);
-			}
-			else
-				return (show_error_return(1, outfile, "No such file or directory"));;
-		}
+			return (show_error_return(1, outfile, "No such file or directory"));;
 	}
 	else
 	{
 		cmd->fd_out = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (cmd->fd_out == -1)
-		{
-			if (is_exit)
-			{
-				show_error(outfile, "No such file or directory");
-				exit_and_free(sh, cmd, 1);
-			}
-			else
 				return (show_error_return(1, outfile, "No such file or directory"));;
-		}
 	}
 	return (0);
 }
@@ -157,12 +101,15 @@ int	parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit)
 				free(cmd->infile);
 				cmd->infile = NULL;
 			}
-			error_code = open_fdin(cmd->args[i + 1], sh, cmd, is_exit);
+			error_code = open_fdin(cmd->args[i + 1], cmd);
 			if (error_code)
 			{
 				free_array_back(clean_args, j);
 				clean_args = NULL;
-				return (error_code);
+				if (is_exit)
+					exit_and_free(sh, cmd, error_code);
+				else
+					return (error_code);
 			}
 			cmd->infile = ft_strdup(cmd->args[i + 1]);
 			if (!cmd->infile)
@@ -183,12 +130,15 @@ int	parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit)
 				cmd->outfile = NULL;
 				close(cmd->fd_out);
 			}
-			error_code = open_fdout(cmd->args[i + 1], sh, cmd, is_exit);
+			error_code = open_fdout(cmd->args[i + 1], cmd);
 			if (error_code)
 			{
 				free_array_back(clean_args, j);
 				clean_args = NULL;
-				return (error_code);
+				if (is_exit)
+					exit_and_free(sh, cmd, error_code);
+				else
+					return (error_code);
 			}
 			cmd->outfile = ft_strdup(cmd->args[i + 1]);
 			if (!cmd->outfile)
@@ -209,11 +159,15 @@ int	parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit)
 				cmd->outfile = NULL;
 				close(cmd->fd_out);
 			}
-			error_code = open_fdout(cmd->args[i + 1], sh, cmd, is_exit);
+			error_code = open_fdout(cmd->args[i + 1], cmd);
 			if (error_code)
 			{
 				free_array_back(clean_args, j);
-				return (error_code);
+				clean_args = NULL;
+				if (is_exit)
+					exit_and_free(sh, cmd, error_code);
+				else
+					return (error_code);
 			}
 			cmd->outfile = ft_strdup(cmd->args[i + 1]);
 			if (!cmd->outfile)

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:06:00 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/14 13:47:20 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/14 15:35:13 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,9 @@ int	execute_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 	if (ft_strncmp(cmd->args[0], "exit\0", 5) == 0)
 	{
 		if (!is_in_pipe)
-			return (exit_shell(sh, cmd->args));
+			return (exit_shell(sh, cmd));
 		else
-			exit(exit_shell(sh, cmd->args));
+			exit(exit_shell(sh, cmd));
 	}
 	if (ft_strncmp(cmd->args[0], "export\0", 7) == 0)
 	{
@@ -157,10 +157,8 @@ int	execute_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 		else
 		{
 			if (echo(cmd->args))
-				exit(1);
-			free_cmd(cmd);
-			free_shell(sh);
-			exit(0);
+				exit_and_free(sh, cmd, 1);
+			exit_and_free(sh, cmd, 0);
 		}
 
 	}
