@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 10:34:04 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/10 18:53:40 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/15 11:32:21 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ char *split_and_parse(char *str, t_shell *sh)
                 result = temp;
                 i += 2; // Skip the $ and ?
             }
-            else if ((ft_isdigit(str[i + 1]) || str[i + 1] == '\'' || str[i + 1] == '\"') && !in_double_quotes)
+            else if (ft_isdigit(str[i + 1]) && !in_double_quotes)
             {
                 if (str[i + 1] == '\"' && !in_single_quotes)
 			        in_double_quotes = !in_double_quotes;
@@ -183,6 +183,8 @@ char *split_and_parse(char *str, t_shell *sh)
 			        in_single_quotes = !in_single_quotes;
                 i += 2;
             }
+			else if ((str[i + 1] == '\'' || str[i + 1] == '\"') && !in_double_quotes)
+				i += 1;
             else if (ft_isalpha(str[i + 1]) || str[i + 1] == '_') // Handle $VAR_NAME
             {
                 i++;
