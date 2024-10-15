@@ -34,6 +34,93 @@ int is_open_quote(char *str)
 	return (0);
 }
 
+static void increase_shlvl(t_shell *sh)
+{
+	char	*temp_itoa;
+	int		temp_atoi;
+	char	*value;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	temp_atoi = 0;
+	temp_itoa = NULL;
+	value = NULL;
+
+	while (sh->envp[i])
+	{
+		if (is_check_key_equal(sh->envp[i], "SHLVL"))
+		{
+			value = get_value(sh->envp[i]);
+			if (value)
+			{
+				j = 0;
+				while (value[j])
+				{
+					if (!ft_isdigit(value[j]))
+					{
+						free(value);
+						if (set_variables(sh, "SHLVL", "1"))
+						{
+							error_sys("Setting SHLVL failed\n");
+							return ;
+						}
+						return ;
+					}
+					j++;
+				}
+				temp_atoi = ft_atoi(value);
+				if (!temp_atoi)
+				{
+					free(value);
+					error_sys("Setting SHLVL failed\n");
+					return ;
+				}
+				temp_atoi += 1;
+				temp_itoa = ft_itoa(temp_atoi);
+				if (!temp_itoa)
+				{
+					free(value);
+					error_sys("Setting SHLVL failed\n");
+					return ;
+				}
+				if (set_variables(sh, "SHLVL", temp_itoa))
+				{
+					free(value);
+					free(temp_itoa);
+					error_sys("Setting SHLVL failed\n");
+					return ;
+				}
+				free(value);
+				free(temp_itoa);
+				return ;
+			}
+			else
+			{
+				if (set_variables(sh, "SHLVL", "1"))
+				{
+					error_sys("Setting SHLVL failed\n");
+					return ;
+				}
+			}
+		}
+		++i;
+	}
+	if (append_table(&sh->envp, "SHLVL", "1"))
+	{
+		error_sys("Setting SHLVL failed\n");
+		return ;
+	}
+	if (append_table(&sh->local_shellvars, "SHLVL", "1"))
+	{
+		error_sys("Setting SHLVL failed\n");
+		return ;
+	}
+	sort_table(sh->local_shellvars);
+	return ;
+}
+
 static void	initialize_shell(t_shell *sh, char **envp)
 {
 	t_heredoc	*hd;
@@ -44,6 +131,8 @@ static void	initialize_shell(t_shell *sh, char **envp)
 	sh->promt = NULL;
 	sh->pipes = NULL;
 	copy_env(envp, sh);
+	if (envp)
+		increase_shlvl(sh);
 	sh->homepath = expand(envp, "HOME");
 	if (!sh->homepath)
 	{
