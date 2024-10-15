@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 11:18:27 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/08 11:18:52 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/15 11:59:51 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,12 @@
 static void sig_handler_sigint(int signum)
 {
     if (signum == SIGINT)
-        printf("\nminishell> ");
+    {
+        rl_replace_line("", 0);
+        printf("\n");
+        rl_on_new_line();
+        rl_redisplay();
+    }
 }
 
 int reset_signals(t_shell *sh) 

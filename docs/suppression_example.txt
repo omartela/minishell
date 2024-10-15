@@ -1,0 +1,5 @@
+Hi, here is the suppression file and example command
+valgrind --leak-check=full --show-leak-kinds=all --suppressions=vg.supp ./minishell < ./42_minishell_tester/cmds/mand/1_builtins.sh
+if you want to add supression for example you find some new readline leak. Use the gen-suppression flag like this
+valgrind --leak-check=full --show-leak-kinds=all --gen-suppressions=all --suppressions=vg.supp ./minishell < ~/42_minishell_tester/cmds/mand/1_builtins.sh
+then you can copy the {} output to suppression file

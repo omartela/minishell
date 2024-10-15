@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:57:46 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/10 20:48:18 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:10:51 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 static int	append_table_value(char ***table, size_t index, const char *value)

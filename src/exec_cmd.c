@@ -6,7 +6,7 @@
 /*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 17:58:11 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/10 20:26:27 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/14 11:53:04 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*get_full_command_path(char *path, char *command, t_cmd *cmd)
 	return (full_path);
 }
 
-static void	check_permissions(t_cmd *cmd, int is_abs_relative)
+static void	check_permissions(t_shell *sh, t_cmd *cmd, int is_abs_relative)
 {
 	int	fd_test;
 
@@ -46,46 +46,63 @@ static void	check_permissions(t_cmd *cmd, int is_abs_relative)
 		if (fd_test != -1)
 		{
 			close(fd_test);
-			show_error_free_cmd_exit(126, cmd->args[0], "Is a directory", cmd);
+			show_error(cmd->args[0], "Is a directory");
+			exit_and_free(sh, cmd, 126);
 		}
 	}
 	if ((access(cmd->args[0], F_OK) == -1) && is_abs_relative)
-		show_error_free_cmd_exit(127, cmd->args[0],
-			"No such file or directory", cmd);
+	{
+		show_error(cmd->args[0], "No such file or directory");
+		exit_and_free(sh, cmd, 127);
+	}
 	if ((access(cmd->args[0], X_OK) == -1) && is_abs_relative)
-		show_error_free_cmd_exit(126, cmd->args[0], "Permission denied", cmd);
+	{
+		show_error(cmd->args[0], "Permission denied");
+		exit_and_free(sh, cmd, 126);
+	}
 	if (!is_abs_relative)
-		show_error_free_cmd_exit(127, cmd->args[0], "command not found", cmd);
+	{
+		show_error(cmd->args[0], "command not found");
+		exit_and_free(sh, cmd, 127);
+	}
 	return ;
 }
 
-static void	execute_absolute_relative_command(t_cmd *cmd, char **envp)
+static void	execute_absolute_relative_command(t_shell *sh, t_cmd *cmd, char **envp)
 {
 	if (ft_strncmp(cmd->args[0], ".\0", 2) == 0)
-		show_error_free_cmd_exit(2, cmd->args[0], "filename argument required", cmd);
+	{
+		show_error(cmd->args[0], "filename argument required");
+		exit_and_free(sh, cmd, 2);
+	}
 	if (ft_strncmp(cmd->args[0], "..\0", 3) == 0)
-		show_error_free_cmd_exit(127, cmd->args[0], "command not found", cmd);
+	{
+		show_error(cmd->args[0], "command not found");
+		exit_and_free(sh, cmd, 127);
+	}
 	execve(cmd->args[0], cmd->args, envp);
-	check_permissions(cmd, 1);
-	free_cmd(cmd); // CHECK
+	check_permissions(sh, cmd, 1);
 	error_sys("execve failed\n");
-	exit(1);
+	exit_and_free(sh, cmd, 1);
 }
 
-void	execute_command(t_cmd *cmd, char **envp)
+void	execute_command(t_shell *sh, t_cmd *cmd, char **envp)
 {
 	int		i;
 	char	*full_path;
 
 	i = 0;
 	full_path = NULL;
+	if (cmd->args[0] == NULL)
+		exit_and_free(sh, cmd, 0);
 	if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
-		execute_absolute_relative_command(cmd, envp);
+		execute_absolute_relative_command(sh, cmd, envp);
 	if (!cmd->path)
 	{
 		execve(cmd->args[0], cmd->args, envp);
-		check_permissions(cmd, 1);
-		show_error_free_cmd_exit(1, cmd->args[0], "command not found", cmd);
+		check_permissions(sh, cmd, 1);
+		show_error(cmd->args[0], "command not found");
+		exit_and_free(sh, cmd, 1);
 	}
 	while (cmd->path[i])
 	{
@@ -94,8 +111,7 @@ void	execute_command(t_cmd *cmd, char **envp)
 		free(full_path);
 		i++;
 	}
-	check_permissions(cmd, 0);
-	free_cmd(cmd);
+	check_permissions(sh, cmd, 0);
 	error_sys("execve failed\n");
-	exit(1);
+	exit_and_free(sh, cmd, 1);
 }

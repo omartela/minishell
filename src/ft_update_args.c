@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:04:53 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/10 12:17:51 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/13 18:56:50 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*ft_add_spaces(char *s)
 	in_quotes = 0;
 	len = ft_strlen(s);
 	spaces_needed = ft_redirect_counter(s);
-	new_str = malloc(len + spaces_needed + 1); // protect
+	new_str = malloc(len + spaces_needed + 1);
 	dest = new_str;
 	if (!new_str)
 		return (NULL);
