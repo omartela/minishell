@@ -133,6 +133,7 @@ int		add_table(char ***table, const char *variable, const char *value);
 char	**sort_table(char **envp);
 int		remove_table(char ***table, const char *variable);
 int		append_table(char ***table, const char *variable, const char *value);
+int		set_variables(t_shell *shell, char *variable, char *value);
 
 //exit command
 int		exit_shell(t_shell *sh, t_cmd *cmd);
