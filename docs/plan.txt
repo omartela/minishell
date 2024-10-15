@@ -1,0 +1,116 @@
+Milestone 1: Project Setup and Basic Shell Structure
+Set Up the Project Repository
+
+Create a Git repository.
+Set up your development environment (e.g., compiler, libraries).
+Create the basic project structure (folders for source files, headers, etc.).
+Display a Prompt and copy environment
+
+Task: Create a basic loop that prints a prompt (minishell> ) and waits for user input and copy the environment variables to new environment.
+Branch: basic-prompt and environment
+
+Command Parsing
+
+Task: Implement basic command parsing, splitting user input into command and arguments.
+Branch: command-parsing
+Execute Simple Commands
+
+Task: Implement the ability to execute simple commands (like ls, pwd, etc.) using execve.
+Branch: execute-simple-commands
+Milestone 2: Built-in Commands Implementation
+Implement echo Built-in
+
+Task: Add support for the echo command with the -n option.
+Branch: builtin-echo
+Implement cd Built-in
+
+Task: Implement the cd command, handling relative and absolute paths.
+Branch: builtin-cd
+Implement pwd Built-in
+
+Task: Implement the pwd command to print the current working directory.
+Branch: builtin-pwd
+Implement export and unset Built-ins
+
+Task: Handle environment variable management with export and unset.
+Branch: builtin-export-unset
+Implement env Built-in
+
+Task: Implement the env command to print environment variables.
+Branch: builtin-env
+Implement exit Built-in
+
+Task: Add the exit command to close the shell.
+Branch: builtin-exit
+Milestone 3: Redirection and Piping
+Input Redirection (<)
+
+Task: Implement the ability to redirect input from a file using <.
+Branch: input-redirection
+Output Redirection (>)
+
+Task: Implement output redirection to a file using >.
+Branch: output-redirection
+Append Output Redirection (>>)
+
+Task: Handle appending output to a file with >>.
+Branch: append-output-redirection
+Here Document (<<)
+
+Task: Implement the here document feature with <<.
+Branch: heredoc-redirection
+Pipes (|)
+
+Task: Implement pipes to connect the output of one command to the input of another.
+Branch: pipes
+Milestone 4: Advanced Features
+Environment Variable Expansion
+
+Task: Implement expansion of environment variables (e.g., echo $HOME).
+Branch: env-variable-expansion
+Special Variable $?
+
+Task: Implement the $? variable to return the status of the last executed command.
+Branch: special-variable-status
+Signal Handling
+
+Task: Implement handling for ctrl-C, ctrl-D, and ctrl-\.
+Branch: signal-handling
+Quotes Handling
+
+Task: Implement handling for single (') and double (") quotes.
+Branch: quotes-handling
+Unclosed Quotes and Syntax Handling
+
+Task: Handle errors like unclosed quotes and unexpected characters.
+Branch: syntax-error-handling
+Milestone 5: Testing and Optimization
+Test All Built-ins
+
+Task: Create a comprehensive set of test cases for all built-in commands.
+Branch: builtin-tests
+Test Redirection and Pipes
+
+Task: Create test cases for redirection and pipes, including edge cases.
+Branch: redirection-pipe-tests
+Memory Leak Testing
+
+Task: Use tools like Valgrind to check for memory leaks and optimize memory usage.
+Branch: memory-leak-testing
+Code Refactoring
+
+Task: Refactor the code for readability, modularity, and performance improvements.
+Branch: code-refactoring
+Final Testing and Bug Fixes
+
+Task: Perform final testing, fix any bugs, and ensure compliance with project specifications.
+Branch: final-testing-bug-fixes
+Milestone 6: Documentation and Submission
+Write Documentation
+
+Task: Document how the shell works, including a README with usage instructions.
+Branch: documentation
+Final Review and Submission
+
+Task: Do a final review of all code, ensure everything is committed, and prepare the project for submission.
+Branch: final-review
