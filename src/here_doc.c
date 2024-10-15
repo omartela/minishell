@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/14 21:17:39 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/15 17:38:44 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static int	is_continue(char *line, char *delimiter)
 	return (1);
 }
 
-static int	here_doc_input(char *delimiter, t_shell *sh)
+static int	here_doc_input(char *delimiter, t_shell *sh, int expand)
 {
 	int		pipe_fd[2];
 	char	*temp;
@@ -73,7 +73,7 @@ static int	here_doc_input(char *delimiter, t_shell *sh)
 	}
 	while (1)
 	{
-		ft_putstr_fd("> ", 1);
+		//ft_putstr_fd("> ", 1);
 		line = get_next_line(0);
 		if (!line)
 			break;
@@ -82,14 +82,17 @@ static int	here_doc_input(char *delimiter, t_shell *sh)
 			error_sys("add_prompt failed\n");
 			return (-1);
 		}
-		temp = split_and_parse(line, sh);
-		free(line);
-		if (!temp)
+		if (expand)
 		{
-			error_sys("split_and_parse failed\n");
-			return (-1);
+			temp = split_and_parse(line, sh);
+			free(line);
+			if (!temp)
+			{
+				error_sys("split_and_parse failed\n");
+				return (-1);
+			}
+			line = temp;
 		}
-		line = temp;
 		if (!is_continue(line, delimiter))
 			break ;
 		write(pipe_fd[1], line, ft_strlen(line));
@@ -103,20 +106,32 @@ int	handle_here_doc(t_shell *sh, char *input)
 {
 	int		i;
 	char	**args;
+	char	**args_with_quotes;
+	int		expand;
 
 	i = 0;
+	expand = 0;
 	args = split_args_remove_quotes(input, ' ');
 	if (!args)
 		return (1);
+	args_with_quotes = split_args_leave_quotes(input, ' ');
+	if (!args_with_quotes)
+	{
+		free(args);
+		return (1);
+	}
 	while (args[i])
 	{
+		expand = 0;
 		if (ft_strncmp(args[i], "<<\0", 3) == 0 && args[i + 1])
 		{
+			if ((ft_strncmp(args[i + 1], args_with_quotes[i + 1], ft_strlen(args[i + 1])) == 0) || args_with_quotes[i + 1][0] == '\"')
+				expand = 1;
 			if (!sh->hd->heredoc_fds)
 				sh->hd->heredoc_fds = malloc(sizeof(int));
 			else
 				sh->hd->heredoc_fds = ft_realloc(sh->hd->heredoc_fds, sizeof(int) * sh->hd->num_heredocs, sizeof(int) * (sh->hd->num_heredocs + 1));
-			sh->hd->heredoc_fds[sh->hd->num_heredocs] = here_doc_input(args[i + 1], sh);
+			sh->hd->heredoc_fds[sh->hd->num_heredocs] = here_doc_input(args[i + 1], sh, expand);
 			if (sh->hd->heredoc_fds[sh->hd->num_heredocs] == -1)
 				return (1); // free args!!!!!!!
 			sh->hd->num_heredocs++;
@@ -126,5 +141,6 @@ int	handle_here_doc(t_shell *sh, char *input)
 			i++;
 	}
 	free_array(&args);
+	free_array(&args_with_quotes);
 	return (0);
 }
