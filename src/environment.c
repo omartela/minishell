@@ -12,6 +12,22 @@
 
 #include "../include/minishell.h"
 
+int	set_variables(t_shell *shell, char *variable, char *value)
+{
+	int	success1;
+	int success2;
+
+	success1 = set_table(&shell->envp, variable, value);
+	success2 = set_table(&shell->local_shellvars, variable, value);
+	if (!success2)
+	{
+		sort_table(shell->local_shellvars);
+	}
+	if (success1 || success2)
+		return (1);
+	return (0);
+}
+
 static int	append_table_value(char ***table, size_t index, const char *value)
 {
 	char	*temp;
@@ -67,7 +83,7 @@ void	copy_env(char **envp, t_shell *shell)
 	{
 		shell->envp = NULL;
 		shell->local_shellvars = NULL;
-		perror("Copy environment failed..");
+		error_sys("Copy environment failed..\n");
 		exit(1);
 	}
 	i = 0 ;

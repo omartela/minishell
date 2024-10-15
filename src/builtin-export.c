@@ -38,22 +38,6 @@ static void	display_local_shellvars(t_shell *shell)
 	}
 }
 
-static int	set_variables(t_shell *shell, char *variable, char *value)
-{
-	int	success1;
-	int success2;
-
-	success1 = set_table(&shell->envp, variable, value);
-	success2 = set_table(&shell->local_shellvars, variable, value);
-	if (!success2)
-	{
-		sort_table(shell->local_shellvars);
-	}
-	if (success1 || success2)
-		return (1);
-	return (0);
-}
-
 static int	is_valid_argument_name(const char *name)
 {
 	int	i;
