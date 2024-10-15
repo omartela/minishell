@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 14:13:39 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/08 17:17:20 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/15 17:06:09 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ static void	display_local_shellvars(t_shell *shell)
 		if (equal)
 			variable = ft_substr(shell->local_shellvars[i], 0, (equal - shell->local_shellvars[i]));
 		if (equal && *(equal + 1))
-			ft_printf("declare -x %s=\"%s\" \n", variable, (equal + 1));
+			ft_printf("declare -x %s=\"%s\"\n", variable, (equal + 1));
 		else if (equal)
-			ft_printf("declare -x %s\"\" \n", shell->local_shellvars[i]);
+			ft_printf("declare -x %s\"\"\n", shell->local_shellvars[i]);
 		else
-			ft_printf("declare -x %s \n", shell->local_shellvars[i]);
+			ft_printf("declare -x %s\n", shell->local_shellvars[i]);
 		++i;
 		if (variable)
 			free(variable);
