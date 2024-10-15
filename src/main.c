@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/15 11:32:53 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/15 14:48:02 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,9 +203,12 @@ static void	process_input(t_shell *sh, char *input)
 				return ;
 			}
 		}
-		split_input = ft_strjoin(input, next_input);
+		char *temp = ft_strjoin(input, "\n");
 		free(input);
+		split_input = ft_strjoin(temp, next_input);
+		free(temp);
 		free(next_input);
+		next_input = NULL;
 		if (!split_input)
 		{
 			error_sys("ft_strjoin failed\n");
