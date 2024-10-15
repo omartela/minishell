@@ -1,0 +1,100 @@
+Commands with memory leaks:
+File: /home/omartela/42_minishell_tester/cmds/mand/10_parsing_hell.sh | Command: bash
+File: /home/omartela/42_minishell_tester/cmds/mand/10_parsing_hell.sh | Command: ls
+File: /home/omartela/42_minishell_tester/cmds/mand/1_builtins.sh | Command: env | grep DOESNT_EXIST
+File: /home/omartela/42_minishell_tester/cmds/mand/1_builtins.sh | Command: env | grep HOME
+File: /home/omartela/42_minishell_tester/cmds/mand/1_builtins.sh | Command: env | grep USER
+File: /home/omartela/42_minishell_tester/cmds/mand/1_builtins.sh | Command: env | grep HALLO42
+File: /home/omartela/42_minishell_tester/cmds/mand/1_builtins.sh | Command: env | grep HALLO42
+File: /home/omartela/42_minishell_tester/cmds/mand/1_builtins.sh | Command: env | grep HOME
+File: /home/omartela/42_minishell_tester/cmds/mand/1_builtins.sh | Command: env | grep HOME
+File: /home/omartela/42_minishell_tester/cmds/mand/1_builtins.sh | Command: env | grep TES_T
+File: /home/omartela/42_minishell_tester/cmds/mand/1_builtins.sh | Command: env | grep HELLO42
+File: /home/omartela/42_minishell_tester/cmds/mand/1_builtins.sh | Command: env | grep HELLO42=T=
+File: /home/omartela/42_minishell_tester/cmds/mand/1_builtins.sh | Command: env | grep mini_test
+File: /home/omartela/42_minishell_tester/cmds/mand/1_builtins.sh | Command: env | grep mini_test
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: env | sort | grep -v SHLVL | grep -v ^_
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: cat ./test_files/infile_big | grep oi
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: export GHOST=123 | env | grep GHOST
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: /bin/echo 1 | grep 1
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: /bin/echo 1 | grep 2
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ifconfig | grep ":"
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ifconfig | grep nothing
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: echo 42 | echo no | echo smth | grep 42
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: echo 42 | echo no | echo smth | grep no
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: echo 42 | echo no | echo smth | grep smth
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: /bin/env | grep "_="
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: /bin/env | grep "SHLVL"
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls -la ../ | grep "."
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls | cat asd
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls | cat << stop | grep "asd"
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls | cat << stop | ls -la | cat << stop1
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la | cat << stop3
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: as $HOME
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la > out | cat << 'stop3'
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: as $HOME
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: cat Makefile | ls > out
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls | cat << stop | ls -la > out0| cat << stop1 | ls | cat << stop2 | ls -la >> out | cat << stop3
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls > out >> out1 >out3 | cat out1
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls > out >> out1 >out3 | cat out1
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls|cat Makefile|ls
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls|cat Makefile|<wc -l
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls|cat Makefile|> out
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls|cat Makefile|>> out
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls|cat Makefile|cat<<asd>out
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls|cat Makefile|cat<<'asd'>out
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls|cat Makefile|cat<<"asd">out
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls|cat Makefile|>> out|cd ..
+File: /home/omartela/42_minishell_tester/cmds/mand/1_pipelines.sh | Command: cd .. |ls|cat Makefile|>> out
+File: /home/omartela/42_minishell_tester/cmds/mand/1_redirs.sh | Command: cat <"./test_files/infile" | grep hello
+File: /home/omartela/42_minishell_tester/cmds/mand/1_redirs.sh | Command: cat <minishell.h|ls
+File: /home/omartela/42_minishell_tester/cmds/mand/1_redirs.sh | Command: cat | cat | ls
+File: /home/omartela/42_minishell_tester/cmds/mand/1_redirs.sh | Command: chmod -r tmp_redir_out_file1
+File: /home/omartela/42_minishell_tester/cmds/mand/1_redirs.sh | Command: /bin/echo 1 >/dev/null | /usr/bin/grep 1
+File: /home/omartela/42_minishell_tester/cmds/mand/1_redirs.sh | Command: /bin/echo >/dev/null 1 | /usr/bin/grep 1
+File: /home/omartela/42_minishell_tester/cmds/mand/1_scmds.sh | Command: ls
+File: /home/omartela/42_minishell_tester/cmds/mand/1_scmds.sh | Command: expr $? + $?
+File: /home/omartela/42_minishell_tester/cmds/mand/1_scmds.sh | Command: expr 21 + 21
+File: /home/omartela/42_minishell_tester/cmds/mand/1_scmds.sh | Command: "ls"
+File: /home/omartela/42_minishell_tester/cmds/mand/1_scmds.sh | Command: awk '$1 ~ /^d/ {print $9}'
+File: /home/omartela/42_minishell_tester/cmds/mand/1_scmds.sh | Command: awk 'BEGIN{for(i=1;i<=10;i++){for(j=1;j<=10;j++){printf("%4d ",i*j)} printf("\n")}}' /dev/null | tail -n 10
+File: /home/omartela/42_minishell_tester/cmds/mand/1_scmds.sh | Command: awk 'BEGIN{for(i=1;i<=1000000;i++)print int(i)}' | awk '{sum+=$1} END {print sum/NR}'
+File: /home/omartela/42_minishell_tester/cmds/mand/1_scmds.sh | Command: ls >"./ with spaces"
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: expr $? + $?
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: expr $? + $?
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: env | grep HOME
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: env | grep $USER
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: env | grep USER
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: env | grep USER
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: env | grep NEW
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: env | grep NEW
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: env | grep 4=2
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: env | grep NEW
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: env | grep NEW
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: env | grep NEW
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: /bin/ls
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: /bin/ls
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: /bin/ls
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: /bin/ls
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: /bin/ls
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: /bin/ls
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: /bin/ls
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: chmod -wrx bla_test
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: chmod +wrx bla_test
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: ls
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: ls
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: gcc tmp_path_test1/test1.c -o tmp_path_test1/a.out
+File: /home/omartela/42_minishell_tester/cmds/mand/2_correction.sh | Command: gcc tmp_path_test2/test2.c -o tmp_path_test2/a.out
+File: /home/omartela/42_minishell_tester/cmds/mand/2_path_check.sh | Command: /bin/ls
+File: /home/omartela/42_minishell_tester/cmds/mand/2_path_check.sh | Command: ls
+File: /home/omartela/42_minishell_tester/cmds/mand/2_path_check.sh | Command: ls
+File: /home/omartela/42_minishell_tester/cmds/mand/9_go_wild.sh | Command: ls | wc -l | xargs echo
+File: /home/omartela/42_minishell_tester/cmds/mand/9_go_wild.sh | Command: yes "no" | head -n 10
+File: /home/omartela/42_minishell_tester/cmds/mand/9_go_wild.sh | Command: ls -la | grep tmp_redir_out | awk '{print $1 $2}'
+File: /home/omartela/42_minishell_tester/cmds/mand/9_go_wild.sh | Command: grep 1 < filedoesnotexist | echo 1 | grep 1 | head -1 | cat | ls
+File: /home/omartela/42_minishell_tester/cmds/mand/9_go_wild.sh | Command: /usr/bin/env -i bash -c "env" | wc -l
+File: /home/omartela/42_minishell_tester/cmds/mand/9_go_wild.sh | Command: bash tmp_test_sh $test
+File: /home/omartela/42_minishell_tester/cmds/mand/9_go_wild.sh | Command: bash tmp_test_sh $test
+
