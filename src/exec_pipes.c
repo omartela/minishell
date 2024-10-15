@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/14 16:26:57 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/15 11:54:42 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 	}
 	if (pipes->pid[i] == 0)
 	{
+		rl_clear_history();
 		reset_signals(sh);
 		parse_redirections(sh, cmd, 1);
 		child_io(cmd, pipes->fd, i, sh->num_cmds);

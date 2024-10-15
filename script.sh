@@ -26,7 +26,7 @@ while IFS= read -r command; do
     echo "Running command: $command"
 
     # Run Valgrind with the command piped to minishell
-    valgrind --leak-check=full --gen-suppressions=all --show-leak-kinds=all \
+    valgrind --leak-check=full --trace-children=yes --gen-suppressions=all --show-leak-kinds=all \
         --suppressions=vg.supp "$MINISHELL_PATH" <<< "$command"
 
 done < "$COMMANDS_FILE"
