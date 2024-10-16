@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/16 15:47:40 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/16 17:10:45 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,10 @@ void	free_pipes(t_shell *sh)
 	i = 0;
 	while (i < sh->num_cmds - 1)
 	{
+		if (sh->pipes->fd[i][0] != -1)
+			close(sh->pipes->fd[i][0]);
+		if (sh->pipes->fd[i][1] != -1)
+			close(sh->pipes->fd[i][1]);
 		free(sh->pipes->fd[i]);
 		sh->pipes->fd[i] = NULL;
 		i++;
