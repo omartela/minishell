@@ -30,7 +30,10 @@ static void	display_local_shellvars(t_shell *shell)
 		else if (equal)
 			ft_printf("declare -x %s\"\"\n", shell->local_shellvars[i]);
 		else
-			ft_printf("declare -x %s\n", shell->local_shellvars[i]);
+		{
+			if (ft_strncmp("_=", shell->local_shellvars[i], 2) != 0)
+				ft_printf("declare -x %s\n", shell->local_shellvars[i]);
+		}
 		++i;
 		if (variable)
 			free(variable);
