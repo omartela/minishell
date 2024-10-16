@@ -90,7 +90,8 @@ void	copy_env(char **envp, t_shell *shell)
 	while (i < sarray)
 	{
 		copied_envp[i] = ft_strdup(envp[i]);
-		local_shellvars[i] = ft_strdup(envp[i]);
+		if (ft_strncmp("_=", envp[i], 2) != 0)
+			local_shellvars[i] = ft_strdup(envp[i]);
 		++i;
 	}
 	copied_envp[i] = NULL;
