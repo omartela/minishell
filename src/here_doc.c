@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/16 13:52:56 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/16 15:43:10 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,7 @@ static int	here_doc_input(char *delimiter, t_shell *sh, int expand)
 		flag = 1;
 	}
 	if (!flag)
-	{
-		close(pipe_fd[0]);
 		printf("warning: here-document delimited by end-of-file (wanted `%s')\n", delimiter);
-	}
 	close(pipe_fd[1]);
 	return (pipe_fd[0]);
 }
