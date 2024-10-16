@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/15 11:54:42 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/16 20:45:55 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,18 +76,18 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 		error_code = parse_redirections(sh ,cmd, 0);
 		if (error_code)
 			return (error_code);
-		int saved_stdout = dup(STDOUT_FILENO);
-		if (saved_stdout == -1)
+		cmd->saved_std[1] = dup(STDOUT_FILENO);
+		if (cmd->saved_std[1] == -1)
 		{
 			error_sys("dup failed\n");
 			return (1);
 		}
 
-		int saved_stdin = dup(STDIN_FILENO);
-		if (saved_stdin == -1)
+		cmd->saved_std[0] = dup(STDIN_FILENO);
+		if (cmd->saved_std[0] == -1)
 		{
 			error_sys("dup failed\n");
-			close(saved_stdout);
+			close(cmd->saved_std[1]);
 			return (1);
 		}
 		if (cmd->infile)
@@ -95,7 +95,7 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 			if (dup2(cmd->fd_in, STDIN_FILENO) == -1)
 			{
 				error_sys("dup2 failed\n");
-				restore_fds(saved_stdin, saved_stdout);
+				restore_fds(cmd->saved_std[0], cmd->saved_std[1]);
 				return (1);
 			}
 			close(cmd->fd_in);
@@ -105,17 +105,17 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 			if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
 			{
 				error_sys("dup2 failed\n");
-				restore_fds(saved_stdin, saved_stdout);
+				restore_fds(cmd->saved_std[0], cmd->saved_std[1]);
 				return (1);
 			}
 			close(cmd->fd_out);
 		}
 		if (execute_builtin(sh, cmd, 0))
 		{
-			restore_fds(saved_stdin, saved_stdout);
+			restore_fds(cmd->saved_std[0], cmd->saved_std[1]);
 			return (1);
 		}
-		if (restore_fds(saved_stdin, saved_stdout))
+		if (restore_fds(cmd->saved_std[0], cmd->saved_std[1]))
 			return (1);
 		cmd->is_continue = 0;
 		return (0);

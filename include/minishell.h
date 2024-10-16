@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/14 21:16:53 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/16 20:22:30 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_cmd
 	char	*outfile;
 	int		append;
 	int		here_doc;
+	int		*saved_std;
 	int		*fd_heredoc;
 	int		fd_in;
 	int		fd_out;

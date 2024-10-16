@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/16 17:10:45 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/16 20:45:09 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,15 @@ void	free_cmd(t_cmd *cmd)
 	{
 		free(cmd->outfile);
 		cmd->outfile = NULL;
+	}
+	if (cmd->saved_std)
+	{
+		if (cmd->saved_std[0] != -1)
+			close(cmd->saved_std[0]);
+		if (cmd->saved_std[1] != -1)
+			close(cmd->saved_std[1]);
+		free(cmd->saved_std);
+		cmd->saved_std = NULL;
 	}
 	if (cmd->fd_heredoc)
 	{
