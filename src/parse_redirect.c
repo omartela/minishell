@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/16 15:50:53 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/16 17:17:20 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ static int	open_fdout(char *outfile, t_cmd *cmd)
 {
 	cmd->fd_out = open(outfile, O_DIRECTORY);
 	if (cmd->fd_out != -1)
+	{
+		close(cmd->fd_out);
 		return (show_error_return(1, outfile, "Is a directory"));
+	}
 	if (access(outfile, F_OK) == 0 && access(outfile, W_OK) == -1)
 		return (show_error_return(1, outfile, "Permission denied"));
 	if (cmd->append)
