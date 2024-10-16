@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/14 16:28:31 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/16 13:43:04 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,7 @@ int	parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit)
 		{
 			if (cmd->fd_in != STDIN_FILENO)
 			{
+				printf("we closed fd (%d)\n", cmd->fd_in);
 				close(cmd->fd_in);
 				cmd->fd_in = STDIN_FILENO;
 			}
@@ -193,6 +194,7 @@ int	parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit)
 				cmd->infile = NULL;
 			}
 			cmd->fd_in = cmd->fd_heredoc[cmd->here_doc - 1];
+			printf("fd is %d\n", cmd->fd_in);
 			i += 2;
 			continue ;
 		}

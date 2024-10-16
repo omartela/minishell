@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/14 21:03:53 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/16 14:24:37 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,12 @@ void	free_shell(t_shell *sh)
 		free_array(&sh->local_shellvars);
 	if (sh->hd->heredoc_fds)
 	{
+		while (sh->hd->num_heredocs > 0)
+		{
+			sh->hd->num_heredocs--;
+			if (sh->hd->heredoc_fds[sh->hd->num_heredocs - 1] != -1)
+				close(sh->hd->heredoc_fds[sh->hd->num_heredocs - 1]);
+		}
 		free(sh->hd->heredoc_fds);
 		sh->hd->heredoc_fds = NULL;
 	}
@@ -129,15 +135,29 @@ void	free_shell(t_shell *sh)
 
 void	free_partial(t_shell *sh)
 {
+	printf("We are in free_partial\n");
 	if (sh->commands)
 	{
 		free_array(&sh->commands);
 		sh->commands = NULL;
+		sh->num_cmds = 0;
 	}
 	if (sh->hd->heredoc_fds)
 	{
+		printf("sh->hd->num_heredocs is %d\n", sh->hd->num_heredocs);
+		while (sh->hd->num_heredocs > 0)
+		{
+			sh->hd->num_heredocs--;
+			if (sh->hd->heredoc_fds[sh->hd->num_heredocs] != -1)
+			{
+				printf("we close fd %d\n", (sh->hd->num_heredocs));
+				close(sh->hd->heredoc_fds[sh->hd->num_heredocs]);
+			}
+		}
 		free(sh->hd->heredoc_fds);
 		sh->hd->heredoc_fds = NULL;
+		sh->hd->num_heredocs = 0;
+		sh->hd->heredoc_index = 0;
 	}
 	if (sh->pipes)
 	{

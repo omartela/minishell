@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/15 17:38:44 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/16 13:52:56 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ static int	is_continue(char *line, char *delimiter)
 
 static int	here_doc_input(char *delimiter, t_shell *sh, int expand)
 {
+	int		flag;
 	int		pipe_fd[2];
 	char	*temp;
 	char	*line;
@@ -71,6 +72,7 @@ static int	here_doc_input(char *delimiter, t_shell *sh, int expand)
 		error_sys("add_prompt failed\n");
 		return (-1);
 	}
+	flag = 0;
 	while (1)
 	{
 		//ft_putstr_fd("> ", 1);
@@ -97,6 +99,12 @@ static int	here_doc_input(char *delimiter, t_shell *sh, int expand)
 			break ;
 		write(pipe_fd[1], line, ft_strlen(line));
 		free(line);
+		flag = 1;
+	}
+	if (!flag)
+	{
+		close(pipe_fd[0]);
+		printf("warning: here-document delimited by end-of-file (wanted `%s')\n", delimiter);
 	}
 	close(pipe_fd[1]);
 	return (pipe_fd[0]);
@@ -133,7 +141,11 @@ int	handle_here_doc(t_shell *sh, char *input)
 				sh->hd->heredoc_fds = ft_realloc(sh->hd->heredoc_fds, sizeof(int) * sh->hd->num_heredocs, sizeof(int) * (sh->hd->num_heredocs + 1));
 			sh->hd->heredoc_fds[sh->hd->num_heredocs] = here_doc_input(args[i + 1], sh, expand);
 			if (sh->hd->heredoc_fds[sh->hd->num_heredocs] == -1)
-				return (1); // free args!!!!!!!
+			{
+				free_array(&args);
+				free_array(&args_with_quotes);
+				return (1);
+			}
 			sh->hd->num_heredocs++;
 			i += 2;
 		}
