@@ -32,6 +32,7 @@ int	exit_shell(t_shell *sh, t_cmd *cmd)
 {
 	int	exit_code;
 
+	//ft_putstr_fd("exit\n", 2);
 	if ((cmd->args[1] && !is_numeric(cmd->args[1])) \
 		|| (cmd->args[1] && cmd->args[1][0] == '\0'))
 	{
