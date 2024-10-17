@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/16 17:17:20 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/17 12:46:18 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,5 +212,6 @@ int	parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit)
 	clean_args[j] = NULL;
 	free_array(&cmd->args);
 	cmd->args = clean_args;
+/* 	close_sh_hd_fds(sh, cmd); */
 	return (error_code);
 }
