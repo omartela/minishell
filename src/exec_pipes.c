@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/16 20:45:55 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/17 12:29:06 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@ static void	child_io(t_cmd *cmd, int **fd, int i, int num_cmds)
 {
 	if (cmd->infile || cmd->here_doc)
 	{
+		if (i > 0)
+		{
+			close(fd[i - 1][0]);
+			close(fd[i - 1][1]);
+		}
 		dup2(cmd->fd_in, STDIN_FILENO);
 		close(cmd->fd_in);
 	}
@@ -27,6 +32,11 @@ static void	child_io(t_cmd *cmd, int **fd, int i, int num_cmds)
 	}
 	if (cmd->outfile)
 	{
+		if (i < num_cmds - 1)
+		{
+			close(fd[i][0]);
+			close(fd[i][1]);
+		}
 		dup2(cmd->fd_out, STDOUT_FILENO);
 		close(cmd->fd_out);
 	}
