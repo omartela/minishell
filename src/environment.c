@@ -66,6 +66,30 @@ char	**sort_table(char **envp)
 	}
 	return (envp);
 }
+
+static size_t	calculate_table_size(char ***table)
+{
+	size_t	size;
+
+	size = 0;
+	while (((*table)[size]))
+		++size;
+	return (size);
+}
+
+void	allocate_tables(t_shell *shell, char ***copied_envp, char ***local_shellvars, size_t sarray)
+{
+	*copied_envp = ft_calloc(sarray, sizeof(char *) + 1);
+	*local_shellvars = ft_calloc(sarray, sizeof(char *) + 1);
+	if (!copied_envp || !local_shellvars)
+	{
+		shell->envp = NULL;
+		shell->local_shellvars = NULL;
+		error_sys("Copy environment failed..\n");
+		exit(1);
+	}
+}
+
 void	copy_env(char **envp, t_shell *shell)
 {
 	size_t	sarray;
@@ -75,17 +99,8 @@ void	copy_env(char **envp, t_shell *shell)
 
 	sarray = 0;
 	i = 0;
-	while (envp[sarray])
-		sarray++;
-	copied_envp = ft_calloc(sarray, sizeof(char *) + 1);
-	local_shellvars = ft_calloc(sarray, sizeof(char *) + 1);
-	if (!copied_envp || !local_shellvars)
-	{
-		shell->envp = NULL;
-		shell->local_shellvars = NULL;
-		error_sys("Copy environment failed..\n");
-		exit(1);
-	}
+	sarray = calculate_table_size(&envp);
+	allocate_tables(shell, &copied_envp, &local_shellvars, sarray);
 	i = 0 ;
 	while (i < sarray)
 	{
@@ -98,16 +113,6 @@ void	copy_env(char **envp, t_shell *shell)
 	local_shellvars = sort_table(local_shellvars);
 	shell->envp = copied_envp;
 	shell->local_shellvars = local_shellvars;
-}
-
-static size_t	calculate_table_size(char ***table)
-{
-	size_t	size;
-
-	size = 0;
-	while (((*table)[size]))
-		++size;
-	return (size);
 }
 
 int	add_table(char ***table, const char *variable, const char *value)
