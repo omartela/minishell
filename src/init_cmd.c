@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/14 16:28:10 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/16 20:37:39 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,10 +115,18 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	(*cmd)->outfile = NULL;
 	(*cmd)->append = 0;
 	(*cmd)->here_doc = 0;
+	(*cmd)->saved_std = malloc(2 * sizeof(int));
+	if (!(*cmd)->saved_std)
+	{
+		error_sys("malloc failed for saved_std\n");
+		free(*cmd);
+		return (1);
+	}
+	(*cmd)->saved_std[0] = -1;
+	(*cmd)->saved_std[1] = -1;
 	(*cmd)->fd_heredoc = NULL;
 	(*cmd)->args_withquotes = NULL;
 	(*cmd)->args = NULL;
-	(*cmd)->args = 0;
 	temp = ft_add_spaces(command);
 	if (!(temp))
 	{

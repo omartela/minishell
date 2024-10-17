@@ -4,5 +4,7 @@ if you want to add supression for example you find some new readline leak. Use t
 valgrind --leak-check=full --show-leak-kinds=all --gen-suppressions=all --suppressions=vg.supp ./minishell < ~/42_minishell_tester/cmds/mand/1_builtins.sh
 then you can copy the {} output to suppression file
 
+valgrind --show-leak-kinds=all --leak-check=full --track-fds=yes --suppressions=vg.supp --trace-children=yes ./minishell
+
 echo $(echo -e "cat << lim\ntest\nlim\n" | ./minishell)
 echo $(echo -e "cat << lim\ntest\nlim\n" | bash)

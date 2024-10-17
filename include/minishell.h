@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/14 21:16:53 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/17 14:17:29 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_cmd
 	char	*outfile;
 	int		append;
 	int		here_doc;
+	int		*saved_std;
 	int		*fd_heredoc;
 	int		fd_in;
 	int		fd_out;
@@ -95,6 +96,7 @@ void	execute_pipes(t_shell *sh);
 void	execute_command(t_shell *sh, t_cmd *cmd, char **envp);
 
 // free functions
+void	close_sh_hd_fds(t_shell *sh, t_cmd *cmd);
 void	free_array_back(char **array, size_t i);
 void	free_array(char ***array);
 void	free_shell(t_shell *sh);
@@ -161,4 +163,7 @@ int		unset(t_shell *sh, char **args);
 // signals.c
 int		init_signal(t_shell *sh);
 int		reset_signals(t_shell *sh);
+
+// update-underscore-variable
+int update_underscore(t_shell *sh, t_cmd *cmd);
 #endif
