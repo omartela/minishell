@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/17 12:29:06 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/17 15:32:14 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,14 +164,23 @@ static void	wait_for_children(t_pipes *pipes, t_shell *sh)
 {
 	int	i;
 	int	status;
+	int signal_number;
 
 	i = 0;
 	status = 0;
+	signal_number = 0;
 	while (i < sh->num_cmds)
 	{
 		waitpid(pipes->pid[i], &status, 0);
 		if (WIFEXITED(status))
 			sh->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+		{
+			signal_number = WTERMSIG(status);
+			sh->exit_status = 128 + signal_number;
+			if (sh->exit_status == 139 && sh->num_cmds == 1)
+				ft_putstr_fd("Segmentation fault (core dumped)\n", 1);
+		}
 		i++;
 	}
 }
