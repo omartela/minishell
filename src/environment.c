@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:57:46 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/14 16:10:51 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:35:22 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	set_variables(t_shell *shell, char *variable, char *value)
 {
 	int	success1;
-	int success2;
+	int	success2;
 
 	success1 = set_table(&shell->envp, variable, value);
 	success2 = set_table(&shell->local_shellvars, variable, value);
@@ -50,7 +50,7 @@ static int	change_table_value(char ***table, size_t index, char *value)
 char	**sort_table(char **envp)
 {
 	char	*temp;
-	int			i;
+	int		i;
 
 	i = 1;
 	while (envp[i])
@@ -77,14 +77,14 @@ static size_t	calculate_table_size(char ***table)
 	return (size);
 }
 
-void	allocate_tables(t_shell *shell, char ***copied_envp, char ***local_shellvars, size_t sarray)
+void	alloc_tables(t_shell *sh, char ***c_envp, char ***l_shvars, size_t i)
 {
-	*copied_envp = ft_calloc(sarray, sizeof(char *) + 1);
-	*local_shellvars = ft_calloc(sarray, sizeof(char *) + 1);
-	if (!copied_envp || !local_shellvars)
+	*c_envp = ft_calloc(i, sizeof(char *) + 1);
+	*l_shvars = ft_calloc(i, sizeof(char *) + 1);
+	if (!c_envp || !l_shvars)
 	{
-		shell->envp = NULL;
-		shell->local_shellvars = NULL;
+		sh->envp = NULL;
+		sh->local_shellvars = NULL;
 		error_sys("Copy environment failed..\n");
 		exit(1);
 	}
@@ -100,8 +100,8 @@ void	copy_env(char **envp, t_shell *shell)
 	sarray = 0;
 	i = 0;
 	sarray = calculate_table_size(&envp);
-	allocate_tables(shell, &copied_envp, &local_shellvars, sarray);
-	i = 0 ;
+	alloc_tables(shell, &copied_envp, &local_shellvars, sarray);
+	i = 0;
 	while (i < sarray)
 	{
 		copied_envp[i] = ft_strdup(envp[i]);
@@ -117,39 +117,39 @@ void	copy_env(char **envp, t_shell *shell)
 
 int	add_table(char ***table, const char *variable, const char *value)
 {
-	size_t	sarr;
-	char	**temp_table;
+	size_t	i;
+	char	**temp;
 
-	sarr = 0;
-	sarr = calculate_table_size(table);
-	temp_table = ft_realloc(*table, sarr * sizeof(char *), (sarr + 2) * sizeof(char *));
-	if (!temp_table)
+	i = 0;
+	i = calculate_table_size(table);
+	temp = ft_realloc(*table, i * sizeof(char *), (i + 2) * sizeof(char *));
+	if (!temp)
 		return (1);
-	*table = temp_table;
-	(*table)[sarr] = ft_strdup(variable);
+	*table = temp;
+	(*table)[i] = ft_strdup(variable);
 	if (value)
 	{
-		if (append_table_value(table, sarr, "="))
+		if (append_table_value(table, i, "="))
 			return (1);
-		if (append_table_value(table, sarr, value))
+		if (append_table_value(table, i, value))
 			return (1);
 	}
-	(*table)[sarr + 1] = NULL;
+	(*table)[i + 1] = NULL;
 	return (0);
 }
 
-void	find_index_to_modify(char ***table, const char *variable, int *found, size_t *index_to_modify)
+void	find_index(char ***table, const char *var, int *found, size_t *i)
 {
 	size_t	size;
 
 	size = 0;
 	while ((*table)[size])
 	{
-		if (is_check_key_equal((*table)[size], variable))
+		if (is_check_key_equal((*table)[size], var))
 		{
-			*index_to_modify = size;
+			*i = size;
 			*found = 1;
-			break;
+			break ;
 		}
 		++size;
 	}
@@ -165,7 +165,7 @@ int	remove_table(char ***table, const char *variable)
 	i = 0;
 	index_to_remove = 0;
 	found = 0;
-	find_index_to_modify(table, variable, &found, &index_to_remove);
+	find_index(table, variable, &found, &index_to_remove);
 	size = calculate_table_size(table);
 	if (found)
 	{
@@ -176,7 +176,7 @@ int	remove_table(char ***table, const char *variable)
 			(*table)[i] = (*table)[i + 1];
 			++i;
 		}
-    	(*table)[size - 1] = NULL;
+		(*table)[size - 1] = NULL;
 	}
 	return (0);
 }
@@ -187,7 +187,7 @@ int	append_table(char ***table, const char *variable, const char *value)
 	int		found;
 
 	found = 0;
-	find_index_to_modify(table, variable, &found, &index_to_modify);
+	find_index(table, variable, &found, &index_to_modify);
 	if (found)
 	{
 		if (!ft_strchr((*table)[index_to_modify], '='))
@@ -208,33 +208,47 @@ int	append_table(char ***table, const char *variable, const char *value)
 	return (1);
 }
 
-int	set_table(char ***table, const char *variable, const char *value)
+static int	update_t_var(char ***t, const char *var, const char *val, size_t *i)
+{
+	char	*temp;
+
+	temp = ft_strjoin(var, "=");
+	if (!temp)
+		return (1);
+	change_table_value(t, *i, temp);
+	if (val)
+	{
+		if (append_table_value(t, *i, val))
+			return (1);
+		return (0);
+	}
+	return (0);
+}
+
+int	set_table(char ***table, const char *var, const char *value)
 {
 	size_t	i;
 	size_t	len;
-	char	*temp;
+	char	l_c;
+	char	*t_var;
 
 	i = 0;
-	len = ft_strlen(variable);
+	len = ft_strlen(var);
 	while ((*table)[i])
 	{
-		if (ft_strncmp((*table)[i], variable, len + 1) == 0 && !value)
+		t_var = (*table)[i];
+		l_c = (*table)[i][len];
+		if (ft_strncmp(t_var, var, len + 1) == 0 && !value)
 			return (0);
-		if (ft_strncmp((*table)[i], variable, len) == 0 && ((*table)[i][len] == '=' || (*table)[i][len] == '\0'))
+		if (ft_strncmp(t_var, var, len) == 0 && (l_c == '=' || l_c == '\0'))
 		{
-			temp = ft_strjoin(variable, "=");
-			if (!temp)
+			if (update_t_var(table, var, value, &i))
 				return (1);
-			change_table_value(table, i, temp);
-			if (value)
-			{
-				if (append_table_value(table, i, value))
-					return (1);
-				return (0);
-			}
 			return (0);
 		}
 		++i;
 	}
-	return (add_table(table, variable, value));
+	if (add_table(table, var, value))
+		return (1);
+	return (0);
 }
