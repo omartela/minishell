@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/15 11:54:42 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/17 15:32:14 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@ static void	child_io(t_cmd *cmd, int **fd, int i, int num_cmds)
 {
 	if (cmd->infile || cmd->here_doc)
 	{
+		if (i > 0)
+		{
+			close(fd[i - 1][0]);
+			close(fd[i - 1][1]);
+		}
 		dup2(cmd->fd_in, STDIN_FILENO);
 		close(cmd->fd_in);
 	}
@@ -27,6 +32,11 @@ static void	child_io(t_cmd *cmd, int **fd, int i, int num_cmds)
 	}
 	if (cmd->outfile)
 	{
+		if (i < num_cmds - 1)
+		{
+			close(fd[i][0]);
+			close(fd[i][1]);
+		}
 		dup2(cmd->fd_out, STDOUT_FILENO);
 		close(cmd->fd_out);
 	}
@@ -76,18 +86,18 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 		error_code = parse_redirections(sh ,cmd, 0);
 		if (error_code)
 			return (error_code);
-		int saved_stdout = dup(STDOUT_FILENO);
-		if (saved_stdout == -1)
+		cmd->saved_std[1] = dup(STDOUT_FILENO);
+		if (cmd->saved_std[1] == -1)
 		{
 			error_sys("dup failed\n");
 			return (1);
 		}
 
-		int saved_stdin = dup(STDIN_FILENO);
-		if (saved_stdin == -1)
+		cmd->saved_std[0] = dup(STDIN_FILENO);
+		if (cmd->saved_std[0] == -1)
 		{
 			error_sys("dup failed\n");
-			close(saved_stdout);
+			close(cmd->saved_std[1]);
 			return (1);
 		}
 		if (cmd->infile)
@@ -95,7 +105,7 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 			if (dup2(cmd->fd_in, STDIN_FILENO) == -1)
 			{
 				error_sys("dup2 failed\n");
-				restore_fds(saved_stdin, saved_stdout);
+				restore_fds(cmd->saved_std[0], cmd->saved_std[1]);
 				return (1);
 			}
 			close(cmd->fd_in);
@@ -105,17 +115,17 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 			if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
 			{
 				error_sys("dup2 failed\n");
-				restore_fds(saved_stdin, saved_stdout);
+				restore_fds(cmd->saved_std[0], cmd->saved_std[1]);
 				return (1);
 			}
 			close(cmd->fd_out);
 		}
 		if (execute_builtin(sh, cmd, 0))
 		{
-			restore_fds(saved_stdin, saved_stdout);
+			restore_fds(cmd->saved_std[0], cmd->saved_std[1]);
 			return (1);
 		}
-		if (restore_fds(saved_stdin, saved_stdout))
+		if (restore_fds(cmd->saved_std[0], cmd->saved_std[1]))
 			return (1);
 		cmd->is_continue = 0;
 		return (0);
@@ -154,14 +164,23 @@ static void	wait_for_children(t_pipes *pipes, t_shell *sh)
 {
 	int	i;
 	int	status;
+	int signal_number;
 
 	i = 0;
 	status = 0;
+	signal_number = 0;
 	while (i < sh->num_cmds)
 	{
 		waitpid(pipes->pid[i], &status, 0);
 		if (WIFEXITED(status))
 			sh->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+		{
+			signal_number = WTERMSIG(status);
+			sh->exit_status = 128 + signal_number;
+			if (sh->exit_status == 139 && sh->num_cmds == 1)
+				ft_putstr_fd("Segmentation fault (core dumped)\n", 1);
+		}
 		i++;
 	}
 }

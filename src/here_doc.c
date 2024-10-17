@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/16 15:43:10 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/17 12:46:06 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static int	is_continue(char *line, char *delimiter)
 
 static int	here_doc_input(char *delimiter, t_shell *sh, int expand)
 {
-	int		flag;
+	/* int		flag; */
 	int		pipe_fd[2];
 	char	*temp;
 	char	*line;
@@ -72,7 +72,7 @@ static int	here_doc_input(char *delimiter, t_shell *sh, int expand)
 		error_sys("add_prompt failed\n");
 		return (-1);
 	}
-	flag = 0;
+	/* flag = 0; */
 	while (1)
 	{
 		//ft_putstr_fd("> ", 1);
@@ -99,10 +99,10 @@ static int	here_doc_input(char *delimiter, t_shell *sh, int expand)
 			break ;
 		write(pipe_fd[1], line, ft_strlen(line));
 		free(line);
-		flag = 1;
+		/* flag = 1; */
 	}
-	if (!flag)
-		printf("warning: here-document delimited by end-of-file (wanted `%s')\n", delimiter);
+	/* if (!flag)
+		printf("warning: here-document delimited by end-of-file (wanted `%s')\n", delimiter); */
 	close(pipe_fd[1]);
 	return (pipe_fd[0]);
 }

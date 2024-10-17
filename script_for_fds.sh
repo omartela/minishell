@@ -18,8 +18,8 @@ if [ ! -d "$COMMANDS_DIR" ]; then
     exit 1
 fi
 
-# Track commands with leaks
-LEAKY_COMMANDS=()
+# Track commands with file descriptor issues
+FD_ISSUE_COMMANDS=()
 
 # Loop through each file in the cmds/mand directory
 for COMMANDS_FILE in "$COMMANDS_DIR"/*; do
@@ -40,15 +40,7 @@ for COMMANDS_FILE in "$COMMANDS_DIR"/*; do
         TEMP_OUTPUT=$(mktemp)
 
         # Run Valgrind with the command piped to minishell and capture the output
-        valgrind --leak-check=full --trace-children=yes --gen-suppressions=all --show-leak-kinds=all \
-           --track-fds=yes --suppressions=vg.supp "$MINISHELL_PATH" <<< "$command" &> "$TEMP_OUTPUT"
-
-        # Check the output for signs of memory leaks
-        if grep -Eq "definitely lost: [1-9]|indirectly lost: [1-9]|possibly lost: [1-9]|still reachable: [1-9]" "$TEMP_OUTPUT"; then
-            echo "Leak detected for command: $command in file: $COMMANDS_FILE"
-            LEAKY_COMMANDS+=("File: $COMMANDS_FILE | Command: $command")
-            cat "$TEMP_OUTPUT"
-        fi
+        valgrind --trace-children=yes --track-fds=yes --suppressions=vg.supp "$MINISHELL_PATH" <<< "$command" &> "$TEMP_OUTPUT"
 
         # Check for file descriptor inconsistencies
         FD_LINE=$(grep -Eo "FILE DESCRIPTORS: [0-9]+ open \([0-9]+ std\)" "$TEMP_OUTPUT")
@@ -66,16 +58,6 @@ for COMMANDS_FILE in "$COMMANDS_DIR"/*; do
 
     done < "$COMMANDS_FILE"
 done
-
-# Display all commands with leaks at the end
-if [ ${#LEAKY_COMMANDS[@]} -gt 0 ]; then
-    echo -e "\nCommands with memory leaks:"
-    for entry in "${LEAKY_COMMANDS[@]}"; do
-        echo "$entry"
-    done
-else
-    echo -e "\nNo memory leaks detected in any commands."
-fi
 
 # Display all commands with file descriptor issues
 if [ ${#FD_ISSUE_COMMANDS[@]} -gt 0 ]; then

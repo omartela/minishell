@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/16 15:47:40 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/17 14:18:33 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,15 @@ void	free_cmd(t_cmd *cmd)
 		free(cmd->outfile);
 		cmd->outfile = NULL;
 	}
+	if (cmd->saved_std)
+	{
+		if (cmd->saved_std[0] != -1)
+			close(cmd->saved_std[0]);
+		if (cmd->saved_std[1] != -1)
+			close(cmd->saved_std[1]);
+		free(cmd->saved_std);
+		cmd->saved_std = NULL;
+	}
 	if (cmd->fd_heredoc)
 	{
 		free(cmd->fd_heredoc);
@@ -77,6 +86,10 @@ void	free_pipes(t_shell *sh)
 	i = 0;
 	while (i < sh->num_cmds - 1)
 	{
+		if (sh->pipes->fd[i][0] != -1)
+			close(sh->pipes->fd[i][0]);
+		if (sh->pipes->fd[i][1] != -1)
+			close(sh->pipes->fd[i][1]);
 		free(sh->pipes->fd[i]);
 		sh->pipes->fd[i] = NULL;
 		i++;
@@ -130,6 +143,22 @@ void	free_shell(t_shell *sh)
 	{
 		free(sh->promt);
 		sh->promt = NULL;
+	}
+}
+
+void	close_sh_hd_fds(t_shell *sh, t_cmd *cmd)
+{
+	int	i;
+
+	i = sh->hd->num_heredocs;
+	if (sh->hd->heredoc_fds)
+	{
+		while (i > 0)
+		{
+			i--;
+			if (sh->hd->heredoc_fds[i] != -1 && sh->hd->heredoc_fds[i] != cmd->fd_in)
+				close(sh->hd->heredoc_fds[i]);
+		}
 	}
 }
 
