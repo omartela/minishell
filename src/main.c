@@ -71,10 +71,13 @@ static void increase_shlvl(t_shell *sh)
 					j++;
 				}
 				temp_atoi = ft_atoi(value);
-				if (!temp_atoi)
+				if (temp_atoi < 0 || temp_atoi == 0 || temp_atoi == 2147483647)
 				{
-					free(value);
-					error_sys("Setting SHLVL failed\n");
+					if (set_variables(sh, "SHLVL", "1"))
+					{
+						error_sys("Setting SHLVL failed\n");
+						return ;
+					}
 					return ;
 				}
 				temp_atoi += 1;
@@ -121,7 +124,7 @@ static void increase_shlvl(t_shell *sh)
 	return ;
 }
 
-static void	initialize_shell(t_shell *sh, char **envp)
+static void	initialize_shell(t_shell *sh, char ***envp)
 {
 	t_heredoc	*hd;
 
@@ -130,10 +133,13 @@ static void	initialize_shell(t_shell *sh, char **envp)
 	sh->commands = NULL;
 	sh->promt = NULL;
 	sh->pipes = NULL;
-	copy_env(envp, sh);
+	sh->local_shellvars = NULL;
+	sh->envp = NULL;
+	copy_env(*envp, sh);
+	*envp = sh->envp;
 	if (envp)
 		increase_shlvl(sh);
-	sh->homepath = expand(envp, "HOME");
+	sh->homepath = expand(*envp, "HOME");
 	if (!sh->homepath)
 	{
 		error_sys("ft_strdup failed for getenv\n");
@@ -336,7 +342,7 @@ static void	process_input(t_shell *sh, char *input)
 	}
 }
 
-static int	userprompt(int status, char **envp)
+static int	userprompt(int status, char ***envp)
 {
 	t_shell	sh;
 	char	*input;
@@ -383,5 +389,5 @@ int	main(int ac, char **av, char **envp)
 	status = 0;
 	(void)ac;
 	(void)av;
-	return (userprompt(status, envp));
+	return (userprompt(status, &envp));
 }

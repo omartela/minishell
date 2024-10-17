@@ -22,6 +22,11 @@ static void	display_local_shellvars(t_shell *shell)
 	variable = NULL;
 	while (shell->local_shellvars[i])
 	{
+		if (ft_strncmp("_=", shell->local_shellvars[i], 2) == 0)
+		{
+			++i;
+			continue;
+		}
 		equal = ft_strchr(shell->local_shellvars[i], '=');
 		if (equal)
 			variable = ft_substr(shell->local_shellvars[i], 0, (equal - shell->local_shellvars[i]));

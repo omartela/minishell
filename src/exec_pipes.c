@@ -217,6 +217,7 @@ void	execute_pipes(t_shell *sh)
 			sh->exit_status = 1;
 			return ;
 		}
+		update_underscore(sh, cmd);
 		error_code = pipe_and_fork(sh, sh->pipes, i, cmd);
 		if (error_code || !cmd->is_continue)
 		{
