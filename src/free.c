@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/17 12:45:50 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/17 14:18:33 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ void	free_shell(t_shell *sh)
 	}
 }
 
-/* void	close_sh_hd_fds(t_shell *sh, t_cmd *cmd)
+void	close_sh_hd_fds(t_shell *sh, t_cmd *cmd)
 {
 	int	i;
 
@@ -160,7 +160,7 @@ void	free_shell(t_shell *sh)
 				close(sh->hd->heredoc_fds[i]);
 		}
 	}
-} */
+}
 
 void	free_partial(t_shell *sh)
 {

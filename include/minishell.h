@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/17 12:46:29 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/17 14:17:29 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	execute_pipes(t_shell *sh);
 void	execute_command(t_shell *sh, t_cmd *cmd, char **envp);
 
 // free functions
-/* void	close_sh_hd_fds(t_shell *sh, t_cmd *cmd); */
+void	close_sh_hd_fds(t_shell *sh, t_cmd *cmd);
 void	free_array_back(char **array, size_t i);
 void	free_array(char ***array);
 void	free_shell(t_shell *sh);
