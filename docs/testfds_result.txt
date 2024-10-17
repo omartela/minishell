@@ -1,0 +1,9 @@
+17th of October
+Commands with file descriptor issues:
+File: ./42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ifconfig | grep ":" | Total FD: 5, STD FD: 3
+File: ./42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ifconfig | grep nothing | Total FD: 5, STD FD: 3
+File: ./42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls|cat Makefile|cat<<asd>out | Total FD: 4, STD FD: 3
+File: ./42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls|cat Makefile|cat<<'asd'>out | Total FD: 4, STD FD: 3
+File: ./42_minishell_tester/cmds/mand/1_pipelines.sh | Command: ls|cat Makefile|cat<<"asd">out | Total FD: 4, STD FD: 3
+File: ./42_minishell_tester/cmds/mand/9_go_wild.sh | Command: bash tmp_test_sh $test | Total FD: 4, STD FD: 3
+File: ./42_minishell_tester/cmds/mand/9_go_wild.sh | Command: bash tmp_test_sh $test | Total FD: 4, STD FD: 3
