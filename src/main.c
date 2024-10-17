@@ -34,23 +34,26 @@ int is_open_quote(char *str)
 	return (0);
 }
 
-static void increase_shlvl(t_shell *sh)
+static int increase_shlvl(t_shell *sh)
 {
 	char	*temp_itoa;
 	int		temp_atoi;
 	char	*value;
 	int		i;
 	int		j;
+	int		keyok;
 
 	i = 0;
 	j = 0;
+	keyok = 0;
 	temp_atoi = 0;
 	temp_itoa = NULL;
 	value = NULL;
 
 	while (sh->envp[i])
 	{
-		if (is_check_key_equal(sh->envp[i], "SHLVL"))
+		keyok = is_check_key_equal(sh->envp[i], "SHLVL");
+		if (keyok == 1)
 		{
 			value = get_value(sh->envp[i]);
 			if (value)
@@ -64,64 +67,65 @@ static void increase_shlvl(t_shell *sh)
 						if (set_variables(sh, "SHLVL", "1"))
 						{
 							error_sys("Setting SHLVL failed\n");
-							return ;
+							return (1);
 						}
-						return ;
+						return (0);
 					}
 					j++;
 				}
 				temp_atoi = ft_atoi(value);
+				free(value);
 				if (temp_atoi < 0 || temp_atoi == 0 || temp_atoi == 2147483647)
 				{
 					if (set_variables(sh, "SHLVL", "1"))
 					{
 						error_sys("Setting SHLVL failed\n");
-						return ;
+						return (1);
 					}
-					return ;
+					return (0);
 				}
 				temp_atoi += 1;
 				temp_itoa = ft_itoa(temp_atoi);
 				if (!temp_itoa)
 				{
-					free(value);
 					error_sys("Setting SHLVL failed\n");
-					return ;
+					return (1);
 				}
 				if (set_variables(sh, "SHLVL", temp_itoa))
 				{
-					free(value);
 					free(temp_itoa);
 					error_sys("Setting SHLVL failed\n");
-					return ;
+					return (1);
 				}
-				free(value);
 				free(temp_itoa);
-				return ;
+				return (0);
 			}
 			else
 			{
-				if (set_variables(sh, "SHLVL", "1"))
-				{
+					/// allocating failed need to return properly
 					error_sys("Setting SHLVL failed\n");
-					return ;
-				}
+					return (1);
 			}
+		}
+		else if (keyok == -1)
+		{
+			/// allocating failed need to return properly
+			return (1);
 		}
 		++i;
 	}
 	if (append_table(&sh->envp, "SHLVL", "1"))
 	{
 		error_sys("Setting SHLVL failed\n");
-		return ;
+		return (1);
 	}
 	if (append_table(&sh->local_shellvars, "SHLVL", "1"))
 	{
 		error_sys("Setting SHLVL failed\n");
-		return ;
+		return (1);
 	}
 	sort_table(sh->local_shellvars);
-	return ;
+	return (0);
 }
 
 static void	initialize_shell(t_shell *sh, char ***envp)
@@ -137,8 +141,12 @@ static void	initialize_shell(t_shell *sh, char ***envp)
 	sh->envp = NULL;
 	copy_env(*envp, sh);
 	*envp = sh->envp;
-	if (envp)
-		increase_shlvl(sh);
+	if (increase_shlvl(sh))
+	{
+		free_array(&sh->envp);
+		free_array(&sh->local_shellvars);
+		exit (1);
+	}
 	sh->homepath = expand(*envp, "HOME");
 	if (!sh->homepath)
 	{

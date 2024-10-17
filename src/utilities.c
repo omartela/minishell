@@ -20,9 +20,17 @@ char	*get_value(char *args)
 	value = NULL;
 	equal = ft_strchr(args, '=');
 	if (equal)
+	{
 		value = ft_strdup((equal + 1));
+		if (!value)
+			return (NULL);
+	}
 	else
+	{
 		value = ft_strdup("");
+		if (!value)
+			return (NULL);
+	}
 	return (value);
 }
 
@@ -35,6 +43,11 @@ char	*get_key(char *args)
 	if (!split)
 		return (NULL);
 	key = ft_strdup(split[0]);
+	if (!key)
+	{
+		free_array(&split);
+		return (NULL);
+	}
 	free_array(&split);
 	return (key);
 }
@@ -46,7 +59,7 @@ int	is_check_key_equal(char *args, const char *variable)
 
 	key = get_key(args);
 	if (!key)
-		return (0);
+		return (-1);
 	len = ft_strlen(key);
 	if (ft_strncmp(key, variable, len + 1) == 0)
 	{
