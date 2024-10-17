@@ -133,6 +133,8 @@ static void	initialize_shell(t_shell *sh, char ***envp)
 	sh->commands = NULL;
 	sh->promt = NULL;
 	sh->pipes = NULL;
+	sh->local_shellvars = NULL;
+	sh->envp = NULL;
 	copy_env(*envp, sh);
 	*envp = sh->envp;
 	if (envp)
