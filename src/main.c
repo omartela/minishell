@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/17 17:06:53 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/18 16:19:43 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,13 +150,18 @@ static void	initialize_shell(t_shell *sh, char ***envp)
 	sh->homepath = expand(*envp, "HOME");
 	if (!sh->homepath)
 	{
-		error_sys("ft_strdup failed for getenv\n");
+		error_sys("Expand home failed\n");
+		free_array(&sh->envp);
+		free_array(&sh->local_shellvars);
 		exit (1);
 	}
 	hd = malloc(sizeof(t_heredoc));
 	if (!hd)
 	{
-		error_sys("malloc failed for t_heredoc\n");
+		error_sys("t_heredoc failed\n");
+		free(sh->homepath);
+		free_array(&sh->envp);
+		free_array(&sh->local_shellvars);
 		exit(1);
 	}
 	sh->hd = hd;
@@ -166,7 +171,10 @@ static void	initialize_shell(t_shell *sh, char ***envp)
 	ft_memset(&sh->org_sig_int, 0, sizeof(sh->org_sig_int));
 	ft_memset(&sh->org_sig_quit, 0, sizeof(sh->org_sig_quit));
 	if (init_signal(sh))
+	{
+		free_shell(sh);
 		exit (1);
+	}
 }
 
 int	add_prompt(t_shell *sh, char *input)
@@ -177,10 +185,7 @@ int	add_prompt(t_shell *sh, char *input)
 	{
 		temp = ft_strjoin(sh->promt, input);
 		if (!temp)
-		{
-			error_sys("ft_strjoin failed\n");
 			return (1);
-		}
 		free(sh->promt);
 		sh->promt = temp;
 	}
@@ -188,10 +193,7 @@ int	add_prompt(t_shell *sh, char *input)
 	{
 		sh->promt = ft_strdup(input);
 		if (!sh->promt)
-		{
-			error_sys("ft_strdup failed\n");
 			return (1);
-		}
 	}
 	return (0);
 }
@@ -378,7 +380,7 @@ static int	userprompt(int status, char ***envp)
 		{
 			error_sys("add_prompt failed\n");
 			free(input);
-			exit(1);
+			continue ;
 		}
 		process_input(&sh, input);
 		free_partial(&sh);

@@ -6,30 +6,34 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 10:34:04 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/15 11:32:21 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/18 16:22:56 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char    *expand(char **envp, char *variable)
+char	*expand(char **envp, char *variable)
 {
-    int     i;
-    char    *value;
+	int		i;
+	char	*value;
+	int		keyok;
 
-    i = 0;
-    while (envp[i])
-    {
-        if (is_check_key_equal(envp[i], variable))
-        {
-            value = get_value(envp[i]);
-            if (!value)
-                return (NULL);
-            return (value);
-        }
-        ++i;
-    }
-    return (ft_strdup(""));
+	i = 0;
+	while (envp[i])
+	{
+		keyok = is_check_key_equal(envp[i], variable);
+		if (keyok == 1)
+		{
+			value = get_value(envp[i]);
+			if (!value)
+				return (NULL);
+			return (value);
+		}
+		else if (keyok == -1)
+			return (NULL);
+		++i;
+	}
+	return (ft_strdup(""));
 }
 
 
