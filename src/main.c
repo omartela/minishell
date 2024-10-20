@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/18 16:19:43 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/20 17:31:06 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,6 +312,13 @@ static void	process_input(t_shell *sh, char *input)
 		{
 			char *temp = ft_strjoin(input, "\n");
 			free(input);
+			if (!temp)
+			{
+				free(next_input);
+				error_sys("ft_strjoin failed\n");
+				sh->exit_status = 1;
+				return ;
+			}
 			split_input = ft_strjoin(temp, next_input);
 			free(temp);
 			free(next_input);
@@ -346,7 +353,7 @@ static void	process_input(t_shell *sh, char *input)
 	}
 	else
 	{
-		error_sys("ft_split failed\n");
+		error_sys("split_args_leave_quotes failed\n");
 		sh->exit_status = 1;
 		return ;
 	}
