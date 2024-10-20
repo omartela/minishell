@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 10:34:04 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/18 16:22:56 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/20 16:31:05 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,10 @@ char *split_and_parse(char *str, t_shell *sh)
             {
                 insert = get_exit_code(sh);
                 if (!insert)
+                {
+                    free(result);
                     return (NULL);
+                }
                 temp = ft_strjoin(result, insert);
                 free(insert);
                 free(result);
@@ -198,15 +201,22 @@ char *split_and_parse(char *str, t_shell *sh)
 
                 key = ft_substr(str, i, key_len); // Extract the variable name
                 if (!key)
+                {
+                    free(result);
                     return (NULL);
+                }
                 insert = expand(sh->envp, key); // Expand the variable
                 free(key);
                 if (!insert)
+                {
+                    free(result);
                     return (NULL);
-
+                }
                 temp = ft_strjoin(result, insert); // Append the expanded value to result
                 free(insert);
                 free(result);
+                if (!temp)
+                    return (NULL);
                 result = temp;
                 i += key_len; // Move the index past the variable name
             }
@@ -215,6 +225,8 @@ char *split_and_parse(char *str, t_shell *sh)
                 // If we encounter just a single '$' with no valid variable, append it as is
                 temp = ft_strjoin(result, "$");
                 free(result);
+                if (!temp)
+                    return (NULL);
                 result = temp;
                 i++;
             }
@@ -225,6 +237,8 @@ char *split_and_parse(char *str, t_shell *sh)
             char temp_str[2] = {str[i], '\0'}; // Create a string with one character
             temp = ft_strjoin(result, temp_str);
             free(result);
+            if (!temp)
+                return (NULL);
             result = temp;
             i++;
         }
