@@ -195,7 +195,7 @@ void	execute_pipes(t_shell *sh)
 	i = 0;
 	error_code = 0;
 	cmd = NULL;
-	pipes = malloc(sizeof(t_pipes));
+	pipes = ft_calloc(1, sizeof(t_pipes));
 	if (!pipes)
 	{
 		error_sys("malloc failed for t_pipes\n");

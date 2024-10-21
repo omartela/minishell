@@ -84,7 +84,7 @@ int	parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit)
 	j = 0;
 	error_code = 0;
 	arg_count = count_new_args_len(cmd->args_withquotes);
-	clean_args = malloc(sizeof(char *) * (arg_count + 1));
+	clean_args = ft_calloc(sizeof(char *), (arg_count + 1));
 	if (!clean_args)
 	{
 		error_sys("malloc failed for clean_args\n"); //free all

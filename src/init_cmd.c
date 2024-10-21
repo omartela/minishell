@@ -68,7 +68,7 @@ int	init_heredocs(t_shell *sh, t_cmd *cmd)
 		{
 			if (!cmd->fd_heredoc)
 			{
-				cmd->fd_heredoc = malloc(sizeof(int));
+				cmd->fd_heredoc = ft_calloc(1, sizeof(int));
 				if (!cmd->fd_heredoc)
 				{
 					error_sys("malloc failed for fd_heredoc\n");
@@ -77,10 +77,10 @@ int	init_heredocs(t_shell *sh, t_cmd *cmd)
 			}
 			else
 			{
-				cmd->fd_heredoc = ft_realloc(cmd->fd_heredoc, sizeof(int) * j, sizeof(int) * (j + 1));
+				cmd->fd_heredoc = ft_recalloc(cmd->fd_heredoc, sizeof(int) * j, sizeof(int) * (j + 1));
 				if (!cmd->fd_heredoc)
 				{
-					error_sys("ft_realloc failed\n");
+					error_sys("ft_recalloc failed\n");
 					return (1);
 				}
 			}
@@ -101,8 +101,8 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 {
 	char	*temp;
 
-	*cmd = malloc(sizeof(t_cmd));
-	*cmd = ft_memset(*cmd, 0, sizeof(t_cmd));
+	*cmd = ft_calloc(1, sizeof(t_cmd));
+	//*cmd = ft_memset(*cmd, 0, sizeof(t_cmd));
 	if (!*cmd)
 	{
 		error_sys("malloc failed for cmd\n"); //free all
@@ -115,7 +115,7 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	(*cmd)->outfile = NULL;
 	(*cmd)->append = 0;
 	(*cmd)->here_doc = 0;
-	(*cmd)->saved_std = malloc(2 * sizeof(int));
+	(*cmd)->saved_std = ft_calloc(2, sizeof(int));
 	if (!(*cmd)->saved_std)
 	{
 		error_sys("malloc failed for saved_std\n");

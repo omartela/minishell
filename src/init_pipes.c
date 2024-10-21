@@ -42,12 +42,12 @@ int	init_pipes(t_pipes *pipes, int num_cmds)
 
 	i = 0;
 	z = 0;
-	pipes->fd = malloc((num_cmds - 1) * sizeof(int *));
+	pipes->fd = ft_calloc((num_cmds - 1), sizeof(int *));
 	if (!pipes->fd)
 		return (1);
 	while (i < num_cmds - 1)
 	{
-		pipes->fd[i] = malloc(2 * sizeof(int));
+		pipes->fd[i] = ft_calloc(2, sizeof(int));
 		if (!pipes->fd[i])
 		{
 			free_fds_on_failure(pipes->fd, i);
@@ -55,17 +55,17 @@ int	init_pipes(t_pipes *pipes, int num_cmds)
 		}
 		i++;
 	}
-	pipes->pid = malloc(num_cmds * sizeof(pid_t));
+	pipes->pid = ft_calloc(num_cmds, sizeof(pid_t));
 	if (!pipes->pid)
 	{
 		free_fds_on_failure(pipes->fd, i);
 		return (1);
 	}
-	while (z < num_cmds)
+	/* while (z < num_cmds)
 	{
 		ft_memset(&pipes->pid[z], 0, sizeof(pid_t));
 		++z;
-	}
+	} */ // Changed to ft_calloc so this memset should be unnecessary
 	init_fds(pipes->fd, num_cmds);
 	return (0);
 }
