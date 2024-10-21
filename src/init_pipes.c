@@ -25,23 +25,25 @@ static void	init_fds(int **fd, int num_cmds)
 	}
 }
 
-static void	free_fds_on_failure(int **fd, int i)
+static void	free_fds_on_failure(int ***fd, int i)
 {
 	while (i > 0)
 	{
 		i--;
 		free(fd[i]);
+		fd[i] = NULL;
 	}
 	free(fd);
+	fd = NULL;
 }
 
 int	init_pipes(t_pipes *pipes, int num_cmds)
 {
 	int	i;
-	int z;
+	//int z;
 
 	i = 0;
-	z = 0;
+	//z = 0;
 	pipes->fd = ft_calloc((num_cmds - 1), sizeof(int *));
 	if (!pipes->fd)
 		return (1);
@@ -50,7 +52,7 @@ int	init_pipes(t_pipes *pipes, int num_cmds)
 		pipes->fd[i] = ft_calloc(2, sizeof(int));
 		if (!pipes->fd[i])
 		{
-			free_fds_on_failure(pipes->fd, i);
+			free_fds_on_failure(&pipes->fd, i);
 			return (1);
 		}
 		i++;
@@ -58,7 +60,7 @@ int	init_pipes(t_pipes *pipes, int num_cmds)
 	pipes->pid = ft_calloc(num_cmds, sizeof(pid_t));
 	if (!pipes->pid)
 	{
-		free_fds_on_failure(pipes->fd, i);
+		free_fds_on_failure(&pipes->fd, i);
 		return (1);
 	}
 	/* while (z < num_cmds)

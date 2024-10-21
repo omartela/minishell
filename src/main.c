@@ -172,6 +172,7 @@ static void	initialize_shell(t_shell *sh, char ***envp)
 	ft_memset(&sh->org_sig_quit, 0, sizeof(sh->org_sig_quit));
 	if (init_signal(sh))
 	{
+		error_sys("Error when initializing signal\n");
 		free_shell(sh);
 		exit (1);
 	}
@@ -367,6 +368,11 @@ static int	userprompt(int status, char ***envp)
 	initialize_shell(&sh, envp);
 	while (1)
 	{
+		if (init_signal(&sh))
+		{
+			error_sys("Init signals failed\n");
+			continue;
+		}
 		//Snippet for tester
 		if (isatty(fileno(stdin)))
 			input = readline("minishell> ");

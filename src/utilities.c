@@ -70,12 +70,6 @@ int	is_check_key_equal(char *args, const char *variable)
 	return (0);
 }
 
-
-char	*expand_tilde(t_shell *sh)
-{
-	return (sh->homepath);
-}
-
 int	is_builtin(t_cmd *cmd)
 {
 	char **str;
@@ -85,6 +79,11 @@ int	is_builtin(t_cmd *cmd)
 	str = ft_split("exit,export,cd,env,unset,pwd,echo", ',');
 	i = 0;
 	is_builtin = 0;
+	if (!str)
+	{
+		error_sys("is_builtin failed\n");
+		return (-1);
+	}
 	while (str[i])
 	{
 		if (cmd->args[0] && ft_strncmp(cmd->args[0], str[i], ft_strlen(str[i]) + 1) == 0)

@@ -88,7 +88,10 @@ int	parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit)
 	if (!clean_args)
 	{
 		error_sys("malloc failed for clean_args\n"); //free all
-		exit (1);
+		if (is_exit)
+			exit_and_free(sh, cmd, 1);
+		else
+			return (1);
 	}
 	while (cmd->args[i])
 	{
@@ -119,7 +122,11 @@ int	parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit)
 			{
 				error_sys("ft_strdup failed\n");
 				free_array_back(clean_args, j);
-				exit (1);
+				clean_args = NULL;
+				if (is_exit)
+					exit_and_free(sh, cmd, 1);
+				else
+					return (1);
 			}
 			i += 2;
 			continue ;
@@ -148,7 +155,11 @@ int	parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit)
 			{
 				error_sys("ft_strdup failed\n");
 				free_array_back(clean_args, j);
-				exit (1);
+				clean_args = NULL;
+				if (is_exit)
+					exit_and_free(sh, cmd, 1);
+				else
+					return (1);
 			}
 			i += 2;
 			continue ;
@@ -177,7 +188,11 @@ int	parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit)
 			{
 				error_sys("ft_strdup failed\n");
 				free_array_back(clean_args, j);
-				exit (1);
+				clean_args = NULL;
+				if (is_exit)
+					exit_and_free(sh, cmd, 1);
+				else
+					return (1);
 			}
 			i += 2;
 			continue ;
@@ -204,7 +219,11 @@ int	parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit)
 		{
 			error_sys("ft_strdup failed\n");
 			free_array_back(clean_args, j);
-			exit (1);
+			clean_args = NULL;
+			if (is_exit)
+				exit_and_free(sh, cmd, 1);
+			else
+				return (1);
 		}
 		j++;
 		i++;

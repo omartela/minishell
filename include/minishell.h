@@ -101,7 +101,7 @@ void	free_array_back(char **array, size_t i);
 void	free_array(char ***array);
 void	free_shell(t_shell *sh);
 void	free_partial(t_shell *sh);
-void	free_cmd(t_cmd *cmd);
+void	free_cmd(t_cmd **cmd);
 void	free_pipes(t_shell *sh);
 void	exit_and_free(t_shell *sh, t_cmd *cmd, int status);
 

@@ -19,13 +19,13 @@ int    pwd(void)
     str = getcwd(cwd, sizeof(cwd));
     if (str != NULL)
     {
-        ft_putstr_fd(cwd, 1);
+        ft_putstr_fd(str, 1);
         write(1, "\n", 1);
         return (0);
     }
     else
     {
-        ft_putstr_fd("pwd error, unknown folder \n", 2);
+        ft_putstr_fd("getcwd: cannot access directories: No such file or directory\n", 2);
         return (1);
     }
     return (0);

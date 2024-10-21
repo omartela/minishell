@@ -120,6 +120,7 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	{
 		error_sys("malloc failed for saved_std\n");
 		free(*cmd);
+		*cmd = NULL;
 		return (1);
 	}
 	(*cmd)->saved_std[0] = -1;
@@ -131,7 +132,7 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	if (!(temp))
 	{
 		error_sys("malloc failed for add_spaces\n"); //free all
-		free_cmd(*cmd);
+		free_cmd(cmd);
 		return (1);
 	}
 /* 	(*cmd)->args = split_args_leave_quotes(temp1, ' ');
@@ -145,24 +146,27 @@ int	init_cmd(t_cmd **cmd, char *command, t_shell *sh)
 	if (!(*cmd)->args /* || parse_dollar_sign(*cmd, sh) */)
 	{
 		error_sys("ft_split_args failed\n"); //free all
-		free_cmd(*cmd);
+		free_cmd(cmd);
+		free(temp);
 		return (1);
 	}
 	(*cmd)->args_withquotes = split_args_leave_quotes(temp, ' ');
 	if (!(*cmd)->args_withquotes)
 	{
 		error_sys("ft_split_args failed\n"); //free all
-		free_cmd(*cmd);
+		free_cmd(cmd);
 		free(temp);
 		return (1);
 	}
 	free(temp);
 	if (init_heredocs(sh, *cmd) == 1)
+	{
+		free_cmd(cmd);
 		return (1);
+	}
 	if (path_init(*cmd, sh->envp) == 1)
 	{
-		free_array(&(*cmd)->args);
-		free_cmd(*cmd);
+		free_cmd(cmd);
 		return (1);
 	}
 	return (0);
