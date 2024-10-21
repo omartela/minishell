@@ -213,10 +213,10 @@ static void	process_input(t_shell *sh, char *input)
 		sh->exit_status = 2;
 		return ;
 	}
-	input = split_and_parse(split_input, sh);
+	input = expand_input(split_input, sh);
 	if (!input)
 	{
-		error_sys("split_and_parse failed\n");
+		error_sys("expand_input failed\n");
 		sh->exit_status = 1;
 		return ;
 	}
@@ -271,11 +271,11 @@ static void	process_input(t_shell *sh, char *input)
 			free(next_input);
 			return ;
 		}
-		split_input = split_and_parse(next_input, sh);
+		split_input = expand_input(next_input, sh);
 		free(next_input);
 		if (!split_input)
 		{
-			error_sys("split_and_parse failed\n");
+			error_sys("expand_input failed\n");
 			free(input);
 			sh->exit_status = 1;
 			return ;

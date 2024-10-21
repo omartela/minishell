@@ -141,7 +141,7 @@ int	add_table(char ***table, const char *variable, const char *value)
 
 	i = 0;
 	i = calculate_table_size(table);
-	temp = ft_realloc(*table, i * sizeof(char *), (i + 2) * sizeof(char *));
+	temp = ft_recalloc(*table, i * sizeof(char *), (i + 2) * sizeof(char *));
 	if (!temp)
 		return (1);
 	*table = temp;

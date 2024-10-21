@@ -36,63 +36,6 @@ char	*expand(char **envp, char *variable)
 	return (ft_strdup(""));
 }
 
-
-char	*ft_strndup(const char *s1, size_t n)
-{
-	size_t	i;
-	char	*dst;
-
-	i = 0;
-	dst = (char *)malloc(sizeof(char) * (n + 1));
-	if (dst == NULL)
-		return (NULL);
-	while (i < n)
-	{
-		dst[i] = s1[i];
-		i++;
-	}
-	dst[i] = '\0';
-	return (dst);
-}
-
-char    *insert_to_string(char *str, char *delimiter, char *insert)
-{
-    size_t  i;
-    char    *result;
-    char    *temp;
-
-    i = 0;
-	result = NULL;
-    while (str[i])
-    {
-        if (ft_strncmp(&str[i], delimiter, ft_strlen(delimiter)) == 0)
-        {
-            result = ft_strndup(str, i);
-            if (!result)
-                return (NULL);
-            temp = ft_strjoin(result, insert);
-            if (!temp)
-            {
-                free(result);
-                return (NULL);
-            }
-            free(result);
-            result = temp;
-            temp = ft_strjoin(result, &str[i] + ft_strlen(delimiter));
-            if (!temp)
-            {
-                free(result);
-                return (NULL);
-            }
-            free(result);
-            result = temp;
-			return (result);
-        }
-        ++i;
-    }
-    return (NULL);
-}
-
 static char  *get_exit_code(t_shell *sh)
 {
     char    *tempitoa;
@@ -106,7 +49,7 @@ static char  *get_exit_code(t_shell *sh)
     return (tempitoa);
 }
 
-char *split_and_parse(char *str, t_shell *sh)
+char *expand_input(char *str, t_shell *sh)
 {
     int		in_single_quotes;
     int     in_double_quotes;

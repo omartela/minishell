@@ -91,13 +91,13 @@ static int	here_doc_input(char *delimiter, t_shell *sh, int expand)
 		}
 		if (expand)
 		{
-			temp = split_and_parse(line, sh);
+			temp = expand_input(line, sh);
 			free(line);
 			if (!temp)
 			{
 				close(pipe_fd[0]);
 				close(pipe_fd[1]);
-				error_sys("split_and_parse failed\n");
+				error_sys("expand_input failed\n");
 				return (-1);
 			}
 			line = temp;
