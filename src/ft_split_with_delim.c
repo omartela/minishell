@@ -86,7 +86,7 @@ char	**ft_split_with_delim(char *str, char delimiter)
 	if (!str)
 		return (NULL);
 	split_count = count_splits(str, delimiter);
-	result = malloc((split_count + 1) * sizeof(char *));
+	result = ft_calloc((split_count + 1), sizeof(char *));
 	if (!result)
 		return (NULL);
 	return (split_and_store(result, str, delimiter, start));

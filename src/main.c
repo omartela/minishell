@@ -155,7 +155,7 @@ static void	initialize_shell(t_shell *sh, char ***envp)
 		free_array(&sh->local_shellvars);
 		exit (1);
 	}
-	hd = malloc(sizeof(t_heredoc));
+	hd = ft_calloc(1, sizeof(t_heredoc));
 	if (!hd)
 	{
 		error_sys("t_heredoc failed\n");

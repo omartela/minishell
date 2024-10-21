@@ -140,7 +140,7 @@ int	handle_here_doc(t_shell *sh, char *input)
 			if ((ft_strncmp(args[i + 1], args_with_quotes[i + 1], ft_strlen(args[i + 1])) == 0) || args_with_quotes[i + 1][0] == '\"')
 				expand = 1;
 			if (!sh->hd->heredoc_fds)
-				sh->hd->heredoc_fds = malloc(sizeof(int));
+				sh->hd->heredoc_fds = ft_calloc(1, sizeof(int));
 			else
 				sh->hd->heredoc_fds = ft_realloc(sh->hd->heredoc_fds, sizeof(int) * sh->hd->num_heredocs, sizeof(int) * (sh->hd->num_heredocs + 1));
 			if (!sh->hd->heredoc_fds)
