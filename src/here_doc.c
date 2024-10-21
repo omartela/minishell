@@ -142,7 +142,7 @@ int	handle_here_doc(t_shell *sh, char *input)
 			if (!sh->hd->heredoc_fds)
 				sh->hd->heredoc_fds = ft_calloc(1, sizeof(int));
 			else
-				sh->hd->heredoc_fds = ft_realloc(sh->hd->heredoc_fds, sizeof(int) * sh->hd->num_heredocs, sizeof(int) * (sh->hd->num_heredocs + 1));
+				sh->hd->heredoc_fds = ft_recalloc(sh->hd->heredoc_fds, sizeof(int) * sh->hd->num_heredocs, sizeof(int) * (sh->hd->num_heredocs + 1));
 			if (!sh->hd->heredoc_fds)
 			{
 				free_array(&args);
