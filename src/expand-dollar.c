@@ -121,7 +121,7 @@ char    *handle_exit_code(t_shell *sh, char *result)
     return (result);
 }
 
-char    *handle_tilde(t_shell *sh, char *result, char *str, int i)
+char    *handle_only_tilde(t_shell *sh, char *result, char *str, int i)
 {
     char    *temp;
 
@@ -169,83 +169,96 @@ char    *handle_tilde_middle(t_shell *sh, char *result)
     return (result);
 }
 
-char    *expand_input(char *str, t_shell *sh)
+char    *only_dollar(t_expand_state *state)
 {
-    int		in_single_quotes;
-    int     in_double_quotes;
-    char    *result;
-    //char    *insert;
-   /*  int     key_len;
-    char    *key; */
-    int     i;
     char    *temp;
 
-    i = 0;
-	in_single_quotes = 0;
-    in_double_quotes = 0;
-    result = ft_strdup(""); // Start with an empty string to build the result dynamically
-    if (!result)
+    temp = ft_strjoin(state->result, "$");
+    free(state->result);
+    if (!temp)
         return (NULL);
-    while (str[i])
+    state->result = temp;
+    state->i += 1;
+    return (state->result);
+}
+char    *handle_dollar(t_shell *sh, t_expand_state *state, char *str)
+{
+    char    *temp;
+
+    if (str[state->i] == '$' && !state->in_single_quotes) // We found a '$' sign
     {
-        handle_quotes(str[i], &in_single_quotes, &in_double_quotes);
-        if (i == 0 && (ft_strncmp(str, "~\0", 2) == 0  || ft_strncmp(&str[i], "~/", 2) == 0) && !in_double_quotes && !in_single_quotes)
+        if (str[state->i + 1] == '?') // Handle $? (exit code)
         {
-            result = handle_tilde(sh, result, str, i);
-            return (result);
+            state->result = handle_exit_code(sh, state->result);
+            if (!state->result)
+                return (NULL);
+            state->i += 2; // Skip the $ and ?
         }
-        if (str[i + 1] == '~') 
+        else if (ft_isdigit(str[state->i + 1]) && !state->in_double_quotes)
         {
-            if ((ft_strncmp(&str[i], " ~ ", 3) == 0 || ft_strncmp(&str[i], " ~\0", 3) == 0 || ft_strncmp(&str[i], " ~/", 3) == 0) && !in_double_quotes && !in_single_quotes)
-                {
-                    result = handle_tilde_middle(sh, result);
-                    if (!result)
-                        return (NULL);
-                    i += 2;
-                    continue;
-                }
+            handle_quotes(str[state->i + 1], &state->in_single_quotes, &state->in_double_quotes);
+            state->i += 2;
         }
-        if (str[i] == '$' && !in_single_quotes) // We found a '$' sign
+        else if ((str[state->i + 1] == '\'' || str[state->i + 1] == '\"') && !state->in_double_quotes)
+            state->i += 1;
+        else if (ft_isalpha(str[state->i + 1]) || str[state->i + 1] == '_') // Handle $VAR_NAME
         {
-            if (str[i + 1] == '?') // Handle $? (exit code)
-            {
-                result = handle_exit_code(sh, result);
-                if (!result)
-                    return (NULL);
-                i += 2; // Skip the $ and ?
-            }
-            else if (ft_isdigit(str[i + 1]) && !in_double_quotes)
-            {
-                handle_quotes(str[i + 1], &in_single_quotes, &in_double_quotes);
-                i += 2;
-            }
-			else if ((str[i + 1] == '\'' || str[i + 1] == '\"') && !in_double_quotes)
-				i += 1;
-            else if (ft_isalpha(str[i + 1]) || str[i + 1] == '_') // Handle $VAR_NAME
-            {
-                result = handle_dollarvarname(sh, result, str, &i);
-                if (!result)
-                    return (NULL);
-            }
-            else
-            {
-                // If we encounter just a single '$' with no valid variable, append it as is
-                temp = ft_strjoin(result, "$");
-                free(result);
-                if (!temp)
-                    return (NULL);
-                result = temp;
-                i++;
-            }
+            state->result = handle_dollarvarname(sh, state->result, str, &state->i);
+            if (!state->result)
+                return (NULL);
         }
         else
         {
-            result = append_characters(result, str, i);
-            if (!result)
-                result = NULL;
-            i++;
+            // If we encounter just a single '$' with no valid variable, append it as is
+            temp = ft_strjoin(state->result, "$");
+            free(state->result);
+            if (!temp)
+                return (NULL);
+            state->result = temp;
+            state->i += 1;
         }
     }
-    return (result);
+    else
+    {
+        state->result = append_characters(state->result, str, state->i);
+        if (!state->result)
+            state->result = NULL;
+        state->i += 1;
+    }
+    return (state->result);
+}
+
+char    *expand_input(char *str, t_shell *sh)
+{
+    t_expand_state state;
+
+    ft_memset(&state, 0, sizeof(t_expand_state));
+    state.result = ft_strdup("");
+    if (!state.result)
+        return (NULL);
+    while (str[state.i])
+    {
+        handle_quotes(str[state.i], &state.in_single_quotes, &state.in_double_quotes);
+        if (state.i == 0 && (ft_strncmp(str, "~\0", 2) == 0  || ft_strncmp(&str[state.i], "~/", 2) == 0) && !state.in_double_quotes && !state.in_single_quotes)
+        {
+            state.result = handle_only_tilde(sh, state.result, str, state.i);
+            return (state.result);
+        }
+        if (str[state.i + 1] == '~') 
+        {
+            if ((ft_strncmp(&str[state.i], " ~ ", 3) == 0 || ft_strncmp(&str[state.i], " ~\0", 3) == 0 || ft_strncmp(&str[state.i], " ~/", 3) == 0) && !state.in_double_quotes && !state.in_single_quotes)
+                {
+                    state.result = handle_tilde_middle(sh, state.result);
+                    if (!state.result)
+                        return (NULL);
+                    state.i += 2;
+                    continue;
+                }
+        }
+        state.result = handle_dollar(sh, &state, str);
+        if (!state.result)
+            return (NULL);
+    }
+    return (state.result);
 }
 
