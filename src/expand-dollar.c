@@ -120,11 +120,10 @@ char    *handle_exit_code(t_shell *sh, char *result)
 char    *handle_tilde(t_shell *sh, char *result, char *str, int i)
 {
     char    *temp;
-  
+
+    temp = NULL;
     if (*(sh->homepath) != '\0')
-    {
         temp = ft_strjoin(result, sh->homepath);
-    }
     else
         temp = ft_strjoin(result, "~");
     free(result);
@@ -145,6 +144,25 @@ void	handle_quotes(char c, int *in_single_quote, int *in_double_quote)
 		*in_single_quote = !(*in_single_quote);
 	if (c == '\"' && !(*in_single_quote))
 		*in_double_quote = !(*in_double_quote);
+}
+
+char    *handle_tilde_middle(t_shell *sh, char *result)
+{
+    char    *temp;
+
+    temp = NULL;
+    if (*(sh->homepath) != '\0')
+    {
+        temp = ft_strjoin(result, " ");
+        free(result);
+        result = temp;
+        temp = ft_strjoin(result, sh->homepath);
+    }
+    else
+        temp = ft_strjoin(result, " ~");
+    free(result);
+    result = temp;
+    return (result);
 }
 
 char    *expand_input(char *str, t_shell *sh)
@@ -176,17 +194,9 @@ char    *expand_input(char *str, t_shell *sh)
         {
             if ((ft_strncmp(&str[i], " ~ ", 3) == 0 || ft_strncmp(&str[i], " ~\0", 3) == 0 || ft_strncmp(&str[i], " ~/", 3) == 0) && !in_double_quotes && !in_single_quotes)
                 {
-                    if (*(sh->homepath) != '\0')
-                    {
-                        temp = ft_strjoin(result, " ");
-                        free(result);
-                        result = temp;
-                        temp = ft_strjoin(result, sh->homepath);
-                    }
-                    else
-                        temp = ft_strjoin(result, " ~");
-                    free(result);
-                    result = temp;
+                    result = handle_tilde_middle(sh, result);
+                    if (!result)
+                        return (NULL);
                     i += 2;
                     continue;
                 }
