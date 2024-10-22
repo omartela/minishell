@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/20 17:08:24 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:52:33 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	is_heredoc(char *input)
 			in_single_quotes = !in_single_quotes;
 		if (input[i] == '<' && !in_double_quotes && !in_single_quotes)
 		{
-			if (input[i + 1] && input[i + 1 ]== '<')
+			if (input[i + 1] && input[i + 1 ] == '<')
 				return (1);
 		}
 		i++;
@@ -80,7 +80,7 @@ static int	here_doc_input(char *delimiter, t_shell *sh, int expand)
 		//ft_putstr_fd("> ", 1);
 		line = get_next_line(0);
 		if (!line)
-			break;
+			break ;
 		if (add_prompt(sh, line))
 		{
 			free(line);
