@@ -161,13 +161,25 @@ int		is_check_key_equal(char *args, const char *variable);
 char	*get_value(char *args);
 
 // environment.c
-void	copy_env(char **envp, t_shell *shell);
 int		set_table(char ***table, const char *variable, const char *value);
 int		add_table(char ***table, const char *variable, const char *value);
-char	**sort_table(char **envp);
 int		remove_table(char ***table, const char *variable);
 int		append_table(char ***table, const char *variable, const char *value);
 int		set_variables(t_shell *shell, char *variable, char *value);
+char	**sort_table(char **envp);
+
+// environment_utilities.c
+size_t	calculate_table_size(char ***table);
+int		find_index(char ***table, const char *var, int *found, size_t *i);
+int		update_t_var(char ***t, const char *var, const char *val, size_t *i);
+int 	append_table_value(char ***table, size_t index, const char *value);
+
+// init_env.c
+void	copy_env(char **envp, t_shell *shell);
+
+// set_environment.c
+int	set_variables(t_shell *shell, char *variable, char *value);
+int	set_table(char ***table, const char *var, const char *value);
 
 //exit command
 int		exit_shell(t_shell *sh, t_cmd *cmd);
