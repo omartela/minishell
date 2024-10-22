@@ -99,7 +99,7 @@ char    *handle_dollarvarname(t_shell *sh, char *result, char *str, int *i)
     return (result);
 }
 
-char    *handle_exit_code(t_shell *sh, char *result, int *i)
+char    *handle_exit_code(t_shell *sh, char *result)
 {
     char    *insert;
     char    *temp;
@@ -114,7 +114,6 @@ char    *handle_exit_code(t_shell *sh, char *result, int *i)
     free(insert);
     free(result);
     result = temp;
-    *i += 2; // Skip the $ and ?
     return (result);
 }
 
@@ -196,16 +195,9 @@ char    *expand_input(char *str, t_shell *sh)
         {
             if (str[i + 1] == '?') // Handle $? (exit code)
             {
-              insert = get_exit_code(sh);
-              if (!insert)
-              {
-                free(result);
-                return (NULL);
-              }
-                temp = ft_strjoin(result, insert);
-                free(insert);
-                free(result);
-                result = temp;
+                result = handle_exit_code(sh, result);
+                if (!result)
+                    return (NULL);
                 i += 2; // Skip the $ and ?
             }
             else if (ft_isdigit(str[i + 1]) && !in_double_quotes)
