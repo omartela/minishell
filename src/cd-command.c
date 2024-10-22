@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 16:06:06 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/22 17:48:22 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/22 18:47:25 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,11 +112,11 @@ static int	cd_to_path(t_shell *sh, char **args)
 
 	oldpwd = getcwd(cwd, sizeof(cwd));
 	if (set_oldpwd(sh, oldpwd))
-			return (1);
+		return (1);
 	if (chdir(args[1]) == -1)
 		return (show_error_return(1, args[1], "Not a directory"));
 	if (set_currentpwd(sh))
-			return (1);
+		return (1);
 	return (0);
 }
 
