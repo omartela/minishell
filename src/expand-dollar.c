@@ -55,6 +55,11 @@ char    *append_characters(char *result, char *str, int i)
     char    *temp_str;
 
     temp_str = ft_strndup(&str[i], 1);
+    if (!temp_str)
+    {
+        free(result);
+        return (NULL);
+    }
     temp = ft_strjoin(result, temp_str);
     free(result);
     if (!temp)
@@ -75,7 +80,6 @@ char    *handle_dollarvarname(t_shell *sh, char *result, char *str, int *i)
     key_len = 0;
     while (ft_isalnum(str[*i + key_len]) || str[*i + key_len] == '_') // Get the length of the variable name
         key_len++;
-
     key = ft_substr(str, *i, key_len); // Extract the variable name
     if (!key)
     {
@@ -95,7 +99,7 @@ char    *handle_dollarvarname(t_shell *sh, char *result, char *str, int *i)
     if (!temp)
         return (NULL);
     result = temp;
-    i += key_len; // Move the index past the variable name
+    *i += key_len; // Move the index past the variable name
     return (result);
 }
 
@@ -170,9 +174,9 @@ char    *expand_input(char *str, t_shell *sh)
     int		in_single_quotes;
     int     in_double_quotes;
     char    *result;
-    char    *insert;
-    int     key_len;
-    char    *key;
+    //char    *insert;
+   /*  int     key_len;
+    char    *key; */
     int     i;
     char    *temp;
 
@@ -219,31 +223,9 @@ char    *expand_input(char *str, t_shell *sh)
 				i += 1;
             else if (ft_isalpha(str[i + 1]) || str[i + 1] == '_') // Handle $VAR_NAME
             {
-                i++;
-                key_len = 0;
-                while (ft_isalnum(str[i + key_len]) || str[i + key_len] == '_') // Get the length of the variable name
-                    key_len++;
-
-                key = ft_substr(str, i, key_len); // Extract the variable name
-                if (!key)
-                {
-                    free(result);
+                result = handle_dollarvarname(sh, result, str, &i);
+                if (!result)
                     return (NULL);
-                }
-                insert = expand(sh->envp, key); // Expand the variable
-                free(key);
-                if (!insert)
-                {
-                    free(result);
-                    return (NULL);
-                }
-                temp = ft_strjoin(result, insert); // Append the expanded value to result
-                free(insert);
-                free(result);
-                if (!temp)
-                    return (NULL);
-                result = temp;
-                i += key_len; // Move the index past the variable nam
             }
             else
             {
