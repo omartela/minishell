@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/22 16:48:47 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 18:07:56 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ void	initialize_shell(t_shell *sh, char ***envp);
 int		add_prompt(t_shell *sh, char *input);
 char	*trim_spaces(char *str);
 int		check_syntax(char *input);
-int		is_heredoc(char *input);
 size_t	ft_strcounter(char *s, char c);
 void	process_quotes(char **s, int *in_quotes, char *quote_type);
 char	*expand_input(char *str, t_shell *sh);
@@ -99,7 +98,6 @@ char	**split_args_general(char *s, char c, int keep_quotes);
 int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
 void	init_num_cmds(t_shell *sh);
 char	*ft_add_spaces(char *s);
-int		handle_here_doc(t_shell *sh, char *input);
 int		parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit);
 int		init_pipes(t_pipes *pipes, int num_cmds);
 void	execute_pipes(t_shell *sh);
@@ -140,6 +138,11 @@ int		handle_ampersand(t_check *check);
 void	handle_text(t_check *check, char *input, size_t *i);
 int		handle_first_redirect(t_check *check, char *input, size_t *i);
 int		handle_second_redirect(char *input, size_t i);
+
+//heredoc
+int		is_heredoc(char *input);
+int		handle_here_doc(t_shell *sh, char *input);
+int		here_doc_input(char *delimiter, t_shell *sh, int expand);
 
 // echo_command
 int		echo(char *argv[]);

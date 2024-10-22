@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/22 14:52:33 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 18:15:50 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	is_heredoc(char *input)
 			in_single_quotes = !in_single_quotes;
 		if (input[i] == '<' && !in_double_quotes && !in_single_quotes)
 		{
-			if (input[i + 1] && input[i + 1 ] == '<')
+			if (input[i + 1] && input[i + 1] == '<')
 				return (1);
 		}
 		i++;
@@ -37,81 +37,62 @@ int	is_heredoc(char *input)
 	return (0);
 }
 
-static int	is_continue(char *line, char *delimiter)
+static int	allocate_heredocs_fds(t_heredoc *hd, char **args)
 {
-	if (ft_strlen(delimiter) == 0 && ft_strlen(line) == 1
-		&& line[0] == '\n')
+	if (!hd->heredoc_fds)
+		hd->heredoc_fds = ft_calloc(1, sizeof(int));
+	else
+		hd->heredoc_fds = ft_recalloc(hd->heredoc_fds,
+				sizeof(int) * hd->num_heredocs,
+				sizeof(int) * (hd->num_heredocs + 1));
+	if (!hd->heredoc_fds)
 	{
-		free(line);
-		return (0);
+		free_array(&args);
+		return (1);
 	}
-	if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
-		&& line[ft_strlen(delimiter)] == '\n')
-	{
-		free(line);
-		return (0);
-	}
-	return (1);
+	return (0);
 }
 
-static int	here_doc_input(char *delimiter, t_shell *sh, int expand)
+static int	save_heredoc_fds(t_shell *sh, char **args, int *expand, int i)
 {
-	/* int		flag; */
-	int		pipe_fd[2];
-	char	*temp;
-	char	*line;
+	sh->hd->heredoc_fds[sh->hd->num_heredocs]
+		= here_doc_input(args[i + 1], sh, *expand);
+	if (sh->hd->heredoc_fds[sh->hd->num_heredocs] == -1)
+	{
+		free_array(&args);
+		return (1);
+	}
+	return (0);
+}
 
-	(void) sh; //temp solution, we probably will free it
-	if (pipe(pipe_fd) == -1)
+static int	loop_args(t_shell *sh, char **args,
+	char **args_with_quotes, int *expand)
+{
+	int	i;
+
+	i = 0;
+	while (args[i])
 	{
-		error_sys("pipe failed\n"); // free
-		return (-1);
-	}
-	if (add_prompt(sh, "\n"))
-	{
-		close(pipe_fd[0]);
-		close(pipe_fd[1]);
-		error_sys("add_prompt failed\n");
-		return (-1);
-	}
-	/* flag = 0; */
-	while (1)
-	{
-		//ft_putstr_fd("> ", 1);
-		line = get_next_line(0);
-		if (!line)
-			break ;
-		if (add_prompt(sh, line))
+		*expand = 0;
+		if (ft_strncmp(args[i], "<<\0", 3) == 0 && args[i + 1])
 		{
-			free(line);
-			close(pipe_fd[0]);
-			close(pipe_fd[1]);
-			error_sys("add_prompt failed\n");
-			return (-1);
-		}
-		if (expand)
-		{
-			temp = expand_input(line, sh);
-			free(line);
-			if (!temp)
+			if ((ft_strncmp(args[i + 1], args_with_quotes[i + 1],
+						ft_strlen(args[i + 1])) == 0)
+				|| args_with_quotes[i + 1][0] == '\"')
+				*expand = 1;
+			if (allocate_heredocs_fds(sh->hd, args)
+				|| save_heredoc_fds(sh, args, expand, i))
 			{
-				close(pipe_fd[0]);
-				close(pipe_fd[1]);
-				error_sys("expand_input failed\n");
-				return (-1);
+				free_array(&args_with_quotes);
+				return (1);
 			}
-			line = temp;
+			sh->hd->num_heredocs++;
+			i += 2;
 		}
-		if (!is_continue(line, delimiter))
-			break ;
-		write(pipe_fd[1], line, ft_strlen(line));
-		free(line);
-		/* flag = 1; */
+		else
+			i++;
 	}
-	/* if (!flag)
-		printf("warning: here-document delimited by end-of-file (wanted `%s')\n", delimiter); */
-	close(pipe_fd[1]);
-	return (pipe_fd[0]);
+	return (0);
 }
 
 int	handle_here_doc(t_shell *sh, char *input)
@@ -132,36 +113,8 @@ int	handle_here_doc(t_shell *sh, char *input)
 		free(args);
 		return (1);
 	}
-	while (args[i])
-	{
-		expand = 0;
-		if (ft_strncmp(args[i], "<<\0", 3) == 0 && args[i + 1])
-		{
-			if ((ft_strncmp(args[i + 1], args_with_quotes[i + 1], ft_strlen(args[i + 1])) == 0) || args_with_quotes[i + 1][0] == '\"')
-				expand = 1;
-			if (!sh->hd->heredoc_fds)
-				sh->hd->heredoc_fds = ft_calloc(1, sizeof(int));
-			else
-				sh->hd->heredoc_fds = ft_recalloc(sh->hd->heredoc_fds, sizeof(int) * sh->hd->num_heredocs, sizeof(int) * (sh->hd->num_heredocs + 1));
-			if (!sh->hd->heredoc_fds)
-			{
-				free_array(&args);
-				free_array(&args_with_quotes);
-				return (1);
-			}
-			sh->hd->heredoc_fds[sh->hd->num_heredocs] = here_doc_input(args[i + 1], sh, expand);
-			if (sh->hd->heredoc_fds[sh->hd->num_heredocs] == -1)
-			{
-				free_array(&args);
-				free_array(&args_with_quotes);
-				return (1);
-			}
-			sh->hd->num_heredocs++;
-			i += 2;
-		}
-		else
-			i++;
-	}
+	if (loop_args(sh, args, args_with_quotes, &expand))
+		return (1);
 	free_array(&args);
 	free_array(&args_with_quotes);
 	return (0);
