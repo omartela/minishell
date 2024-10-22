@@ -69,5 +69,6 @@ char	*get_next_line(int fd);
 int		ft_printf(const char *format, ...);
 void	*ft_realloc(void *ptr, size_t old_size, size_t new_size);
 void	*ft_recalloc(void *ptr, size_t old_size, size_t new_size);
+char	*ft_strndup(const char *s1, size_t n);
 
 #endif

@@ -190,19 +190,8 @@ static int	parse_export_argument(char **arg, char **variable, char **value, char
 	return (0);
 }
 
-static int	parse_export_arg_and_add(t_shell *sh, char *arg)
+static int	add_arg(t_shell *sh, char *variable, char *value, int result)
 {
-	char	*variable;
-	char	*value;
-	char	*equal;
-	int		result;
-
-	variable = NULL;
-	value = NULL;
-	equal = NULL;
-	if (parse_export_argument(&arg, &variable, &value, &equal))
-		return (1);
-	result = is_valid_export_argument(variable, value, equal);
 	if (result == 1)
 	{
 		if (export_add_both(sh, variable, value))
@@ -225,6 +214,24 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 	free(variable);
 	free(value);
 	return (1);
+}
+
+static int	parse_export_arg_and_add(t_shell *sh, char *arg)
+{
+	char	*variable;
+	char	*value;
+	char	*equal;
+	int		result;
+
+	variable = NULL;
+	value = NULL;
+	equal = NULL;
+	if (parse_export_argument(&arg, &variable, &value, &equal))
+		return (1);
+	result = is_valid_export_argument(variable, value, equal);
+	if (add_arg(sh, variable, value, result))
+		return (1);
+	return (0);
 }
 
 int	export(t_shell *shell, char **args)

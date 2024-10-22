@@ -14,38 +14,38 @@
 
 static int update_underscore_command(t_shell *sh, t_cmd *cmd)
 {
-    if (set_table(&sh->envp, "_", cmd->args[0]))
-    {
-        error_sys("Error when updating _ \n");
-        return (1);
-    }
-    return (0);
+	if (set_table(&sh->envp, "_", cmd->args[0]))
+	{
+		error_sys("Error when updating _ \n");
+		return (1);
+	}
+	return (0);
 }
 
 static int  update_underscore_argument(t_shell *sh, t_cmd *cmd)
 {
-    int i;
+	int i;
 
-    i = 0;
-    while (cmd->args[i])
-        ++i;
-    if (set_table(&sh->envp, "_", cmd->args[i - 1]))
-     {
-        error_sys("Error when updating _ \n");
-        return (1);
-    }
-    return (0);
+	i = 0;
+	while (cmd->args[i])
+		++i;
+	if (set_table(&sh->envp, "_", cmd->args[i - 1]))
+	 {
+		error_sys("Error when updating _ \n");
+		return (1);
+	}
+	return (0);
 }
 
 int update_underscore(t_shell *sh, t_cmd *cmd)
 {
-    int i;
+	int i;
 
-    i = 0;
-    while (cmd->args[i])
-        ++i;
-    if (i > 1)
-        return (update_underscore_argument(sh, cmd));
-    else
-        return (update_underscore_command(sh, cmd));
+	i = 0;
+	while (cmd->args[i])
+		++i;
+	if (i > 1)
+		return (update_underscore_argument(sh, cmd));
+	else
+		return (update_underscore_command(sh, cmd));
 }

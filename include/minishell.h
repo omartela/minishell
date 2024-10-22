@@ -75,6 +75,14 @@ typedef struct s_split_opts
 	char	delimiter;
 }	t_split_opts;
 
+typedef struct s_expand_state
+{
+    int     in_single_quotes;
+    int     in_double_quotes;
+    int     i;
+    char    *result;
+} t_expand_state;
+
 typedef struct s_check
 {
 	int		or;
