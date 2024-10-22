@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 11:16:01 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/22 12:41:03 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:43:39 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	handle_or(t_check *check, size_t *i)
 		check->or = 1;
 	else
 	{
-		error_sys("minishell: syntax error near unexpected token `||'\n");
+		show_syntax_error("||");
 		return (0);
 	}
 	(*i)++;
@@ -33,7 +33,7 @@ int	handle_pipe(t_check *check)
 		check->pipe = 1;
 	else
 	{
-		error_sys("minishell: syntax error near unexpected token `|'\n");
+		show_syntax_error("|");
 		return (0);
 	}
 	return (1);
@@ -46,7 +46,7 @@ int	handle_and(t_check *check, size_t *i)
 		check->ampersand = 1;
 	else
 	{
-		error_sys("minishell: syntax error near unexpected token `&&'\n");
+		show_syntax_error("&&");
 		return (0);
 	}
 	(*i)++;
@@ -60,7 +60,7 @@ int	handle_ampersand(t_check *check)
 		check->ampersand = 1;
 	else
 	{
-		error_sys("minishell: syntax error near unexpected token `&'\n");
+		show_syntax_error("&");
 		return (0);
 	}
 	return (1);

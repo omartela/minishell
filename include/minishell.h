@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/22 13:33:02 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:51:22 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,9 +137,8 @@ int		handle_pipe(t_check *check);
 int		handle_and(t_check *check, size_t *i);
 int		handle_ampersand(t_check *check);
 void	handle_text(t_check *check, char *input, size_t *i);
-int 	handle_first_redirect(t_check *check, char *input, size_t *i);
-int 	handle_second_redirect(char *input, size_t i);
-
+int		handle_first_redirect(t_check *check, char *input, size_t *i);
+int		handle_second_redirect(char *input, size_t i);
 
 // echo_command
 int		echo(char *argv[]);
