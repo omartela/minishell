@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/22 12:17:23 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 12:33:58 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,10 +130,11 @@ void	print_command(t_cmd *cmd);
 void	test_echo_command(char *argv[], t_shell *shell);
 
 //check syntax
-int	handle_or(t_check *check, size_t *i);
-int	handle_pipe(t_check *check);
-int	handle_and(t_check *check, size_t *i);
-int	handle_ampersand(t_check *check);
+int		handle_or(t_check *check, size_t *i);
+int		handle_pipe(t_check *check);
+int		handle_and(t_check *check, size_t *i);
+int		handle_ampersand(t_check *check);
+void	handle_text(t_check *check, char *input, size_t *i);
 
 // echo_command
 int		echo(char *argv[]);
