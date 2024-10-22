@@ -183,8 +183,6 @@ char    *only_dollar(t_expand_state *state)
 }
 char    *handle_dollar(t_shell *sh, t_expand_state *state, char *str)
 {
-    char    *temp;
-
     if (str[state->i] == '$' && !state->in_single_quotes) // We found a '$' sign
     {
         if (str[state->i + 1] == '?') // Handle $? (exit code)
@@ -209,13 +207,9 @@ char    *handle_dollar(t_shell *sh, t_expand_state *state, char *str)
         }
         else
         {
-            // If we encounter just a single '$' with no valid variable, append it as is
-            temp = ft_strjoin(state->result, "$");
-            free(state->result);
-            if (!temp)
+            state->result = only_dollar(state);
+            if (!state->result)
                 return (NULL);
-            state->result = temp;
-            state->i += 1;
         }
     }
     else
