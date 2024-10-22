@@ -22,17 +22,106 @@ void	init_num_cmds(t_shell *sh)
 	sh->num_cmds = i;
 }
 
+
+static int increase_shlvl(t_shell *sh)
+{
+	char	*temp_itoa;
+	int		temp_atoi;
+	char	*value;
+	int		i;
+	int		j;
+	int		keyok;
+
+	i = 0;
+	j = 0;
+	keyok = 0;
+	temp_atoi = 0;
+	temp_itoa = NULL;
+	value = NULL;
+
+	while (sh->envp[i])
+	{
+		keyok = is_check_key_equal(sh->envp[i], "SHLVL");
+		if (keyok == 1)
+		{
+			value = get_value(sh->envp[i]);
+			if (value)
+			{
+				j = 0;
+				while (value[j])
+				{
+					if (!ft_isdigit(value[j]))
+					{
+						free(value);
+						if (set_variables(sh, "SHLVL", "1"))
+						{
+							error_sys("Setting SHLVL failed\n");
+							return (1);
+						}
+						return (0);
+					}
+					j++;
+				}
+				temp_atoi = ft_atoi(value);
+				free(value);
+				if (temp_atoi < 0 || temp_atoi == 0 || temp_atoi == 2147483647)
+				{
+					if (set_variables(sh, "SHLVL", "1"))
+					{
+						error_sys("Setting SHLVL failed\n");
+						return (1);
+					}
+					return (0);
+				}
+				temp_atoi += 1;
+				temp_itoa = ft_itoa(temp_atoi);
+				if (!temp_itoa)
+				{
+					error_sys("Setting SHLVL failed\n");
+					return (1);
+				}
+				if (set_variables(sh, "SHLVL", temp_itoa))
+				{
+					free(temp_itoa);
+					error_sys("Setting SHLVL failed\n");
+					return (1);
+				}
+				free(temp_itoa);
+				return (0);
+			}
+			else
+			{
+					/// allocating failed need to return properly
+					error_sys("Setting SHLVL failed\n");
+					return (1);
+			}
+		}
+		else if (keyok == -1)
+		{
+			/// allocating failed need to return properly
+			return (1);
+		}
+		++i;
+	}
+	if (append_table(&sh->envp, "SHLVL", "1"))
+	{
+		error_sys("Setting SHLVL failed\n");
+		return (1);
+	}
+	if (append_table(&sh->local_shellvars, "SHLVL", "1"))
+	{
+		error_sys("Setting SHLVL failed\n");
+		return (1);
+	}
+	sort_table(sh->local_shellvars);
+	return (0);
+}
+
 void	initialize_shell(t_shell *sh, char ***envp)
 {
 	t_heredoc	*hd;
 
-	sh->exit_status = 0;
-	sh->num_cmds = 0;
-	sh->commands = NULL;
-	sh->promt = NULL;
-	sh->pipes = NULL;
-	sh->local_shellvars = NULL;
-	sh->envp = NULL;
+	ft_memset(sh, 0, sizeof(t_shell));
 	copy_env(*envp, sh);
 	*envp = sh->envp;
 	if (increase_shlvl(sh))
@@ -59,9 +148,6 @@ void	initialize_shell(t_shell *sh, char ***envp)
 		exit(1);
 	}
 	sh->hd = hd;
-	hd->heredoc_fds = NULL;
-	hd->num_heredocs = 0;
-	hd->heredoc_index = 0;
 	ft_memset(&sh->org_sig_int, 0, sizeof(sh->org_sig_int));
 	ft_memset(&sh->org_sig_quit, 0, sizeof(sh->org_sig_quit));
 	if (init_signal(sh))
