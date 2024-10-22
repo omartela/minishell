@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/17 14:17:29 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 10:29:32 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ void	show_error(char *name, char *msg);
 void	show_error_free_cmd_exit(int code, char *name, char *msg, t_cmd *cmd);
 int		show_error_return(int code, char *name, char *msg);
 void	error_sys(char *msg);
+void	error_dup(t_shell *sh, t_cmd *cmd);
 
 // test functions
 void	test_split_args_leave_quotes(char *input, char c);
