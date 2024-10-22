@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 17:58:11 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/22 10:47:43 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 11:19:30 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*get_full_command_path(char *path, char *command, t_cmd *cmd)
 	return (full_path);
 }
 
-static void	check_permissions(t_shell *sh, t_cmd *cmd, int is_abs_relative)
+void	check_permissions(t_shell *sh, t_cmd *cmd, int is_abs_relative)
 {
 	int	fd_test;
 
@@ -81,9 +81,7 @@ static void	execute_absolute_relative_command(t_shell *sh, t_cmd *cmd, char **en
 		exit_and_free(sh, cmd, 127);
 	}
 	execve(cmd->args[0], cmd->args, envp);
-	check_permissions(sh, cmd, 1);
-	error_sys("execve failed\n");
-	exit_and_free(sh, cmd, 1);
+	error_execve_and_permission(sh, cmd, 1);
 }
 
 void	execute_command(t_shell *sh, t_cmd *cmd, char **envp)
@@ -100,9 +98,7 @@ void	execute_command(t_shell *sh, t_cmd *cmd, char **envp)
 	if (!cmd->path)
 	{
 		execve(cmd->args[0], cmd->args, envp);
-		check_permissions(sh, cmd, 1);
-		error_sys("execve failed\n");
-		exit_and_free(sh, cmd, 1);
+		error_execve_and_permission(sh, cmd, 1);
 	}
 	while (cmd->path[i])
 	{
@@ -111,7 +107,5 @@ void	execute_command(t_shell *sh, t_cmd *cmd, char **envp)
 		free(full_path);
 		i++;
 	}
-	check_permissions(sh, cmd, 0);
-	error_sys("execve failed\n");
-	exit_and_free(sh, cmd, 1);
+	error_execve_and_permission(sh, cmd, 0);
 }

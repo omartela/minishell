@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:27:15 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/14 12:34:48 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 12:17:36 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,24 +44,18 @@ static int	is_ampersand(char c)
 int	check_syntax(char *input)
 {
 	char	quote;
+	int		is_continue;
 	size_t	len;
 	size_t	i;
-	int		or;
-	int		redirect;
-	int		ampersand;
-	int		pipe;
-	int		text;
+	t_check	check;
 
 	i = 0;
-	or = 0;
-	pipe = 0;
-	redirect = 0;
-	ampersand = 0;
-	text = 0;
 	len = ft_strlen(input);
+	is_continue = 1;
+	ft_memset(&check, 0, sizeof(t_check));
 	while (input[i])
 	{
-		if (is_redirection_operator(input[i]) && redirect == 0)
+		if (is_redirection_operator(input[i]) && check.redirect == 0)
 		{
 			if (input[i + 1] == '\0') // or newline?
 			{
@@ -72,51 +66,25 @@ int	check_syntax(char *input)
 			{
 				i++;
 			}
-			redirect = 1;
+			check.redirect = 1;
 		}
 		else if (is_pipe(input[i]) && is_pipe(input[i + 1]))
 		{
-			if (or == 0 && redirect == 0 && ampersand == 0 && pipe == 0 && text == 1)
-				or = 1;
-			else
-			{
-				error_sys("minishell: syntax error near unexpected token `||'\n");
-				return (1);
-			}
-			i++;
+			is_continue = handle_or(&check, &i);
 		}
 		else if (is_pipe(input[i]))
 		{
-			if (pipe == 0 && redirect == 0 && or == 0 && ampersand == 0 && text == 1)
-				pipe = 1;
-			else
-			{
-				error_sys("minishell: syntax error near unexpected token `|'\n");
-				return (1);
-			}
+			is_continue = handle_pipe(&check);
 		}
 		else if (is_ampersand(input[i]) && is_ampersand(input[i + 1]))
 		{
-			if (ampersand == 0 && redirect == 0 && pipe == 0 && or == 0 && text == 1)
-				ampersand = 1;
-			else
-			{
-				error_sys("minishell: syntax error near unexpected token `&&'\n");
-				return (1);
-			}
-			i++;
+			is_continue = handle_and(&check, &i);
 		}
 		else if (is_ampersand(input[i]))
 		{
-			if (ampersand == 0 && redirect == 0 && pipe == 0 && or == 0 && text == 1)
-				ampersand = 1;
-			else
-			{
-				error_sys("minishell: syntax error near unexpected token `&'\n");
-				return (1);
-			}
+			is_continue = handle_ampersand(&check);
 		}
-		else if (is_redirection_operator(input[i]) && redirect == 1)
+		else if (is_redirection_operator(input[i]) && check.redirect == 1)
 		{
 			if (input[i] == '>')
 			{
@@ -168,15 +136,17 @@ int	check_syntax(char *input)
 				if (input[i] == '\0')
 					i--;
 			}
-			text = 1;
-			or = 0;
-			pipe = 0;
-			redirect = 0;
-			ampersand = 0;
+			check.text = 1;
+			check.or = 0;
+			check.pipe = 0;
+			check.redirect = 0;
+			check.ampersand = 0;
 		}
+		if (!is_continue)
+			return (1);
 		i++;
 	}
-	if (redirect == 1)
+	if (check.redirect == 1)
 	{
 		error_sys("minishell: syntax error near unexpected token `newline'\n");
 		return (1);

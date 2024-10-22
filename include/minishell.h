@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/22 10:29:32 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 12:17:23 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 typedef struct s_heredoc
 {
 	int		num_heredocs;
-	int 	heredoc_index;
+	int		heredoc_index;
 	int		*heredoc_fds;
 }	t_heredoc;
 
@@ -75,6 +75,15 @@ typedef struct s_split_opts
 	char	delimiter;
 }	t_split_opts;
 
+typedef struct s_check
+{
+	int		or;
+	int		redirect;
+	int		ampersand;
+	int		pipe;
+	int		text;
+}	t_check;
+
 // main functions
 int		add_prompt(t_shell *sh, char *input);
 char	*trim_spaces(char *str);
@@ -82,7 +91,7 @@ int		check_syntax(char *input);
 int		is_heredoc(char *input);
 size_t	ft_strcounter(char *s, char c);
 void	process_quotes(char **s, int *in_quotes, char *quote_type);
-char 	*expand_input(char *str, t_shell *sh);
+char	*expand_input(char *str, t_shell *sh);
 char	**split_args_remove_quotes(char *s, char c);
 char	**split_args_leave_quotes(char *s, char c);
 char	**split_args_general(char *s, char c, int keep_quotes);
@@ -94,6 +103,7 @@ int		parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit);
 int		init_pipes(t_pipes *pipes, int num_cmds);
 void	execute_pipes(t_shell *sh);
 void	execute_command(t_shell *sh, t_cmd *cmd, char **envp);
+void	check_permissions(t_shell *sh, t_cmd *cmd, int is_abs_relative);
 
 // free functions
 void	close_sh_hd_fds(t_shell *sh, t_cmd *cmd);
@@ -111,12 +121,19 @@ void	show_error_free_cmd_exit(int code, char *name, char *msg, t_cmd *cmd);
 int		show_error_return(int code, char *name, char *msg);
 void	error_sys(char *msg);
 void	error_dup(t_shell *sh, t_cmd *cmd);
+void	error_execve_and_permission(t_shell *sh, t_cmd *cmd, int is_abs_relative);
 
 // test functions
 void	test_split_args_leave_quotes(char *input, char c);
 void	test_split_args_remove_quotes(char *input, char c);
 void	print_command(t_cmd *cmd);
 void	test_echo_command(char *argv[], t_shell *shell);
+
+//check syntax
+int	handle_or(t_check *check, size_t *i);
+int	handle_pipe(t_check *check);
+int	handle_and(t_check *check, size_t *i);
+int	handle_ampersand(t_check *check);
 
 // echo_command
 int		echo(char *argv[]);
@@ -156,7 +173,7 @@ int		pwd(void);
 // expand-dollar.c
 int		parse_dollar_sign(t_cmd	*cmd, t_shell *sh);
 void	is_expandable(t_cmd *cmd);
-char    *expand(char **envp, char *variable);
+char	*expand(char **envp, char *variable);
 
 // unset command
 int		unset(t_shell *sh, char **args);
@@ -166,5 +183,6 @@ int		init_signal(t_shell *sh);
 int		reset_signals(t_shell *sh);
 
 // update-underscore-variable
-int update_underscore(t_shell *sh, t_cmd *cmd);
+int		update_underscore(t_shell *sh, t_cmd *cmd);
+
 #endif

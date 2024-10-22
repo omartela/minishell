@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 12:19:32 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/05 14:45:51 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 11:12:06 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void	free_split_array(char **array)
 	free(array);
 }
 
-int main() {
+/* int main() {
 	char str[] = ",Hello , Worl,d,";
 	char str1[] = "Hi, Hive";
 	char str2[] = ",";
@@ -148,3 +148,4 @@ int main() {
 	free_split_array(split_array3);
 	return (0);
 }
+ */
