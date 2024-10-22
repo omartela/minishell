@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-static void	display_local_shellvars(t_shell *shell)
+static int	display_local_shellvars(t_shell *shell)
 {
 	int		i;
 	char	*variable;
@@ -29,7 +29,11 @@ static void	display_local_shellvars(t_shell *shell)
 		}
 		equal = ft_strchr(shell->local_shellvars[i], '=');
 		if (equal)
+		{
 			variable = ft_substr(shell->local_shellvars[i], 0, (equal - shell->local_shellvars[i]));
+			if (!variable)
+				return (1);
+		}
 		if (equal && *(equal + 1))
 			ft_printf("declare -x %s=\"%s\"\n", variable, (equal + 1));
 		else if (equal)
@@ -41,6 +45,7 @@ static void	display_local_shellvars(t_shell *shell)
 			free(variable);
 		variable = NULL;
 	}
+	return (0);
 }
 
 static int	is_valid_argument_name(const char *name)
@@ -233,7 +238,8 @@ int	export(t_shell *shell, char **args)
 		argc++;
 	if (argc == 1)
 	{
-		display_local_shellvars(shell);
+		if (display_local_shellvars(shell))
+			return (1);
 		return (0);
 	}
 	if (argc >= 2)

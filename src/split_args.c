@@ -16,7 +16,7 @@ static char	*copy_with_quotes(char *start, size_t len)
 {
 	char	*result;
 
-	result = malloc(len + 1);
+	result = ft_calloc(len + 1, sizeof(char));
 	if (!result)
 		return (NULL);
 	ft_strlcpy(result, start, len + 1);
@@ -74,7 +74,7 @@ static char	*copy_string(char *start, size_t len, t_split_opts *opts)
 		return (result);
 	}
 	new_len = len_without_quotes(start, len);
-	result = malloc(new_len + 1);
+	result = ft_calloc(new_len + 1, sizeof(char));
 	if (!result)
 		return (NULL);
 	while (i < len)
@@ -138,7 +138,7 @@ char	**split_args_general(char *s, char c, int keep_quotes)
 	i = 0;
 	opts.keep_quotes = keep_quotes;
 	opts.delimiter = c;
-	result = (char **)malloc(sizeof(char *) * (ft_strcounter(s, c) + 1));
+	result = (char **)ft_calloc((ft_strcounter(s, c) + 1), sizeof(char *));
 	if (!result || !s)
 		return (NULL);
 	return (ft_helper(s, i, result, &opts));

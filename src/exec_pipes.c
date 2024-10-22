@@ -6,13 +6,13 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/17 15:32:14 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 10:27:09 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	child_io(t_cmd *cmd, int **fd, int i, int num_cmds)
+static void	child_io(t_shell *sh, t_cmd *cmd, int **fd, int i)
 {
 	if (cmd->infile || cmd->here_doc)
 	{
@@ -21,29 +21,33 @@ static void	child_io(t_cmd *cmd, int **fd, int i, int num_cmds)
 			close(fd[i - 1][0]);
 			close(fd[i - 1][1]);
 		}
-		dup2(cmd->fd_in, STDIN_FILENO);
+		if (dup2(cmd->fd_in, STDIN_FILENO) == -1)
+			error_dup(sh, cmd);
 		close(cmd->fd_in);
 	}
 	else if (i > 0)
 	{
 		close(fd[i - 1][1]);
-		dup2(fd[i - 1][0], STDIN_FILENO);
+		if (dup2(fd[i - 1][0], STDIN_FILENO) == -1)
+			error_dup(sh, cmd);
 		close(fd[i - 1][0]);
 	}
 	if (cmd->outfile)
 	{
-		if (i < num_cmds - 1)
+		if (i < sh->num_cmds - 1)
 		{
 			close(fd[i][0]);
 			close(fd[i][1]);
 		}
-		dup2(cmd->fd_out, STDOUT_FILENO);
+		if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
+			error_dup(sh, cmd);
 		close(cmd->fd_out);
 	}
-	else if (i < num_cmds - 1)
+	else if (i < sh->num_cmds - 1)
 	{
 		close(fd[i][0]);
-		dup2(fd[i][1], STDOUT_FILENO);
+		if (dup2(fd[i][1], STDOUT_FILENO) == -1)
+			error_dup(sh, cmd);
 		close(fd[i][1]);
 	}
 }
@@ -68,25 +72,35 @@ static int	restore_fds(int saved_stdin, int saved_stdout)
 	return (error);
 }
 
-static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
+static void	sig_handler_sigint_2(int signum)
+{
+	if (signum == SIGINT)
+	{
+		printf("\n");
+	}
+}
+
+static int	pipe_and_fork(t_shell *sh, t_cmd *cmd, int i)
 {
 	int	error_code;
+	int is_build;
 
 	error_code = 0;
 	if (i < sh->num_cmds - 1)
 	{
-		if (pipe(pipes->fd[i]) == -1)
+		if (pipe(sh->pipes->fd[i]) == -1)
 		{
 			error_sys("pipe failed\n");
 			return (1);
 		}
 	}
-	if (sh->num_cmds == 1 && is_builtin(cmd))
+	is_build = is_builtin(cmd);
+	if (sh->num_cmds == 1 && is_build == 1)
 	{
 		error_code = parse_redirections(sh ,cmd, 0);
 		if (error_code)
 			return (error_code);
-		cmd->saved_std[1] = dup(STDOUT_FILENO);
+		cmd->saved_std[1] = dup(STDOUT_FILENO); /// Make a function to protect all dups or something...
 		if (cmd->saved_std[1] == -1)
 		{
 			error_sys("dup failed\n");
@@ -130,32 +144,38 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 		cmd->is_continue = 0;
 		return (0);
 	}
-	pipes->pid[i] = fork();
-	if (pipes->pid[i] == -1)
+	else if(is_build == -1)
+		return (1);
+	signal(SIGINT, sig_handler_sigint_2);
+	sh->pipes->pid[i] = fork();
+	if (sh->pipes->pid[i] == -1)
 	{
 		error_sys("fork failed\n");
 		return (1);
 	}
-	if (pipes->pid[i] == 0)
+	if (sh->pipes->pid[i] == 0)
 	{
 		rl_clear_history();
 		reset_signals(sh);
 		parse_redirections(sh, cmd, 1);
-		child_io(cmd, pipes->fd, i, sh->num_cmds);
-		if (is_builtin(cmd))
+		child_io(sh, cmd, sh->pipes->fd, i);
+		is_build = is_builtin(cmd);
+		if (is_build == 1)
 		{
 			if (execute_builtin(sh, cmd, 1))
 				exit(1);
 			else
 				exit(0);
 		}
+		else if (is_build == -1)
+			exit(1);
 		execute_command(sh, cmd, sh->envp);
 		exit(1);
 	}
 	if (i > 0)
 	{
-		close(pipes->fd[i - 1][0]);
-		close(pipes->fd[i - 1][1]);
+		close(sh->pipes->fd[i - 1][0]);
+		close(sh->pipes->fd[i - 1][1]);
 	}
 	return (error_code);
 }
@@ -195,14 +215,14 @@ void	execute_pipes(t_shell *sh)
 	i = 0;
 	error_code = 0;
 	cmd = NULL;
-	pipes = malloc(sizeof(t_pipes));
+	pipes = ft_calloc(1, sizeof(t_pipes));
 	if (!pipes)
 	{
 		error_sys("malloc failed for t_pipes\n");
 		sh->exit_status = 1;
 		return;
 	}
-	ft_memset(pipes, 0, sizeof(t_pipes));
+	//ft_memset(pipes, 0, sizeof(t_pipes)); We have calloc so we do not need this anymore
 	sh->pipes = pipes;
 	if (init_pipes(sh->pipes, sh->num_cmds) == 1)
 	{
@@ -217,15 +237,19 @@ void	execute_pipes(t_shell *sh)
 			sh->exit_status = 1;
 			return ;
 		}
-		update_underscore(sh, cmd);
-		error_code = pipe_and_fork(sh, sh->pipes, i, cmd);
+		if (update_underscore(sh, cmd))
+		{
+			sh->exit_status = 1;
+			return ;
+		}
+		error_code = pipe_and_fork(sh, cmd, i);
 		if (error_code || !cmd->is_continue)
 		{
-			free_cmd(cmd);
+			free_cmd(&cmd);
 			sh->exit_status = error_code;
 			return ;
 		}
-		free_cmd(cmd);
+		free_cmd(&cmd);
 		i++;
 	}
 	wait_for_children(sh->pipes, sh);

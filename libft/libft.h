@@ -68,5 +68,6 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 char	*get_next_line(int fd);
 int		ft_printf(const char *format, ...);
 void	*ft_realloc(void *ptr, size_t old_size, size_t new_size);
+void	*ft_recalloc(void *ptr, size_t old_size, size_t new_size);
 
 #endif

@@ -10,7 +10,7 @@ if [ ! -x "$MINISHELL_PATH" ]; then
 fi
 
 # Base directory for command files
-COMMANDS_DIR=./42_minishell_tester/cmds/mand
+COMMANDS_DIR=~/42_minishell_tester/cmds/mand
 
 # Check if the command directory exists
 if [ ! -d "$COMMANDS_DIR" ]; then

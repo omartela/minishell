@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/17 17:06:53 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/20 17:31:06 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,26 @@ int is_open_quote(char *str)
 	return (0);
 }
 
-static void increase_shlvl(t_shell *sh)
+static int increase_shlvl(t_shell *sh)
 {
 	char	*temp_itoa;
 	int		temp_atoi;
 	char	*value;
 	int		i;
 	int		j;
+	int		keyok;
 
 	i = 0;
 	j = 0;
+	keyok = 0;
 	temp_atoi = 0;
 	temp_itoa = NULL;
 	value = NULL;
 
 	while (sh->envp[i])
 	{
-		if (is_check_key_equal(sh->envp[i], "SHLVL"))
+		keyok = is_check_key_equal(sh->envp[i], "SHLVL");
+		if (keyok == 1)
 		{
 			value = get_value(sh->envp[i]);
 			if (value)
@@ -64,64 +67,65 @@ static void increase_shlvl(t_shell *sh)
 						if (set_variables(sh, "SHLVL", "1"))
 						{
 							error_sys("Setting SHLVL failed\n");
-							return ;
+							return (1);
 						}
-						return ;
+						return (0);
 					}
 					j++;
 				}
 				temp_atoi = ft_atoi(value);
+				free(value);
 				if (temp_atoi < 0 || temp_atoi == 0 || temp_atoi == 2147483647)
 				{
 					if (set_variables(sh, "SHLVL", "1"))
 					{
 						error_sys("Setting SHLVL failed\n");
-						return ;
+						return (1);
 					}
-					return ;
+					return (0);
 				}
 				temp_atoi += 1;
 				temp_itoa = ft_itoa(temp_atoi);
 				if (!temp_itoa)
 				{
-					free(value);
 					error_sys("Setting SHLVL failed\n");
-					return ;
+					return (1);
 				}
 				if (set_variables(sh, "SHLVL", temp_itoa))
 				{
-					free(value);
 					free(temp_itoa);
 					error_sys("Setting SHLVL failed\n");
-					return ;
+					return (1);
 				}
-				free(value);
 				free(temp_itoa);
-				return ;
+				return (0);
 			}
 			else
 			{
-				if (set_variables(sh, "SHLVL", "1"))
-				{
+					/// allocating failed need to return properly
 					error_sys("Setting SHLVL failed\n");
-					return ;
-				}
+					return (1);
 			}
+		}
+		else if (keyok == -1)
+		{
+			/// allocating failed need to return properly
+			return (1);
 		}
 		++i;
 	}
 	if (append_table(&sh->envp, "SHLVL", "1"))
 	{
 		error_sys("Setting SHLVL failed\n");
-		return ;
+		return (1);
 	}
 	if (append_table(&sh->local_shellvars, "SHLVL", "1"))
 	{
 		error_sys("Setting SHLVL failed\n");
-		return ;
+		return (1);
 	}
 	sort_table(sh->local_shellvars);
-	return ;
+	return (0);
 }
 
 static void	initialize_shell(t_shell *sh, char ***envp)
@@ -137,18 +141,27 @@ static void	initialize_shell(t_shell *sh, char ***envp)
 	sh->envp = NULL;
 	copy_env(*envp, sh);
 	*envp = sh->envp;
-	if (envp)
-		increase_shlvl(sh);
+	if (increase_shlvl(sh))
+	{
+		free_array(&sh->envp);
+		free_array(&sh->local_shellvars);
+		exit (1);
+	}
 	sh->homepath = expand(*envp, "HOME");
 	if (!sh->homepath)
 	{
-		error_sys("ft_strdup failed for getenv\n");
+		error_sys("Expand home failed\n");
+		free_array(&sh->envp);
+		free_array(&sh->local_shellvars);
 		exit (1);
 	}
-	hd = malloc(sizeof(t_heredoc));
+	hd = ft_calloc(1, sizeof(t_heredoc));
 	if (!hd)
 	{
-		error_sys("malloc failed for t_heredoc\n");
+		error_sys("t_heredoc failed\n");
+		free(sh->homepath);
+		free_array(&sh->envp);
+		free_array(&sh->local_shellvars);
 		exit(1);
 	}
 	sh->hd = hd;
@@ -158,7 +171,11 @@ static void	initialize_shell(t_shell *sh, char ***envp)
 	ft_memset(&sh->org_sig_int, 0, sizeof(sh->org_sig_int));
 	ft_memset(&sh->org_sig_quit, 0, sizeof(sh->org_sig_quit));
 	if (init_signal(sh))
+	{
+		error_sys("Error when initializing signal\n");
+		free_shell(sh);
 		exit (1);
+	}
 }
 
 int	add_prompt(t_shell *sh, char *input)
@@ -169,10 +186,7 @@ int	add_prompt(t_shell *sh, char *input)
 	{
 		temp = ft_strjoin(sh->promt, input);
 		if (!temp)
-		{
-			error_sys("ft_strjoin failed\n");
 			return (1);
-		}
 		free(sh->promt);
 		sh->promt = temp;
 	}
@@ -180,10 +194,7 @@ int	add_prompt(t_shell *sh, char *input)
 	{
 		sh->promt = ft_strdup(input);
 		if (!sh->promt)
-		{
-			error_sys("ft_strdup failed\n");
 			return (1);
-		}
 	}
 	return (0);
 }
@@ -203,10 +214,10 @@ static void	process_input(t_shell *sh, char *input)
 		sh->exit_status = 2;
 		return ;
 	}
-	input = split_and_parse(split_input, sh);
+	input = expand_input(split_input, sh);
 	if (!input)
 	{
-		error_sys("split_and_parse failed\n");
+		error_sys("expand_input failed\n");
 		sh->exit_status = 1;
 		return ;
 	}
@@ -261,11 +272,11 @@ static void	process_input(t_shell *sh, char *input)
 			free(next_input);
 			return ;
 		}
-		split_input = split_and_parse(next_input, sh);
+		split_input = expand_input(next_input, sh);
 		free(next_input);
 		if (!split_input)
 		{
-			error_sys("split_and_parse failed\n");
+			error_sys("expand_input failed\n");
 			free(input);
 			sh->exit_status = 1;
 			return ;
@@ -302,6 +313,13 @@ static void	process_input(t_shell *sh, char *input)
 		{
 			char *temp = ft_strjoin(input, "\n");
 			free(input);
+			if (!temp)
+			{
+				free(next_input);
+				error_sys("ft_strjoin failed\n");
+				sh->exit_status = 1;
+				return ;
+			}
 			split_input = ft_strjoin(temp, next_input);
 			free(temp);
 			free(next_input);
@@ -336,7 +354,7 @@ static void	process_input(t_shell *sh, char *input)
 	}
 	else
 	{
-		error_sys("ft_split failed\n");
+		error_sys("split_args_leave_quotes failed\n");
 		sh->exit_status = 1;
 		return ;
 	}
@@ -350,6 +368,11 @@ static int	userprompt(int status, char ***envp)
 	initialize_shell(&sh, envp);
 	while (1)
 	{
+		if (init_signal(&sh))
+		{
+			error_sys("Init signals failed\n");
+			continue;
+		}
 		//Snippet for tester
 		if (isatty(fileno(stdin)))
 			input = readline("minishell> ");
@@ -370,7 +393,7 @@ static int	userprompt(int status, char ***envp)
 		{
 			error_sys("add_prompt failed\n");
 			free(input);
-			exit(1);
+			continue ;
 		}
 		process_input(&sh, input);
 		free_partial(&sh);
