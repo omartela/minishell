@@ -6,87 +6,34 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 10:34:04 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/15 11:32:21 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/20 16:31:05 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char    *expand(char **envp, char *variable)
+char	*expand(char **envp, char *variable)
 {
-    int     i;
-    char    *value;
-
-    i = 0;
-    while (envp[i])
-    {
-        if (is_check_key_equal(envp[i], variable))
-        {
-            value = get_value(envp[i]);
-            if (!value)
-                return (NULL);
-            return (value);
-        }
-        ++i;
-    }
-    return (ft_strdup(""));
-}
-
-
-char	*ft_strndup(const char *s1, size_t n)
-{
-	size_t	i;
-	char	*dst;
+	int		i;
+	char	*value;
+	int		keyok;
 
 	i = 0;
-	dst = (char *)malloc(sizeof(char) * (n + 1));
-	if (dst == NULL)
-		return (NULL);
-	while (i < n)
+	while (envp[i])
 	{
-		dst[i] = s1[i];
-		i++;
+		keyok = is_check_key_equal(envp[i], variable);
+		if (keyok == 1)
+		{
+			value = get_value(envp[i]);
+			if (!value)
+				return (NULL);
+			return (value);
+		}
+		else if (keyok == -1)
+			return (NULL);
+		++i;
 	}
-	dst[i] = '\0';
-	return (dst);
-}
-
-char    *insert_to_string(char *str, char *delimiter, char *insert)
-{
-    size_t  i;
-    char    *result;
-    char    *temp;
-
-    i = 0;
-	result = NULL;
-    while (str[i])
-    {
-        if (ft_strncmp(&str[i], delimiter, ft_strlen(delimiter)) == 0)
-        {
-            result = ft_strndup(str, i);
-            if (!result)
-                return (NULL);
-            temp = ft_strjoin(result, insert);
-            if (!temp)
-            {
-                free(result);
-                return (NULL);
-            }
-            free(result);
-            result = temp;
-            temp = ft_strjoin(result, &str[i] + ft_strlen(delimiter));
-            if (!temp)
-            {
-                free(result);
-                return (NULL);
-            }
-            free(result);
-            result = temp;
-			return (result);
-        }
-        ++i;
-    }
-    return (NULL);
+	return (ft_strdup(""));
 }
 
 static char  *get_exit_code(t_shell *sh)
@@ -102,7 +49,7 @@ static char  *get_exit_code(t_shell *sh)
     return (tempitoa);
 }
 
-char *split_and_parse(char *str, t_shell *sh)
+char *expand_input(char *str, t_shell *sh)
 {
     int		in_single_quotes;
     int     in_double_quotes;
@@ -168,7 +115,10 @@ char *split_and_parse(char *str, t_shell *sh)
             {
                 insert = get_exit_code(sh);
                 if (!insert)
+                {
+                    free(result);
                     return (NULL);
+                }
                 temp = ft_strjoin(result, insert);
                 free(insert);
                 free(result);
@@ -194,15 +144,22 @@ char *split_and_parse(char *str, t_shell *sh)
 
                 key = ft_substr(str, i, key_len); // Extract the variable name
                 if (!key)
+                {
+                    free(result);
                     return (NULL);
+                }
                 insert = expand(sh->envp, key); // Expand the variable
                 free(key);
                 if (!insert)
+                {
+                    free(result);
                     return (NULL);
-
+                }
                 temp = ft_strjoin(result, insert); // Append the expanded value to result
                 free(insert);
                 free(result);
+                if (!temp)
+                    return (NULL);
                 result = temp;
                 i += key_len; // Move the index past the variable name
             }
@@ -211,6 +168,8 @@ char *split_and_parse(char *str, t_shell *sh)
                 // If we encounter just a single '$' with no valid variable, append it as is
                 temp = ft_strjoin(result, "$");
                 free(result);
+                if (!temp)
+                    return (NULL);
                 result = temp;
                 i++;
             }
@@ -221,6 +180,8 @@ char *split_and_parse(char *str, t_shell *sh)
             char temp_str[2] = {str[i], '\0'}; // Create a string with one character
             temp = ft_strjoin(result, temp_str);
             free(result);
+            if (!temp)
+                return (NULL);
             result = temp;
             i++;
         }

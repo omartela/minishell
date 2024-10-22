@@ -141,7 +141,7 @@ int	add_table(char ***table, const char *variable, const char *value)
 
 	i = 0;
 	i = calculate_table_size(table);
-	temp = ft_realloc(*table, i * sizeof(char *), (i + 2) * sizeof(char *));
+	temp = ft_recalloc(*table, i * sizeof(char *), (i + 2) * sizeof(char *));
 	if (!temp)
 		return (1);
 	*table = temp;
@@ -198,11 +198,14 @@ int	remove_table(char ***table, const char *variable)
 	size_t	i;
 	size_t	size;
 	int		found;
+	int		index_ok;
 
 	i = 0;
 	index_to_remove = 0;
 	found = 0;
-	find_index(table, variable, &found, &index_to_remove);
+	index_ok = find_index(table, variable, &found, &index_to_remove);
+	if (index_ok == -1)
+		return (-1);
 	size = calculate_table_size(table);
 	if (found)
 	{

@@ -20,7 +20,7 @@ static char	*get_full_command_path(char *path, char *command, t_cmd *cmd)
 	cmd_path = ft_strjoin(path, "/");
 	if (!cmd_path)
 	{
-		free_cmd(cmd);
+		free_cmd(&cmd);
 		error_sys("ft_strjoin failed\n");
 		exit(1);
 	}
@@ -28,7 +28,7 @@ static char	*get_full_command_path(char *path, char *command, t_cmd *cmd)
 	free(cmd_path);
 	if (!full_path)
 	{
-		free_cmd(cmd);
+		free_cmd(&cmd);
 		error_sys("ft_strjoin failed\n");
 		exit(1);
 	}

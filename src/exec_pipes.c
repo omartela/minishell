@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/22 10:16:11 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 10:27:09 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,18 @@ static int	restore_fds(int saved_stdin, int saved_stdout)
 	return (error);
 }
 
+static void	sig_handler_sigint_2(int signum)
+{
+	if (signum == SIGINT)
+	{
+		printf("\n");
+	}
+}
+
 static int	pipe_and_fork(t_shell *sh, t_cmd *cmd, int i)
 {
 	int	error_code;
+	int is_build;
 
 	error_code = 0;
 	if (i < sh->num_cmds - 1)
@@ -85,12 +94,13 @@ static int	pipe_and_fork(t_shell *sh, t_cmd *cmd, int i)
 			return (1);
 		}
 	}
-	if (sh->num_cmds == 1 && is_builtin(cmd))
+	is_build = is_builtin(cmd);
+	if (sh->num_cmds == 1 && is_build == 1)
 	{
 		error_code = parse_redirections(sh ,cmd, 0);
 		if (error_code)
 			return (error_code);
-		cmd->saved_std[1] = dup(STDOUT_FILENO);
+		cmd->saved_std[1] = dup(STDOUT_FILENO); /// Make a function to protect all dups or something...
 		if (cmd->saved_std[1] == -1)
 		{
 			error_sys("dup failed\n");
@@ -134,6 +144,9 @@ static int	pipe_and_fork(t_shell *sh, t_cmd *cmd, int i)
 		cmd->is_continue = 0;
 		return (0);
 	}
+	else if(is_build == -1)
+		return (1);
+	signal(SIGINT, sig_handler_sigint_2);
 	sh->pipes->pid[i] = fork();
 	if (sh->pipes->pid[i] == -1)
 	{
@@ -145,14 +158,17 @@ static int	pipe_and_fork(t_shell *sh, t_cmd *cmd, int i)
 		rl_clear_history();
 		reset_signals(sh);
 		parse_redirections(sh, cmd, 1);
-		child_io(sh, cmd, sh->pipes->fd, i, sh->num_cmds);
-		if (is_builtin(cmd))
+		child_io(sh, cmd, sh->pipes->fd, i);
+		is_build = is_builtin(cmd);
+		if (is_build == 1)
 		{
 			if (execute_builtin(sh, cmd, 1))
 				exit(1);
 			else
 				exit(0);
 		}
+		else if (is_build == -1)
+			exit(1);
 		execute_command(sh, cmd, sh->envp);
 		exit(1);
 	}
@@ -199,14 +215,14 @@ void	execute_pipes(t_shell *sh)
 	i = 0;
 	error_code = 0;
 	cmd = NULL;
-	pipes = malloc(sizeof(t_pipes));
+	pipes = ft_calloc(1, sizeof(t_pipes));
 	if (!pipes)
 	{
 		error_sys("malloc failed for t_pipes\n");
 		sh->exit_status = 1;
 		return;
 	}
-	ft_memset(pipes, 0, sizeof(t_pipes));
+	//ft_memset(pipes, 0, sizeof(t_pipes)); We have calloc so we do not need this anymore
 	sh->pipes = pipes;
 	if (init_pipes(sh->pipes, sh->num_cmds) == 1)
 	{
@@ -221,15 +237,19 @@ void	execute_pipes(t_shell *sh)
 			sh->exit_status = 1;
 			return ;
 		}
-		update_underscore(sh, cmd);
+		if (update_underscore(sh, cmd))
+		{
+			sh->exit_status = 1;
+			return ;
+		}
 		error_code = pipe_and_fork(sh, cmd, i);
 		if (error_code || !cmd->is_continue)
 		{
-			free_cmd(cmd);
+			free_cmd(&cmd);
 			sh->exit_status = error_code;
 			return ;
 		}
-		free_cmd(cmd);
+		free_cmd(&cmd);
 		i++;
 	}
 	wait_for_children(sh->pipes, sh);

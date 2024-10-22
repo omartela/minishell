@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/17 12:46:06 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/20 17:08:24 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ static int	here_doc_input(char *delimiter, t_shell *sh, int expand)
 	}
 	if (add_prompt(sh, "\n"))
 	{
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
 		error_sys("add_prompt failed\n");
 		return (-1);
 	}
@@ -81,16 +83,21 @@ static int	here_doc_input(char *delimiter, t_shell *sh, int expand)
 			break;
 		if (add_prompt(sh, line))
 		{
+			free(line);
+			close(pipe_fd[0]);
+			close(pipe_fd[1]);
 			error_sys("add_prompt failed\n");
 			return (-1);
 		}
 		if (expand)
 		{
-			temp = split_and_parse(line, sh);
+			temp = expand_input(line, sh);
 			free(line);
 			if (!temp)
 			{
-				error_sys("split_and_parse failed\n");
+				close(pipe_fd[0]);
+				close(pipe_fd[1]);
+				error_sys("expand_input failed\n");
 				return (-1);
 			}
 			line = temp;
@@ -133,9 +140,15 @@ int	handle_here_doc(t_shell *sh, char *input)
 			if ((ft_strncmp(args[i + 1], args_with_quotes[i + 1], ft_strlen(args[i + 1])) == 0) || args_with_quotes[i + 1][0] == '\"')
 				expand = 1;
 			if (!sh->hd->heredoc_fds)
-				sh->hd->heredoc_fds = malloc(sizeof(int));
+				sh->hd->heredoc_fds = ft_calloc(1, sizeof(int));
 			else
-				sh->hd->heredoc_fds = ft_realloc(sh->hd->heredoc_fds, sizeof(int) * sh->hd->num_heredocs, sizeof(int) * (sh->hd->num_heredocs + 1));
+				sh->hd->heredoc_fds = ft_recalloc(sh->hd->heredoc_fds, sizeof(int) * sh->hd->num_heredocs, sizeof(int) * (sh->hd->num_heredocs + 1));
+			if (!sh->hd->heredoc_fds)
+			{
+				free_array(&args);
+				free_array(&args_with_quotes);
+				return (1);
+			}
 			sh->hd->heredoc_fds[sh->hd->num_heredocs] = here_doc_input(args[i + 1], sh, expand);
 			if (sh->hd->heredoc_fds[sh->hd->num_heredocs] == -1)
 			{

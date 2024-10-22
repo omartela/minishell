@@ -82,7 +82,7 @@ int		check_syntax(char *input);
 int		is_heredoc(char *input);
 size_t	ft_strcounter(char *s, char c);
 void	process_quotes(char **s, int *in_quotes, char *quote_type);
-char 	*split_and_parse(char *str, t_shell *sh);
+char 	*expand_input(char *str, t_shell *sh);
 char	**split_args_remove_quotes(char *s, char c);
 char	**split_args_leave_quotes(char *s, char c);
 char	**split_args_general(char *s, char c, int keep_quotes);
@@ -101,7 +101,7 @@ void	free_array_back(char **array, size_t i);
 void	free_array(char ***array);
 void	free_shell(t_shell *sh);
 void	free_partial(t_shell *sh);
-void	free_cmd(t_cmd *cmd);
+void	free_cmd(t_cmd **cmd);
 void	free_pipes(t_shell *sh);
 void	exit_and_free(t_shell *sh, t_cmd *cmd, int status);
 

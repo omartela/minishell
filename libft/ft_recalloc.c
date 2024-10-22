@@ -1,32 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin-pwd.c                                      :+:      :+:    :+:   */
+/*   ft_recalloc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/23 12:36:23 by omartela          #+#    #+#             */
-/*   Updated: 2024/09/23 12:36:26 by omartela         ###   ########.fr       */
+/*   Created: 2024/10/21 10:08:21 by omartela          #+#    #+#             */
+/*   Updated: 2024/10/21 10:08:25 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../include/minishell.h"
+#include "libft.h"
 
-int    pwd(void)
+void	*ft_recalloc(void *ptr, size_t old_size, size_t new_size)
 {
-    char    cwd[PATH_MAX];
-    char    *str;
+	void	*new_ptr;
+	size_t	copy_size;
 
-    str = getcwd(cwd, sizeof(cwd));
-    if (str != NULL)
-    {
-        ft_putstr_fd(str, 1);
-        write(1, "\n", 1);
-        return (0);
-    }
-    else
-    {
-        ft_putstr_fd("getcwd: cannot access directories: No such file or directory\n", 2);
-        return (1);
-    }
-    return (0);
+	new_ptr = ft_calloc(1, new_size);
+	if (!new_ptr)
+	{
+		free(ptr);
+		return (NULL);
+	}
+	if (old_size < new_size)
+		copy_size = old_size;
+	else
+		copy_size = new_size;
+	if (ptr)
+	{
+		ft_memcpy(new_ptr, ptr, copy_size);
+		free(ptr);
+	}
+	return (new_ptr);
 }
