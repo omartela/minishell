@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_recalloc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 10:08:21 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/21 10:08:25 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/22 11:06:41 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
 void	*ft_recalloc(void *ptr, size_t old_size, size_t new_size)
