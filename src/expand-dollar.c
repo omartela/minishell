@@ -140,7 +140,15 @@ char    *handle_tilde(t_shell *sh, char *result, char *str, int i)
 
 }
 
-char *expand_input(char *str, t_shell *sh)
+void	handle_quotes(char c, int *in_single_quote, int *in_double_quote)
+{
+	if (c == '\'' && !(*in_double_quote))
+		*in_single_quote = !(*in_single_quote);
+	if (c == '\"' && !(*in_single_quote))
+		*in_double_quote = !(*in_double_quote);
+}
+
+char    *expand_input(char *str, t_shell *sh)
 {
     int		in_single_quotes;
     int     in_double_quotes;
@@ -159,10 +167,7 @@ char *expand_input(char *str, t_shell *sh)
         return (NULL);
     while (str[i])
     {
-        if (str[i] == '\"' && !in_single_quotes)
-			in_double_quotes = !in_double_quotes;
-        if (str[i] == '\'' && !in_double_quotes)
-			in_single_quotes = !in_single_quotes;
+        handle_quotes(str[i], &in_single_quotes, &in_double_quotes);
         if (i == 0 && (ft_strncmp(str, "~\0", 2) == 0  || ft_strncmp(&str[i], "~/", 2) == 0) && !in_double_quotes && !in_single_quotes)
         {
             result = handle_tilde(sh, result, str, i);
@@ -205,10 +210,7 @@ char *expand_input(char *str, t_shell *sh)
             }
             else if (ft_isdigit(str[i + 1]) && !in_double_quotes)
             {
-                if (str[i + 1] == '\"' && !in_single_quotes)
-			        in_double_quotes = !in_double_quotes;
-                if (str[i + 1] == '\'' && !in_double_quotes)
-			        in_single_quotes = !in_single_quotes;
+                handle_quotes(str[i + 1], &in_single_quotes, &in_double_quotes);
                 i += 2;
             }
 			else if ((str[i + 1] == '\'' || str[i + 1] == '\"') && !in_double_quotes)
