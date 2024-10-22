@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/22 14:51:22 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:48:47 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct s_check
 }	t_check;
 
 // main functions
+void	initialize_shell(t_shell *sh, char ***envp);
 int		add_prompt(t_shell *sh, char *input);
 char	*trim_spaces(char *str);
 int		check_syntax(char *input);
@@ -122,7 +123,7 @@ void	show_error_free_cmd_exit(int code, char *name, char *msg, t_cmd *cmd);
 int		show_error_return(int code, char *name, char *msg);
 void	error_sys(char *msg);
 void	error_dup(t_shell *sh, t_cmd *cmd);
-void	error_execve_and_permission(t_shell *sh, t_cmd *cmd, int is_abs_relative);
+void	error_execve_and_permission(t_shell *sh, t_cmd *cmd, int is_abs_rel);
 
 // test functions
 void	test_split_args_leave_quotes(char *input, char c);

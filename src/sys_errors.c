@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 11:02:11 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/22 13:05:09 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:49:04 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	error_dup(t_shell *sh, t_cmd *cmd)
 	exit_and_free(sh, cmd, 1);
 }
 
-void	error_execve_and_permission(t_shell *sh, t_cmd *cmd, int is_abs_relative)
+void	error_execve_and_permission(t_shell *sh, t_cmd *cmd, int is_abs_rel)
 {
 	check_permissions(sh, cmd, is_abs_relative);
 	error_sys("execve failed\n");

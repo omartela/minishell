@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:50:09 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/17 14:18:33 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:15:30 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 void	free_array(char ***array)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	if (!(*array))
-		return;
+		return ;
 	while ((*array)[i])
 	{
 		free((*array)[i]);
@@ -30,7 +32,7 @@ void	free_array(char ***array)
 void	free_array_back(char **array, size_t i)
 {
 	if (!array)
-		return;
+		return ;
 	while (i > 0)
 	{
 		i--;
