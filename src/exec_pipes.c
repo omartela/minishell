@@ -6,13 +6,13 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/17 15:32:14 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 10:16:11 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	child_io(t_cmd *cmd, int **fd, int i, int num_cmds)
+static void	child_io(t_shell *sh, t_cmd *cmd, int **fd, int i)
 {
 	if (cmd->infile || cmd->here_doc)
 	{
@@ -21,29 +21,33 @@ static void	child_io(t_cmd *cmd, int **fd, int i, int num_cmds)
 			close(fd[i - 1][0]);
 			close(fd[i - 1][1]);
 		}
-		dup2(cmd->fd_in, STDIN_FILENO);
+		if (dup2(cmd->fd_in, STDIN_FILENO) == -1)
+			error_dup(sh, cmd);
 		close(cmd->fd_in);
 	}
 	else if (i > 0)
 	{
 		close(fd[i - 1][1]);
-		dup2(fd[i - 1][0], STDIN_FILENO);
+		if (dup2(fd[i - 1][0], STDIN_FILENO) == -1)
+			error_dup(sh, cmd);
 		close(fd[i - 1][0]);
 	}
 	if (cmd->outfile)
 	{
-		if (i < num_cmds - 1)
+		if (i < sh->num_cmds - 1)
 		{
 			close(fd[i][0]);
 			close(fd[i][1]);
 		}
-		dup2(cmd->fd_out, STDOUT_FILENO);
+		if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
+			error_dup(sh, cmd);
 		close(cmd->fd_out);
 	}
-	else if (i < num_cmds - 1)
+	else if (i < sh->num_cmds - 1)
 	{
 		close(fd[i][0]);
-		dup2(fd[i][1], STDOUT_FILENO);
+		if (dup2(fd[i][1], STDOUT_FILENO) == -1)
+			error_dup(sh, cmd);
 		close(fd[i][1]);
 	}
 }
@@ -68,14 +72,14 @@ static int	restore_fds(int saved_stdin, int saved_stdout)
 	return (error);
 }
 
-static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
+static int	pipe_and_fork(t_shell *sh, t_cmd *cmd, int i)
 {
 	int	error_code;
 
 	error_code = 0;
 	if (i < sh->num_cmds - 1)
 	{
-		if (pipe(pipes->fd[i]) == -1)
+		if (pipe(sh->pipes->fd[i]) == -1)
 		{
 			error_sys("pipe failed\n");
 			return (1);
@@ -130,18 +134,18 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 		cmd->is_continue = 0;
 		return (0);
 	}
-	pipes->pid[i] = fork();
-	if (pipes->pid[i] == -1)
+	sh->pipes->pid[i] = fork();
+	if (sh->pipes->pid[i] == -1)
 	{
 		error_sys("fork failed\n");
 		return (1);
 	}
-	if (pipes->pid[i] == 0)
+	if (sh->pipes->pid[i] == 0)
 	{
 		rl_clear_history();
 		reset_signals(sh);
 		parse_redirections(sh, cmd, 1);
-		child_io(cmd, pipes->fd, i, sh->num_cmds);
+		child_io(sh, cmd, sh->pipes->fd, i, sh->num_cmds);
 		if (is_builtin(cmd))
 		{
 			if (execute_builtin(sh, cmd, 1))
@@ -154,8 +158,8 @@ static int	pipe_and_fork(t_shell *sh, t_pipes *pipes, int i, t_cmd *cmd)
 	}
 	if (i > 0)
 	{
-		close(pipes->fd[i - 1][0]);
-		close(pipes->fd[i - 1][1]);
+		close(sh->pipes->fd[i - 1][0]);
+		close(sh->pipes->fd[i - 1][1]);
 	}
 	return (error_code);
 }
@@ -218,7 +222,7 @@ void	execute_pipes(t_shell *sh)
 			return ;
 		}
 		update_underscore(sh, cmd);
-		error_code = pipe_and_fork(sh, sh->pipes, i, cmd);
+		error_code = pipe_and_fork(sh, cmd, i);
 		if (error_code || !cmd->is_continue)
 		{
 			free_cmd(cmd);
