@@ -31,25 +31,11 @@ static int	check_dash_n(char *argv)
 	return (0);
 }
 
-int	echo(char *argv[])
+static int	echo_print_str(char **argv, int no_nl, int i)
 {
-	int	i;
-	int	no_nl;
 	int	check_options;
 
 	check_options = 1;
-	i = 1;
-	no_nl = 0;
-	if (!argv[1])
-	{
-		write(1, "\n", 1);
-		return (0);
-	}
-	if (!check_dash_n(argv[1]))
-	{
-		i = 2;
-		no_nl = 1;
-	}
 	while (argv[i])
 	{
 		if (argv[i] && (ft_strncmp(argv[i], "-\0", 2) == 0))
@@ -70,6 +56,28 @@ int	echo(char *argv[])
 			++i;
 		}
 	}
+	return (0);
+}
+
+int	echo(char *argv[])
+{
+	int	i;
+	int	no_nl;
+
+	i = 1;
+	no_nl = 0;
+	if (!argv[1])
+	{
+		write(1, "\n", 1);
+		return (0);
+	}
+	if (!check_dash_n(argv[1]))
+	{
+		i = 2;
+		no_nl = 1;
+	}
+	if (echo_print_str(argv, no_nl, i))
+		return (1);
 	if (!no_nl)
 		write(1, "\n", 1);
 	return (0);
