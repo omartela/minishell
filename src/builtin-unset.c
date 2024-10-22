@@ -24,8 +24,16 @@ int unset(t_shell *sh, char **args)
     {
         while (i < argc)
         {
-            remove_table(&sh->envp, args[i]);
-            remove_table(&sh->local_shellvars, args[i]);
+            if (remove_table(&sh->envp, args[i]) == -1)
+            {
+                error_sys("Unset failed\n");
+                return (1);
+            }
+            if (remove_table(&sh->local_shellvars, args[i]) == -1)
+            {
+                error_sys("Unset failed\n");
+                return (1);
+            }
             ++i;
         }
     }

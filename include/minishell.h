@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/17 14:17:29 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 10:29:32 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int		check_syntax(char *input);
 int		is_heredoc(char *input);
 size_t	ft_strcounter(char *s, char c);
 void	process_quotes(char **s, int *in_quotes, char *quote_type);
-char 	*split_and_parse(char *str, t_shell *sh);
+char 	*expand_input(char *str, t_shell *sh);
 char	**split_args_remove_quotes(char *s, char c);
 char	**split_args_leave_quotes(char *s, char c);
 char	**split_args_general(char *s, char c, int keep_quotes);
@@ -101,7 +101,7 @@ void	free_array_back(char **array, size_t i);
 void	free_array(char ***array);
 void	free_shell(t_shell *sh);
 void	free_partial(t_shell *sh);
-void	free_cmd(t_cmd *cmd);
+void	free_cmd(t_cmd **cmd);
 void	free_pipes(t_shell *sh);
 void	exit_and_free(t_shell *sh, t_cmd *cmd, int status);
 
@@ -110,6 +110,7 @@ void	show_error(char *name, char *msg);
 void	show_error_free_cmd_exit(int code, char *name, char *msg, t_cmd *cmd);
 int		show_error_return(int code, char *name, char *msg);
 void	error_sys(char *msg);
+void	error_dup(t_shell *sh, t_cmd *cmd);
 
 // test functions
 void	test_split_args_leave_quotes(char *input, char c);

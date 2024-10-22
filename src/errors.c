@@ -29,7 +29,7 @@ void	show_error_free_cmd_exit(int code, char *name, char *msg, t_cmd *cmd)
 	write(2, msg, ft_strlen(msg));
 	write(2, "\n", 1);
 	if (cmd)
-		free_cmd(cmd);
+		free_cmd(&cmd);
 	exit(code);
 }
 
@@ -45,7 +45,7 @@ int	show_error_return(int code, char *name, char *msg)
 
 void	exit_and_free(t_shell *sh, t_cmd *cmd, int status)
 {
-	free_cmd(cmd);
+	free_cmd(&cmd);
 	free_shell(sh);
 	exit(status);
 }

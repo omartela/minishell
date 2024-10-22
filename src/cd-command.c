@@ -27,12 +27,19 @@ int	cd(t_shell *sh, char **args)
 
 	if (args[1] == NULL)
 	{
-		if (chdir(sh->homepath))
+		path = expand(sh->envp, "HOME");
+		if (!path)
 		{
-			ft_putstr_fd("Error when changing directory", 2);
+			error_sys("cd syserror: Allocation failed\n");
 			return (1);
 		}
-		return (1);
+		if (chdir(path) == -1)
+		{
+			free(path);
+			return (show_error_return(1, args[0], "HOME not set"));
+		}
+		free(path);
+		return (0);
 	}
 	else
 	{
@@ -42,11 +49,14 @@ int	cd(t_shell *sh, char **args)
 		{
 			path = expand(sh->envp, "OLDPWD");
 			if (!path)
-				return (show_error_return(1, args[1], "cd - failed"));
+			{
+				error_sys("cd syserror: Allocation failed\n");
+				return (1);
+			}
 			if (chdir(path) == -1)
 			{
 				free(path);
-				return (show_error_return(1, args[1], "Not a directory"));
+				return (show_error_return(1, args[0], "OLDPWD not set"));
 			}
 			ft_printf("%s\n", path);
 			free(path);
@@ -59,14 +69,30 @@ int	cd(t_shell *sh, char **args)
 			return (show_error_return(1, args[1], "Not a directory"));
 		if (oldpwd)
 		{
-			set_table(&sh->envp, "OLDPWD", oldpwd);
-			set_table(&sh->local_shellvars, "OLDPWD", oldpwd);
+			if (set_variables(sh, "OLDPWD", oldpwd))
+			{
+				error_sys("cd syserror: Setting oldpwd failed\n");
+				return (1);
+			}
+		}
+		else
+		{
+			error_sys("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
+			return (1);
 		}
 		currentpwd = getcwd(cwd, sizeof(cwd));
 		if (currentpwd)
 		{
-			set_table(&sh->envp, "PWD", currentpwd);
-			set_table(&sh->local_shellvars, "PWD", currentpwd);
+			if (set_variables(sh, "PWD", currentpwd))
+			{
+				error_sys("cd syserror: Setting pwd failed\n");
+				return (1);
+			}
+		}
+		else
+		{
+			error_sys("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
+			return (1);
 		}
 		return (0);
 	}

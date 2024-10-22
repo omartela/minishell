@@ -20,9 +20,17 @@ char	*get_value(char *args)
 	value = NULL;
 	equal = ft_strchr(args, '=');
 	if (equal)
+	{
 		value = ft_strdup((equal + 1));
+		if (!value)
+			return (NULL);
+	}
 	else
+	{
 		value = ft_strdup("");
+		if (!value)
+			return (NULL);
+	}
 	return (value);
 }
 
@@ -35,6 +43,11 @@ char	*get_key(char *args)
 	if (!split)
 		return (NULL);
 	key = ft_strdup(split[0]);
+	if (!key)
+	{
+		free_array(&split);
+		return (NULL);
+	}
 	free_array(&split);
 	return (key);
 }
@@ -46,7 +59,7 @@ int	is_check_key_equal(char *args, const char *variable)
 
 	key = get_key(args);
 	if (!key)
-		return (0);
+		return (-1);
 	len = ft_strlen(key);
 	if (ft_strncmp(key, variable, len + 1) == 0)
 	{
@@ -55,12 +68,6 @@ int	is_check_key_equal(char *args, const char *variable)
 	}
 	free(key);
 	return (0);
-}
-
-
-char	*expand_tilde(t_shell *sh)
-{
-	return (sh->homepath);
 }
 
 int	is_builtin(t_cmd *cmd)
@@ -72,6 +79,11 @@ int	is_builtin(t_cmd *cmd)
 	str = ft_split("exit,export,cd,env,unset,pwd,echo", ',');
 	i = 0;
 	is_builtin = 0;
+	if (!str)
+	{
+		error_sys("is_builtin failed\n");
+		return (-1);
+	}
 	while (str[i])
 	{
 		if (cmd->args[0] && ft_strncmp(cmd->args[0], str[i], ft_strlen(str[i]) + 1) == 0)

@@ -58,7 +58,7 @@ char	*ft_add_spaces(char *s)
 	in_quotes = 0;
 	len = ft_strlen(s);
 	spaces_needed = ft_redirect_counter(s);
-	new_str = malloc(len + spaces_needed + 1);
+	new_str = ft_calloc(len + spaces_needed + 1, sizeof(char));
 	dest = new_str;
 	if (!new_str)
 		return (NULL);

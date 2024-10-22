@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 17:58:11 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/14 11:53:04 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 10:47:43 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static char	*get_full_command_path(char *path, char *command, t_cmd *cmd)
 	cmd_path = ft_strjoin(path, "/");
 	if (!cmd_path)
 	{
-		free_cmd(cmd);
+		free_cmd(&cmd);
 		error_sys("ft_strjoin failed\n");
 		exit(1);
 	}
@@ -28,7 +28,7 @@ static char	*get_full_command_path(char *path, char *command, t_cmd *cmd)
 	free(cmd_path);
 	if (!full_path)
 	{
-		free_cmd(cmd);
+		free_cmd(&cmd);
 		error_sys("ft_strjoin failed\n");
 		exit(1);
 	}
@@ -101,7 +101,7 @@ void	execute_command(t_shell *sh, t_cmd *cmd, char **envp)
 	{
 		execve(cmd->args[0], cmd->args, envp);
 		check_permissions(sh, cmd, 1);
-		show_error(cmd->args[0], "command not found");
+		error_sys("execve failed\n");
 		exit_and_free(sh, cmd, 1);
 	}
 	while (cmd->path[i])

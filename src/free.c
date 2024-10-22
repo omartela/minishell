@@ -41,42 +41,42 @@ void	free_array_back(char **array, size_t i)
 	array = NULL;
 }
 
-void	free_cmd(t_cmd *cmd)
+void	free_cmd(t_cmd **cmd)
 {
 	if (!cmd)
 		return ;
-	if (cmd->args_withquotes)
-		free_array(&cmd->args_withquotes);
-	if (cmd->args)
-		free_array(&cmd->args);
-	if (cmd->path)
-		free_array(&cmd->path);
-	if (cmd->infile)
+	if ((*cmd)->args_withquotes)
+		free_array(&(*cmd)->args_withquotes);
+	if ((*cmd)->args)
+		free_array(&(*cmd)->args);
+	if ((*cmd)->path)
+		free_array(&(*cmd)->path);
+	if ((*cmd)->infile)
 	{
-		free(cmd->infile);
-		cmd->infile = NULL;
+		free((*cmd)->infile);
+		(*cmd)->infile = NULL;
 	}
-	if (cmd->outfile)
+	if ((*cmd)->outfile)
 	{
-		free(cmd->outfile);
-		cmd->outfile = NULL;
+		free((*cmd)->outfile);
+		(*cmd)->outfile = NULL;
 	}
-	if (cmd->saved_std)
+	if ((*cmd)->saved_std)
 	{
-		if (cmd->saved_std[0] != -1)
-			close(cmd->saved_std[0]);
-		if (cmd->saved_std[1] != -1)
-			close(cmd->saved_std[1]);
-		free(cmd->saved_std);
-		cmd->saved_std = NULL;
+		if ((*cmd)->saved_std[0] != -1)
+			close((*cmd)->saved_std[0]);
+		if ((*cmd)->saved_std[1] != -1)
+			close((*cmd)->saved_std[1]);
+		free((*cmd)->saved_std);
+		(*cmd)->saved_std = NULL;
 	}
-	if (cmd->fd_heredoc)
+	if ((*cmd)->fd_heredoc)
 	{
-		free(cmd->fd_heredoc);
-		cmd->fd_heredoc = NULL;
+		free((*cmd)->fd_heredoc);
+		(*cmd)->fd_heredoc = NULL;
 	}
-	free(cmd);
-	cmd = NULL;
+	free(*cmd);
+	*cmd = NULL;
 }
 
 void	free_pipes(t_shell *sh)
