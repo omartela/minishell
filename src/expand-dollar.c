@@ -193,6 +193,7 @@ char    *only_dollar(t_expand_state *state)
     state->i += 1;
     return (state->result);
 }
+
 char    *handle_dollar(t_shell *sh, t_expand_state *state, char *str)
 {
     if (str[state->i] == '$' && !state->in_single_quotes) // We found a '$' sign
@@ -221,19 +222,40 @@ char    *handle_dollar(t_shell *sh, t_expand_state *state, char *str)
     }
     return (state->result);
 }
-char *parse_and_expand(t_shell *sh, t_expand_state *state, char *str)
+
+int is_only_tilde(char *str, t_expand_state *state)
+{
+    if (state->i == 0 && (ft_strncmp(str, "~\0", 2) == 0  || ft_strncmp(&str[state->i], "~/", 2) == 0))
+    {
+        if (!state->in_double_quotes && !state->in_single_quotes)
+            return (1);
+    }
+    return (0);
+}
+
+int is_tilde_middle(char *str, t_expand_state *state)
+{
+    if ((ft_strncmp(&str[state->i], " ~ ", 3) == 0 || ft_strncmp(&str[state->i], " ~\0", 3) == 0 || ft_strncmp(&str[state->i], " ~/", 3) == 0))
+    {
+        if (!state->in_double_quotes && !state->in_single_quotes)
+            return (1);
+    }
+    return (0);
+}
+
+char    *parse_and_expand(t_shell *sh, t_expand_state *state, char *str)
 {
     while (str[state->i])
     {
         handle_quotes(str[state->i], &state->in_single_quotes, &state->in_double_quotes);
-        if (state->i == 0 && (ft_strncmp(str, "~\0", 2) == 0  || ft_strncmp(&str[state->i], "~/", 2) == 0) && !state->in_double_quotes && !state->in_single_quotes)
+        if (is_only_tilde(str, state))
         {
             state->result = handle_only_tilde(sh, state->result, str, state->i);
             return (state->result);
         }
         if (str[state->i + 1] == '~') 
         {
-            if ((ft_strncmp(&str[state->i], " ~ ", 3) == 0 || ft_strncmp(&str[state->i], " ~\0", 3) == 0 || ft_strncmp(&str[state->i], " ~/", 3) == 0) && !state->in_double_quotes && !state->in_single_quotes)
+            if (is_tilde_middle(str, state))
             {
                 state->result = handle_tilde_middle(sh, state->result);
                 if (!state->result)
@@ -248,6 +270,7 @@ char *parse_and_expand(t_shell *sh, t_expand_state *state, char *str)
     }
     return (state->result);
 }
+
 char    *expand_input(char *str, t_shell *sh)
 {
     t_expand_state state;
