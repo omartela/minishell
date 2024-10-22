@@ -99,6 +99,47 @@ char    *handle_dollarvarname(t_shell *sh, char *result, char *str, int *i)
     return (result);
 }
 
+char    *handle_exit_code(t_shell *sh, char *result, int *i)
+{
+    char    *insert;
+    char    *temp;
+
+    insert = get_exit_code(sh);
+    if (!insert)
+    {
+        free(result);
+        return (NULL);
+    }
+    temp = ft_strjoin(result, insert);
+    free(insert);
+    free(result);
+    result = temp;
+    *i += 2; // Skip the $ and ?
+    return (result);
+}
+
+char    *handle_tilde(t_shell *sh, char *result, char *str, int i)
+{
+    char    *temp;
+  
+    if (*(sh->homepath) != '\0')
+    {
+        temp = ft_strjoin(result, sh->homepath);
+    }
+    else
+        temp = ft_strjoin(result, "~");
+    free(result);
+    result = temp;
+    if (ft_strncmp(&str[i], "~/", 2) == 0)
+    {
+        temp = ft_strjoin(result, &str[1]);
+        free(result);
+        result = temp;
+    }
+    return (result);
+
+}
+
 char *expand_input(char *str, t_shell *sh)
 {
     int		in_single_quotes;
@@ -124,20 +165,7 @@ char *expand_input(char *str, t_shell *sh)
 			in_single_quotes = !in_single_quotes;
         if (i == 0 && (ft_strncmp(str, "~\0", 2) == 0  || ft_strncmp(&str[i], "~/", 2) == 0) && !in_double_quotes && !in_single_quotes)
         {
-            if (*(sh->homepath) != '\0')
-            {
-                temp = ft_strjoin(result, sh->homepath);
-            }
-            else
-                temp = ft_strjoin(result, "~");
-            free(result);
-            result = temp;
-            if (ft_strncmp(&str[i], "~/", 2) == 0)
-            {
-                temp = ft_strjoin(result, &str[1]);
-                free(result);
-                result = temp;
-            }
+            result = handle_tilde(sh, result, str, i);
             return (result);
         }
         if (str[i + 1] == '~') 
@@ -163,12 +191,12 @@ char *expand_input(char *str, t_shell *sh)
         {
             if (str[i + 1] == '?') // Handle $? (exit code)
             {
-                insert = get_exit_code(sh);
-                if (!insert)
-                {
-                    free(result);
-                    return (NULL);
-                }
+              insert = get_exit_code(sh);
+              if (!insert)
+              {
+                free(result);
+                return (NULL);
+              }
                 temp = ft_strjoin(result, insert);
                 free(insert);
                 free(result);
