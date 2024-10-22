@@ -49,15 +49,65 @@ static char  *get_exit_code(t_shell *sh)
     return (tempitoa);
 }
 
+char    *append_characters(char *result, char *str, int i)
+{
+    char    *temp;
+    char    *temp_str;
+
+    temp_str = ft_strndup(&str[i], 1);
+    temp = ft_strjoin(result, temp_str);
+    free(result);
+    if (!temp)
+        result = NULL;
+    else
+        result = temp;
+    return (result);
+}
+
+char    *handle_dollarvarname(t_shell *sh, char *result, char *str, int *i)
+{
+    int     key_len;
+    char    *key;
+    char    *insert;
+    char    *temp;
+
+    *i += 1;
+    key_len = 0;
+    while (ft_isalnum(str[*i + key_len]) || str[*i + key_len] == '_') // Get the length of the variable name
+        key_len++;
+
+    key = ft_substr(str, *i, key_len); // Extract the variable name
+    if (!key)
+    {
+        free(result);
+        return (NULL);
+    }
+    insert = expand(sh->envp, key); // Expand the variable
+    free(key);
+    if (!insert)
+    {
+        free(result);
+        return (NULL);
+    }
+    temp = ft_strjoin(result, insert); // Append the expanded value to result
+    free(insert);
+    free(result);
+    if (!temp)
+        return (NULL);
+    result = temp;
+    i += key_len; // Move the index past the variable name
+    return (result);
+}
+
 char *expand_input(char *str, t_shell *sh)
 {
     int		in_single_quotes;
     int     in_double_quotes;
     char    *result;
     char    *insert;
+    int     key_len;
     char    *key;
     int     i;
-    int     key_len;
     char    *temp;
 
     i = 0;
@@ -161,7 +211,7 @@ char *expand_input(char *str, t_shell *sh)
                 if (!temp)
                     return (NULL);
                 result = temp;
-                i += key_len; // Move the index past the variable name
+                i += key_len; // Move the index past the variable nam
             }
             else
             {
@@ -176,16 +226,12 @@ char *expand_input(char *str, t_shell *sh)
         }
         else
         {
-            // Append regular characters to the result
-            char temp_str[2] = {str[i], '\0'}; // Create a string with one character
-            temp = ft_strjoin(result, temp_str);
-            free(result);
-            if (!temp)
-                return (NULL);
-            result = temp;
+            result = append_characters(result, str, i);
+            if (!result)
+                result = NULL;
             i++;
         }
     }
-    return result;
+    return (result);
 }
 
