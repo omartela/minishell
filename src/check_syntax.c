@@ -6,21 +6,13 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:27:15 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/22 12:35:58 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 13:32:46 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_valid_redirect(char *input)
-{
-	if (ft_strncmp(input, ">>", 2) == 0 || ft_strncmp(input, "<>", 2) == 0
-		|| ft_strncmp(input, "<<", 2) == 0)
-		return (1);
-	return (0);
-}
-
-static int	is_redirection_operator(char c)
+int	is_redirection_operator(char c)
 {
 	if (c == '<' || c == '>')
 		return (1);
@@ -44,29 +36,16 @@ static int	is_ampersand(char c)
 int	check_syntax(char *input)
 {
 	int		is_continue;
-	size_t	len;
 	size_t	i;
 	t_check	check;
 
 	i = 0;
-	len = ft_strlen(input);
 	is_continue = 1;
 	ft_memset(&check, 0, sizeof(t_check));
 	while (input[i])
 	{
 		if (is_redirection_operator(input[i]) && check.redirect == 0)
-		{
-			if (input[i + 1] == '\0') // or newline?
-			{
-				error_sys("minishell: syntax error near unexpected token `newline'\n");
-				return (1);
-			}
-			if (is_redirection_operator(input[i + 1]) && is_valid_redirect(input + i))
-			{
-				i++;
-			}
-			check.redirect = 1;
-		}
+			is_continue = handle_first_redirect(&check, input, &i);
 		else if (is_pipe(input[i]) && is_pipe(input[i + 1]))
 			is_continue = handle_or(&check, &i);
 		else if (is_pipe(input[i]))
@@ -76,44 +55,7 @@ int	check_syntax(char *input)
 		else if (is_ampersand(input[i]))
 			is_continue = handle_ampersand(&check);
 		else if (is_redirection_operator(input[i]) && check.redirect == 1)
-		{
-			if (input[i] == '>')
-			{
-				if (input[i + 1] == '>')
-					error_sys("minishell: syntax error near unexpected token `>>'\n");
-				else
-					error_sys("minishell: syntax error near unexpected token `>'\n");
-				return (1);
-			}
-			else if (input[i] == '<')
-			{
-				if ((i + 2 <= len) && input[i + 2] && input[i + 2] == '<')
-					error_sys("minishell: syntax error near unexpected token `<<<'\n");
-				else if (input[i + 1] && input[i + 1] == '<')
-					error_sys("minishell: syntax error near unexpected token `<<'\n");
-				else if (input[i + 1] && input[i + 1] == '>')
-					error_sys("minishell: syntax error near unexpected token `<>'\n");
-				else
-					error_sys("minishell: syntax error near unexpected token `<'\n");
-				return (1);
-			}
-			else if (input[i] == '|')
-			{
-				if (input[i + 1] == '|')
-					error_sys("minishell: syntax error near unexpected token `||'\n");
-				else
-					error_sys("minishell: syntax error near unexpected token `|'\n");
-				return (1);
-			}
-			else if (input[i] == '&')
-			{
-				if (input[i + 1] == '&')
-					error_sys("minishell: syntax error near unexpected token `&&'\n");
-				else
-					error_sys("minishell: syntax error near unexpected token `&'\n");
-				return (1);
-			}
-		}
+			is_continue = handle_second_redirect(input, i);
 		else if (input[i] != ' ')
 			handle_text(&check, input, &i);
 		if (!is_continue)
