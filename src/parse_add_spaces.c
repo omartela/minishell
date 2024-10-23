@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:04:53 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/23 15:11:19 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 15:46:16 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ static size_t	ft_redirect_count(char *s)
 	return (spaces);
 }
 
-static void	check_quotes_and_type(char *s, char *quote_type, char **dest, int *in_quotes)
+static void	check_quotes_and_type(char *s, char *quote_type,
+		char **dest, int *in_quotes)
 {
 	if ((*s == '\'' || *s == '\"') && !*in_quotes)
 	{
@@ -54,10 +55,10 @@ static void	check_quotes_and_type(char *s, char *quote_type, char **dest, int *i
 	(*dest)++;
 }
 
-
-static void handle_redirection_spaces(char **dest, char *new_str, char **s)
+static void	handle_redirection_spaces(char **dest, char *new_str, char **s)
 {
-	if (*dest > new_str && *(*dest - 1) != ' ' && *(*dest - 1) != '<' && *(*dest - 1) != '>')
+	if (*dest > new_str && *(*dest - 1) != ' ' && *(*dest - 1) != '<'
+		&& *(*dest - 1) != '>')
 	{
 		**dest = ' ';
 		(*dest)++;
