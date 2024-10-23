@@ -16,7 +16,7 @@ int	unset(t_shell *sh, char **args)
 {
 	int	argc;
 	int	i;
-	/// add error checking for args
+
 	argc = 0;
 	i = 1;
 	while (args[argc])
