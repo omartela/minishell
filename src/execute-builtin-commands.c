@@ -6,7 +6,7 @@
 /*   By: omartela <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 14:29:37 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 14:57:42 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/23 15:45:21 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	handle_in_pipe(int (*builtin_func)(t_shell *, char **), t_shell *sh, t_cmd *
 	if (builtin_func(sh, cmd->args))
 		exit_and_free(sh, cmd, 1);
 	exit_and_free(sh, cmd, 0);
-	return (1);  // This won't actually be reached because of `exit()`.
+	return (1);
 }
 
 int	handle_not_in_pipe(int (*builtin_func)(t_shell *, char **), t_shell *sh, t_cmd *cmd)
@@ -31,7 +31,6 @@ int	handle_not_in_pipe(int (*builtin_func)(t_shell *, char **), t_shell *sh, t_c
 	return (0);
 }
 
-// Handle exit built-in
 int	execute_exit_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 {
 	if (is_in_pipe)
@@ -40,7 +39,6 @@ int	execute_exit_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 		return (exit_shell(sh, cmd));
 }
 
-// Handle export built-in
 int	execute_export_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 {
 	if (is_in_pipe)
@@ -49,7 +47,6 @@ int	execute_export_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 		return (handle_not_in_pipe(export, sh, cmd));
 }
 
-// Handle env built-in
 int	execute_env_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 {
 	if (is_in_pipe)
@@ -58,7 +55,6 @@ int	execute_env_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 		return (handle_not_in_pipe(env, sh, cmd));
 }
 
-// Handle cd built-in
 int	execute_cd_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 {
 	if (is_in_pipe)
@@ -67,7 +63,6 @@ int	execute_cd_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 		return (handle_not_in_pipe(cd, sh, cmd));
 }
 
-// Handle unset built-in
 int	execute_unset_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 {
 	if (is_in_pipe)
@@ -76,33 +71,31 @@ int	execute_unset_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 		return (handle_not_in_pipe(unset, sh, cmd));
 }
 
-// Handle pwd built-in
 int	execute_pwd_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 {
-	 if (is_in_pipe)
-    {
-        if (pwd())
-            exit_and_free(sh, cmd, 1);
-        exit_and_free(sh, cmd, 0);
-    }
-    else
-    {
-        if (pwd())
-        {
-            sh->exit_status = 1;
-            return 1;
-        }
-        sh->exit_status = 0;
-        return 0;
-    }
+	if (is_in_pipe)
+	{
+		if (pwd())
+			exit_and_free(sh, cmd, 1);
+		exit_and_free(sh, cmd, 0);
+	}
+	else
+	{
+		if (pwd())
+		{
+			sh->exit_status = 1;
+			return (1);
+		}
+		sh->exit_status = 0;
+		return (0);
+	}
 	return (0);
 }
 
-// Handle echo built-in
 int	execute_echo_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 {
 	if (!is_in_pipe)
-	{	
+	{
 		if (echo(cmd->args))
 		{
 			sh->exit_status = 1;
@@ -136,5 +129,5 @@ int	execute_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 		return (execute_pwd_builtin(sh, cmd, is_in_pipe));
 	if (ft_strncmp(cmd->args[0], "echo\0", 5) == 0)
 		return (execute_echo_builtin(sh, cmd, is_in_pipe));
-	return (1);  // Default case if no built-in command matches.
+	return (1);
 }
