@@ -6,51 +6,11 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/22 10:27:09 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 16:34:00 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	child_io(t_shell *sh, t_cmd *cmd, int **fd, int i)
-{
-	if (cmd->infile || cmd->here_doc)
-	{
-		if (i > 0)
-		{
-			close(fd[i - 1][0]);
-			close(fd[i - 1][1]);
-		}
-		if (dup2(cmd->fd_in, STDIN_FILENO) == -1)
-			error_dup(sh, cmd);
-		close(cmd->fd_in);
-	}
-	else if (i > 0)
-	{
-		close(fd[i - 1][1]);
-		if (dup2(fd[i - 1][0], STDIN_FILENO) == -1)
-			error_dup(sh, cmd);
-		close(fd[i - 1][0]);
-	}
-	if (cmd->outfile)
-	{
-		if (i < sh->num_cmds - 1)
-		{
-			close(fd[i][0]);
-			close(fd[i][1]);
-		}
-		if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
-			error_dup(sh, cmd);
-		close(cmd->fd_out);
-	}
-	else if (i < sh->num_cmds - 1)
-	{
-		close(fd[i][0]);
-		if (dup2(fd[i][1], STDOUT_FILENO) == -1)
-			error_dup(sh, cmd);
-		close(fd[i][1]);
-	}
-}
 
 static int	restore_fds(int saved_stdin, int saved_stdout)
 {
@@ -150,25 +110,7 @@ static int	pipe_and_fork(t_shell *sh, t_cmd *cmd, int i)
 		return (1);
 	}
 	if (sh->pipes->pid[i] == 0)
-	{
-		rl_clear_history();
-		if (reset_signals(sh))
-			exit(1);
-		parse_redirections(sh, cmd, 1);
-		child_io(sh, cmd, sh->pipes->fd, i);
-		is_build = is_builtin(cmd);
-		if (is_build == 1)
-		{
-			if (execute_builtin(sh, cmd, 1))
-				exit(1);
-			else
-				exit(0);
-		}
-		else if (is_build == -1)
-			exit(1);
-		execute_command(sh, cmd, sh->envp);
-		exit(1);
-	}
+		exec_child(sh, cmd, i);
 	if (i > 0)
 	{
 		close(sh->pipes->fd[i - 1][0]);
@@ -219,7 +161,6 @@ void	execute_pipes(t_shell *sh)
 		sh->exit_status = 1;
 		return;
 	}
-	//ft_memset(pipes, 0, sizeof(t_pipes)); We have calloc so we do not need this anymore
 	sh->pipes = pipes;
 	if (init_pipes(sh->pipes, sh->num_cmds) == 1)
 	{

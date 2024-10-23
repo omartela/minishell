@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 16:05:06 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/23 16:13:27 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 16:35:37 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ int	initialize_heredoc(t_shell *sh)
 
 void	initialize_shell(t_shell *sh, char ***envp)
 {
-	t_heredoc	*hd;
-
 	ft_memset(sh, 0, sizeof(t_shell));
 	copy_env(*envp, sh);
 	*envp = sh->envp;
