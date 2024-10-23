@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/22 18:15:50 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 10:16:18 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,10 @@ int	handle_here_doc(t_shell *sh, char *input)
 	int		i;
 	char	**args;
 	char	**args_with_quotes;
-	int		expand;
+	int		expand_flag;
 
 	i = 0;
-	expand = 0;
+	expand_flag = 0;
 	args = split_args_remove_quotes(input, ' ');
 	if (!args)
 		return (1);
@@ -113,7 +113,7 @@ int	handle_here_doc(t_shell *sh, char *input)
 		free(args);
 		return (1);
 	}
-	if (loop_args(sh, args, args_with_quotes, &expand))
+	if (loop_args(sh, args, args_with_quotes, &expand_flag))
 		return (1);
 	free_array(&args);
 	free_array(&args_with_quotes);
