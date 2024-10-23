@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 11:35:41 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/14 11:54:38 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 10:48:41 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	show_error_return(int code, char *name, char *msg)
 	write(2, ": ", 2);
 	write(2, msg, ft_strlen(msg));
 	write(2, "\n", 1);
-	return(code);
+	return (code);
 }
 
 void	exit_and_free(t_shell *sh, t_cmd *cmd, int status)

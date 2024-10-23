@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment_utilities.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 20:59:50 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/22 21:00:16 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/23 10:45:34 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/22 16:48:47 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 11:00:37 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,11 @@ typedef struct s_split_opts
 
 typedef struct s_expand_state
 {
-    int     in_single_quotes;
-    int     in_double_quotes;
-    int     i;
-    char    *result;
-} t_expand_state;
+	int		in_single_quotes;
+	int		in_double_quotes;
+	int		i;
+	char	*result;
+}	t_expand_state;
 
 typedef struct s_check
 {
@@ -97,7 +97,6 @@ void	initialize_shell(t_shell *sh, char ***envp);
 int		add_prompt(t_shell *sh, char *input);
 char	*trim_spaces(char *str);
 int		check_syntax(char *input);
-int		is_heredoc(char *input);
 size_t	ft_strcounter(char *s, char c);
 void	process_quotes(char **s, int *in_quotes, char *quote_type);
 char	*expand_input(char *str, t_shell *sh);
@@ -107,7 +106,6 @@ char	**split_args_general(char *s, char c, int keep_quotes);
 int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
 void	init_num_cmds(t_shell *sh);
 char	*ft_add_spaces(char *s);
-int		handle_here_doc(t_shell *sh, char *input);
 int		parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit);
 int		init_pipes(t_pipes *pipes, int num_cmds);
 void	execute_pipes(t_shell *sh);
@@ -149,6 +147,11 @@ void	handle_text(t_check *check, char *input, size_t *i);
 int		handle_first_redirect(t_check *check, char *input, size_t *i);
 int		handle_second_redirect(char *input, size_t i);
 
+//heredoc
+int		is_heredoc(char *input);
+int		handle_here_doc(t_shell *sh, char *input);
+int		here_doc_input(char *delimiter, t_shell *sh, int expand_flag);
+
 // echo_command
 int		echo(char *argv[]);
 
@@ -172,14 +175,14 @@ char	**sort_table(char **envp);
 size_t	calculate_table_size(char ***table);
 int		find_index(char ***table, const char *var, int *found, size_t *i);
 int		update_t_var(char ***t, const char *var, const char *val, size_t *i);
-int 	append_table_value(char ***table, size_t index, const char *value);
+int		append_table_value(char ***table, size_t index, const char *value);
 
 // init_env.c
 void	copy_env(char **envp, t_shell *shell);
 
 // set_environment.c
-int	set_variables(t_shell *shell, char *variable, char *value);
-int	set_table(char ***table, const char *var, const char *value);
+int		set_variables(t_shell *shell, char *variable, char *value);
+int		set_table(char ***table, const char *var, const char *value);
 
 //exit command
 int		exit_shell(t_shell *sh, t_cmd *cmd);
