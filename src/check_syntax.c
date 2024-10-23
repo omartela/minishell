@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:27:15 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/22 14:48:18 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/22 20:58:20 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,8 @@ static int	process_check_synax(t_check *check, char *input, int is_continue)
 int	check_syntax(char *input)
 {
 	int		is_continue;
-	size_t	i;
 	t_check	check;
 
-	i = 0;
 	is_continue = 1;
 	ft_memset(&check, 0, sizeof(t_check));
 	if (process_check_synax(&check, input, is_continue))

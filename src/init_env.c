@@ -10,39 +10,61 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
-static int	count_env_vars(char **envp)
+static void	alloc_tables(t_shell *sh, char ***c_envp, char ***l_shvars, size_t i)
 {
-	int	count;
-
-	count = 0;
-	while (envp[count])
-		count++;
-	return (count);
+	*c_envp = ft_calloc(i, sizeof(char *) + 1);
+	*l_shvars = ft_calloc(i, sizeof(char *) + 1);
+	if (!c_envp || !l_shvars)
+	{
+		if (c_envp)
+			free(c_envp);
+		if (l_shvars)
+			free(l_shvars);
+		sh->envp = NULL;
+		sh->local_shellvars = NULL;
+		error_sys("Copy environment failed..\n");
+		exit(1);
+	}
 }
 
-char	**copy_envp(char **envp)
+void	copy_env(char **envp, t_shell *shell)
 {
-	int		i;
-	int		env_count;
-	char	**env_copy;
+	size_t	sarray;
+	char	**copied_envp;
+	char	**local_shellvars;
+	size_t	i;
 
+	sarray = 0;
 	i = 0;
-	env_count = count_env_vars(envp);
-	env_copy = (char **)malloc((env_count + 1) * sizeof(char *));
-	if (!env_copy)
-		return (NULL);
-	while (i < env_count)
+	// think what to do if envp is "empty" or does not exist
+	sarray = calculate_table_size(&envp);
+	alloc_tables(shell, &copied_envp, &local_shellvars, sarray);
+	i = 0;
+	while (i < sarray)
 	{
-		env_copy[i] = strdup(envp[i]);
-		if (!env_copy[i])
+		copied_envp[i] = ft_strdup(envp[i]);
+		if (!copied_envp[i])
 		{
-			free_array_back(env_copy, i);
-			return (NULL);
+			free_array_back(copied_envp, i);
+			free_array_back(local_shellvars, i);
+			error_sys("Copy environment failed..\n");
+			exit(1);
 		}
-		i++;
+		local_shellvars[i] = ft_strdup(envp[i]);
+		if (!local_shellvars[i])
+		{
+			free_array_back(local_shellvars, i);
+			free_array_back(copied_envp, i + 1);
+			error_sys("Copy environment failed..\n");
+			exit(1);
+		}
+		++i;
 	}
-	env_copy[env_count] = NULL;
-	return (env_copy);
+	copied_envp[i] = NULL;
+	local_shellvars[i] = NULL;
+	local_shellvars = sort_table(local_shellvars);
+	shell->envp = copied_envp;
+	shell->local_shellvars = local_shellvars;
 }
