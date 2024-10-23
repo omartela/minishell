@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 16:34:34 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 17:35:57 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,8 @@ void	execute_pipes(t_shell *sh);
 void	execute_command(t_shell *sh, t_cmd *cmd, char **envp);
 void	check_permissions(t_shell *sh, t_cmd *cmd, int is_abs_relative);
 void	exec_child(t_shell *sh, t_cmd *cmd, int i);
+int		exec_in_parent(t_shell *sh, t_cmd *cmd);
+void	wait_for_children(t_pipes *pipes, t_shell *sh);
 
 // free functions
 void	close_sh_hd_fds(t_shell *sh, t_cmd *cmd);

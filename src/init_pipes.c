@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 23:28:36 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/23 16:15:22 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 17:36:25 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,29 @@ int	init_pipes(t_pipes *pipes, int num_cmds)
 	}
 	init_fds(pipes->fd, num_cmds);
 	return (0);
+}
+
+void	wait_for_children(t_pipes *pipes, t_shell *sh)
+{
+	int	i;
+	int	status;
+	int	signal_number;
+
+	i = 0;
+	status = 0;
+	signal_number = 0;
+	while (i < sh->num_cmds)
+	{
+		waitpid(pipes->pid[i], &status, 0);
+		if (WIFEXITED(status))
+			sh->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+		{
+			signal_number = WTERMSIG(status);
+			sh->exit_status = 128 + signal_number;
+			if (sh->exit_status == 139 && sh->num_cmds == 1)
+				ft_putstr_fd("Segmentation fault (core dumped)\n", 1);
+		}
+		i++;
+	}
 }
