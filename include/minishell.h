@@ -207,6 +207,7 @@ int		unset(t_shell *sh, char **args);
 // signals.c
 int		init_signal(t_shell *sh);
 int		reset_signals(t_shell *sh);
+int		change_signal_handler(void);
 
 // update-underscore-variable
 int		update_underscore(t_shell *sh, t_cmd *cmd);

@@ -72,14 +72,6 @@ static int	restore_fds(int saved_stdin, int saved_stdout)
 	return (error);
 }
 
-static void	sig_handler_sigint_2(int signum)
-{
-	if (signum == SIGINT)
-	{
-		printf("\n");
-	}
-}
-
 static int	pipe_and_fork(t_shell *sh, t_cmd *cmd, int i)
 {
 	int	error_code;
@@ -146,7 +138,11 @@ static int	pipe_and_fork(t_shell *sh, t_cmd *cmd, int i)
 	}
 	else if(is_build == -1)
 		return (1);
-	signal(SIGINT, sig_handler_sigint_2);
+	if (change_signal_handler())
+	{
+		error_sys("Changing signal handler failed\n");
+		return (1);
+	}
 	sh->pipes->pid[i] = fork();
 	if (sh->pipes->pid[i] == -1)
 	{
@@ -156,7 +152,8 @@ static int	pipe_and_fork(t_shell *sh, t_cmd *cmd, int i)
 	if (sh->pipes->pid[i] == 0)
 	{
 		rl_clear_history();
-		reset_signals(sh);
+		if (reset_signals(sh))
+			exit(1);
 		parse_redirections(sh, cmd, 1);
 		child_io(sh, cmd, sh->pipes->fd, i);
 		is_build = is_builtin(cmd);
