@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/23 12:40:07 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 13:02:25 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,24 +35,20 @@ static int	count_new_args_len(char **args)
 	return (arg_count);
 }
 
-int	process_arguments(t_redirection *data)
+static int	process_arguments(t_redirection *data)
 {
 	data->clean_args[data->j] = ft_strdup(data->cmd->args[data->i]);
 	if (!data->clean_args[data->j])
 	{
 		error_sys("ft_strdup failed\n");
-		free_array_back(data->clean_args, data->j);
-		data->clean_args = NULL;
-		if (data->is_exit)
-			exit_and_free(data->sh, data->cmd, 1);
-		return (1);
+		return (cleanup_on_error_redir(data, 1));
 	}
 	data->j++;
 	data->i++;
 	return (0);
 }
 
-int	init_redirection(t_redirection *data, t_shell *sh, t_cmd *cmd, int is_exit)
+static int	init_redirection(t_redirection *data, t_shell *sh, t_cmd *cmd, int is_exit)
 {
 	int	arg_count;
 
@@ -73,7 +69,7 @@ int	init_redirection(t_redirection *data, t_shell *sh, t_cmd *cmd, int is_exit)
 	return (0);
 }
 
-int	process_redirections(t_redirection *data)
+static int	process_redirections(t_redirection *data)
 {
 	int	error_code;
 
