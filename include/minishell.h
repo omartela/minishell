@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 11:00:37 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 12:20:00 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,16 @@ typedef struct s_check
 	int		text;
 }	t_check;
 
+typedef struct s_redirection
+{
+	int		i;
+	int		j;
+	int		is_exit;
+	t_shell	*sh;
+	t_cmd	*cmd;
+	char	**clean_args;
+}	t_redirection;
+
 // main functions
 void	initialize_shell(t_shell *sh, char ***envp);
 int		add_prompt(t_shell *sh, char *input);
@@ -151,6 +161,13 @@ int		handle_second_redirect(char *input, size_t i);
 int		is_heredoc(char *input);
 int		handle_here_doc(t_shell *sh, char *input);
 int		here_doc_input(char *delimiter, t_shell *sh, int expand_flag);
+
+//parse redirection
+int		handle_input_redirection(t_redirection *data);
+int		handle_output_redirection(t_redirection *data, int append_flag);
+void	handle_heredoc_redirection(t_redirection *data);
+int		open_fdin(char *infile, t_cmd *cmd);
+int		open_fdout(char *outfile, t_cmd *cmd);
 
 // echo_command
 int		echo(char *argv[]);
