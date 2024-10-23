@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 11:18:27 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/18 15:53:08 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 13:15:01 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@ static void	sig_handler_sigint(int signum)
 	}
 }
 
-int	reset_signals(t_shell *sh) 
+int	reset_signals(t_shell *sh)
 {
-	if (sigaction(SIGINT, &sh->org_sig_int, NULL) == -1) 
+	if (sigaction(SIGINT, &sh->org_sig_int, NULL) == -1)
 	{
 		error_sys("Error resetting SIGINT handler");
 		return (1);
 	}
-	if (sigaction(SIGQUIT, &sh->org_sig_quit, NULL) == -1) 
+	if (sigaction(SIGQUIT, &sh->org_sig_quit, NULL) == -1)
 	{
 		error_sys("Error resetting SIGQUIT handler");
 		return (1);
@@ -64,7 +64,6 @@ int	init_signal(t_shell *sh)
 {
 	struct sigaction	sa_int;
 	struct sigaction	sa_quit;
-	
 
 	ft_memset(&sa_int, 0, sizeof(sa_int));
 	if (sigemptyset(&sa_int.sa_mask) == -1)
@@ -82,4 +81,3 @@ int	init_signal(t_shell *sh)
 		return (1);
 	return (0);
 }
- 
