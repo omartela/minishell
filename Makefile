@@ -6,7 +6,7 @@
 #    By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 22:33:20 by irychkov          #+#    #+#              #
-#    Updated: 2024/10/23 16:56:29 by irychkov         ###   ########.fr        #
+#    Updated: 2024/10/23 22:34:12 by irychkov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ SRCS = src/main.c src/split_args.c src/split_args_helper.c \
 		src/exec_child.c src/exec_in_parent.c \
 		src/exec_cmd.c src/exec_pipes.c \
 		src/errors.c src/sys_errors.c\
-		src/free.c \
+		src/free.c src/free_cmd.c src/free_shell.c \
 		src/test_split.c src/test_parse_redirect.c \
 		src/environment.c src/builtin-export.c \
 		src/utilities.c src/builtin-env.c \

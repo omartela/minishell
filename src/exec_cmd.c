@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 17:58:11 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/23 15:55:53 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 22:41:56 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,6 @@ static void	is_folder(t_shell *sh, t_cmd *cmd)
 
 void	check_permissions(t_shell *sh, t_cmd *cmd, int is_abs_relative)
 {
-	int	fd_test;
-
-	fd_test = -1;
 	if (is_abs_relative)
 		is_folder(sh, cmd);
 	if ((access(cmd->args[0], F_OK) == -1) && is_abs_relative)

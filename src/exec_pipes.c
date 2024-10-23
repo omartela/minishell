@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/23 18:29:45 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 22:43:59 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,14 +93,8 @@ static int	execute_commands_in_pipes(t_shell *sh)
 
 void	execute_pipes(t_shell *sh)
 {
-	int		i;
-	t_cmd	*cmd;
 	t_pipes	*pipes;
-	int		error_code;
 
-	i = 0;
-	error_code = 0;
-	cmd = NULL;
 	pipes = ft_calloc(1, sizeof(t_pipes));
 	if (!pipes)
 	{
