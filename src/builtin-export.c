@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 14:13:39 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/15 17:06:09 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 13:22:37 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static int	display_local_shellvars(t_shell *shell)
 	int		i;
 	char	*variable;
 	char	*equal;
+
 	i = 0;
 	equal = NULL;
 	variable = NULL;
@@ -25,7 +26,7 @@ static int	display_local_shellvars(t_shell *shell)
 		if (ft_strncmp("_=", shell->local_shellvars[i], 2) == 0)
 		{
 			++i;
-			continue;
+			continue ;
 		}
 		equal = ft_strchr(shell->local_shellvars[i], '=');
 		if (equal)
@@ -76,7 +77,7 @@ static int	is_valid_value(const char *value)
 static int	is_last_plus_sign_and_remove(char *str)
 {
 	int	len;
- 
+
 	if (!str)
 		return (0);
 	len = ft_strlen(str);
@@ -86,7 +87,6 @@ static int	is_last_plus_sign_and_remove(char *str)
 		return (1);
 	}
 	return (0);
-
 }
 
 static int	is_valid_export_argument(char *variable, char *value, char *equal)
@@ -116,7 +116,7 @@ static int	is_valid_export_argument(char *variable, char *value, char *equal)
 	return (0);
 }
 
-static int export_add_local(t_shell *sh, char *variable)
+static int	export_add_local(t_shell *sh, char *variable)
 {
 	if (set_table(&sh->local_shellvars, variable, NULL))
 	{
@@ -237,7 +237,7 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 int	export(t_shell *shell, char **args)
 {
 	int		argc;
-	int 	i;
+	int		i;
 
 	argc = 0;
 	i = 1;
