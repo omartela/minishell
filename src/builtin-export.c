@@ -12,6 +12,28 @@
 
 #include "../include/minishell.h"
 
+static int	display_equal_cases(char **l_vars, char *equal, int i)
+{
+	char	*variable;
+
+	variable = NULL;
+	if (equal)
+	{
+		variable = ft_substr(l_vars[i], 0, (equal - l_vars[i]));
+		if (!variable)
+			return (1);
+	}
+	if (equal && *(equal + 1))
+		ft_printf("declare -x %s=\"%s\"\n", variable, (equal + 1));
+	else if (equal)
+		ft_printf("declare -x %s\"\"\n", l_vars[i]);
+	else
+		ft_printf("declare -x %s\n", l_vars[i]);
+	if (variable)
+		free(variable);
+	return (0);
+}
+
 static int	display_local_shellvars(t_shell *shell)
 {
 	int		i;
@@ -29,18 +51,8 @@ static int	display_local_shellvars(t_shell *shell)
 			continue ;
 		}
 		equal = ft_strchr(shell->local_shellvars[i], '=');
-		if (equal)
-		{
-			variable = ft_substr(shell->local_shellvars[i], 0, (equal - shell->local_shellvars[i]));
-			if (!variable)
-				return (1);
-		}
-		if (equal && *(equal + 1))
-			ft_printf("declare -x %s=\"%s\"\n", variable, (equal + 1));
-		else if (equal)
-			ft_printf("declare -x %s\"\"\n", shell->local_shellvars[i]);
-		else
-			ft_printf("declare -x %s\n", shell->local_shellvars[i]);
+		if (display_equal_cases(shell->local_shellvars, equal, i))
+			return (1);
 		++i;
 		if (variable)
 			free(variable);
@@ -166,25 +178,25 @@ static int	export_append_both(t_shell *sh, char *variable, char *value)
 	return (0);
 }
 
-static int	parse_export_argument(char **arg, char **variable, char **value, char **equal)
+static int	parse_export_arg(char **arg, char **var, char **value, char **equal)
 {
 	*equal = ft_strchr(*arg, '=');
 	if (*equal)
 	{
-		*variable = ft_substr(*arg, 0, (*equal - *arg));
-		if (!(*variable))
+		*var = ft_substr(*arg, 0, (*equal - *arg));
+		if (!(*var))
 			return (1);
 		*value = ft_strdup(*equal + 1);
 		if (!(*value))
 		{
-			free(*variable);
+			free(*var);
 			return (1);
 		}
 	}
 	else
 	{
-		*variable = ft_strdup(*arg);
-		if (!(*variable))
+		*var = ft_strdup(*arg);
+		if (!(*var))
 			return (1);
 	}
 	return (0);
@@ -226,7 +238,7 @@ static int	parse_export_arg_and_add(t_shell *sh, char *arg)
 	variable = NULL;
 	value = NULL;
 	equal = NULL;
-	if (parse_export_argument(&arg, &variable, &value, &equal))
+	if (parse_export_arg(&arg, &variable, &value, &equal))
 		return (1);
 	result = is_valid_export_argument(variable, value, equal);
 	if (add_arg(sh, variable, value, result))
@@ -260,4 +272,3 @@ int	export(t_shell *shell, char **args)
 	}
 	return (0);
 }
- 
