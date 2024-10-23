@@ -6,7 +6,7 @@
 #    By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 22:33:20 by irychkov          #+#    #+#              #
-#    Updated: 2024/10/22 18:04:51 by irychkov         ###   ########.fr        #
+#    Updated: 2024/10/23 12:17:30 by irychkov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ NAME = minishell
 SRCS = src/main.c src/split_args.c src/split_args_helper.c \
 		src/init_pipes.c src/init_cmd.c src/init_shell.c \
 		src/here_doc.c src/here_doc2.c \
-		src/ft_update_args.c src/parse_redirect.c \
+		src/ft_update_args.c \
+		src/parse_redirect.c src/parse_redirect2.c \
 		src/check_syntax.c src/check_syntax2.c src/check_syntax3.c\
 		src/trim_spaces.c \
 		src/exec_cmd.c src/exec_pipes.c \

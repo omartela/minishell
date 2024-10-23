@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 11:00:37 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 13:04:38 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,11 +92,20 @@ typedef struct s_check
 	int		text;
 }	t_check;
 
+typedef struct s_redirection
+{
+	int		i;
+	int		j;
+	int		is_exit;
+	t_shell	*sh;
+	t_cmd	*cmd;
+	char	**clean_args;
+}	t_redirection;
+
 // main functions
 void	initialize_shell(t_shell *sh, char ***envp);
 int		add_prompt(t_shell *sh, char *input);
 char	*trim_spaces(char *str);
-int		check_syntax(char *input);
 size_t	ft_strcounter(char *s, char c);
 void	process_quotes(char **s, int *in_quotes, char *quote_type);
 char	*expand_input(char *str, t_shell *sh);
@@ -106,7 +115,6 @@ char	**split_args_general(char *s, char c, int keep_quotes);
 int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
 void	init_num_cmds(t_shell *sh);
 char	*ft_add_spaces(char *s);
-int		parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit);
 int		init_pipes(t_pipes *pipes, int num_cmds);
 void	execute_pipes(t_shell *sh);
 void	execute_command(t_shell *sh, t_cmd *cmd, char **envp);
@@ -138,6 +146,7 @@ void	print_command(t_cmd *cmd);
 void	test_echo_command(char *argv[], t_shell *shell);
 
 //check syntax
+int		check_syntax(char *input);
 int		is_redirection_operator(char c);
 int		handle_or(t_check *check, size_t *i);
 int		handle_pipe(t_check *check);
@@ -151,6 +160,13 @@ int		handle_second_redirect(char *input, size_t i);
 int		is_heredoc(char *input);
 int		handle_here_doc(t_shell *sh, char *input);
 int		here_doc_input(char *delimiter, t_shell *sh, int expand_flag);
+
+//parse redirection
+int		parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit);
+int		handle_input_redirection(t_redirection *data);
+int		handle_output_redirection(t_redirection *data, int append_flag);
+void	handle_heredoc_redirection(t_redirection *data);
+int		cleanup_on_error_redir(t_redirection *data, int error_code);
 
 // echo_command
 int		echo(char *argv[]);
