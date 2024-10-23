@@ -32,6 +32,9 @@ SRCS = src/main.c src/split_args.c src/split_args_helper.c \
 		src/expand-dollar.c \
 		src/signals.c \
 		src/update-underscore-variable.c \
+		src/set_environment.c \
+		src/init_env.c \
+		src/environment_utilities.c \
 
 OBJS = $(SRCS:src/%.c=src/%.o)
 
