@@ -12,6 +12,17 @@
 
 #include "../include/minishell.h"
 
+int	is_only_numbers(char *str)
+{
+	while (*str)
+	{
+		if (!ft_isdigit(*str))
+			return (0);
+		++str;
+	}
+	return (1);
+}
+
 char	*get_value(char *args)
 {
 	char	*value;
