@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 10:50:14 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 14:43:07 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,11 @@ static void	process_input(t_shell *sh, char *input)
 		sh->exit_status = 1;
 		return ;
 	}
-	split_input = ft_add_spaces(input);
+	split_input = add_spaces(input);
 	free(input);
 	if (!split_input)
 	{
-		error_sys("ft_add_spaces failed\n");
+		error_sys("add_spaces failed\n");
 		sh->exit_status = 1;
 		return ;
 	}
@@ -144,11 +144,11 @@ static void	process_input(t_shell *sh, char *input)
 			sh->exit_status = 2;
 			return ;
 		}
-		split_input = ft_add_spaces(next_input);
+		split_input = add_spaces(next_input);
 		free(next_input);
 		if (!split_input)
 		{
-			error_sys("ft_add_spaces failed\n");
+			error_sys("add_spaces failed\n");
 			free(input);
 			sh->exit_status = 1;
 			return ;
