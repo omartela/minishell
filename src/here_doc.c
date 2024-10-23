@@ -97,12 +97,10 @@ static int	loop_args(t_shell *sh, char **args,
 
 int	handle_here_doc(t_shell *sh, char *input)
 {
-	int		i;
 	char	**args;
 	char	**args_with_quotes;
 	int		expand_flag;
 
-	i = 0;
 	expand_flag = 0;
 	args = split_args_remove_quotes(input, ' ');
 	if (!args)
