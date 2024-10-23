@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 12:20:00 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 12:25:06 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,7 @@ int		here_doc_input(char *delimiter, t_shell *sh, int expand_flag);
 int		handle_input_redirection(t_redirection *data);
 int		handle_output_redirection(t_redirection *data, int append_flag);
 void	handle_heredoc_redirection(t_redirection *data);
+int		process_arguments(t_redirection *data);
 int		open_fdin(char *infile, t_cmd *cmd);
 int		open_fdout(char *outfile, t_cmd *cmd);
 
