@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set_environment.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:40:31 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/22 21:40:53 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/23 10:47:53 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

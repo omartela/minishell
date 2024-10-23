@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/22 18:07:56 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 11:00:37 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,11 @@ typedef struct s_split_opts
 
 typedef struct s_expand_state
 {
-    int     in_single_quotes;
-    int     in_double_quotes;
-    int     i;
-    char    *result;
-} t_expand_state;
+	int		in_single_quotes;
+	int		in_double_quotes;
+	int		i;
+	char	*result;
+}	t_expand_state;
 
 typedef struct s_check
 {
@@ -150,7 +150,7 @@ int		handle_second_redirect(char *input, size_t i);
 //heredoc
 int		is_heredoc(char *input);
 int		handle_here_doc(t_shell *sh, char *input);
-int		here_doc_input(char *delimiter, t_shell *sh, int expand);
+int		here_doc_input(char *delimiter, t_shell *sh, int expand_flag);
 
 // echo_command
 int		echo(char *argv[]);
@@ -175,14 +175,14 @@ char	**sort_table(char **envp);
 size_t	calculate_table_size(char ***table);
 int		find_index(char ***table, const char *var, int *found, size_t *i);
 int		update_t_var(char ***t, const char *var, const char *val, size_t *i);
-int 	append_table_value(char ***table, size_t index, const char *value);
+int		append_table_value(char ***table, size_t index, const char *value);
 
 // init_env.c
 void	copy_env(char **envp, t_shell *shell);
 
 // set_environment.c
-int	set_variables(t_shell *shell, char *variable, char *value);
-int	set_table(char ***table, const char *var, const char *value);
+int		set_variables(t_shell *shell, char *variable, char *value);
+int		set_table(char ***table, const char *var, const char *value);
 
 //exit command
 int		exit_shell(t_shell *sh, t_cmd *cmd);
