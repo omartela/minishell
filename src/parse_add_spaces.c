@@ -41,22 +41,35 @@ static size_t	ft_redirect_count(char *s)
 	return (spaces);
 }
 
-/* static void handle_redirection_spaces(char **dest, char **new_str, char **s)
+static void	check_quotes_and_type(char *s, char *quote_type, char **dest, int *in_quotes)
 {
-	if (*dest > *new_str && **(dest - 1) != ' ' && **(dest - 1) != '<'
-		&& **(dest - 1) != '>')
+	if ((*s == '\'' || *s == '\"') && !*in_quotes)
+	{
+		*in_quotes = 1;
+		*quote_type = *s;
+	}
+	else if (*in_quotes && *s == *quote_type)
+		*in_quotes = 0;
+	**dest = *s;
+	(*dest)++;
+}
+
+
+static void handle_redirection_spaces(char **dest, char *new_str, char **s)
+{
+	if (*dest > new_str && *(*dest - 1) != ' ' && *(*dest - 1) != '<' && *(*dest - 1) != '>')
 	{
 		**dest = ' ';
 		(*dest)++;
 	}
 	**dest = **s;
 	(*dest)++;
-	if (**(s + 1) && **(s + 1) != ' ' && **(s + 1) != '<' && **(s + 1) != '>')
+	if (*(*s + 1) && *(*s + 1) != ' ' && *(*s + 1) != '<' && *(*s + 1) != '>')
 	{
 		**dest = ' ';
 		(*dest)++;
 	}
-} */
+}
 
 char	*add_spaces(char *s)
 {
@@ -73,25 +86,9 @@ char	*add_spaces(char *s)
 	while (*s)
 	{
 		if (((*s == '<') || (*s == '>')) && !in_quotes)
-		{
-			if (dest > new_str && *(dest - 1) != ' ' && *(dest - 1) != '<' && *(dest - 1) != '>')
-				*dest++ = ' ';
-			*dest++ = *s;
-			if (*(s + 1) && *(s + 1) != ' ' && *(s + 1) != '<' && *(s + 1) != '>')
-				*dest++ = ' ';
-		}
-			/* handle_redirection_spaces(&dest, &new_str, &s); */
+			handle_redirection_spaces(&dest, new_str, &s);
 		else
-		{
-			if ((*s == '\'' || *s == '\"') && !in_quotes)
-			{
-				in_quotes = 1;
-				quote_type = *s;
-			}
-			else if (in_quotes && *s == quote_type)
-				in_quotes = 0;
-			*dest++ = *s;
-		}
+			check_quotes_and_type(s, &quote_type, &dest, &in_quotes);
 		s++;
 	}
 	*dest = '\0';
