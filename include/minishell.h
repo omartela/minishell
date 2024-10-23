@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 13:04:38 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 14:32:16 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,12 +106,8 @@ typedef struct s_redirection
 void	initialize_shell(t_shell *sh, char ***envp);
 int		add_prompt(t_shell *sh, char *input);
 char	*trim_spaces(char *str);
-size_t	ft_strcounter(char *s, char c);
 void	process_quotes(char **s, int *in_quotes, char *quote_type);
 char	*expand_input(char *str, t_shell *sh);
-char	**split_args_remove_quotes(char *s, char c);
-char	**split_args_leave_quotes(char *s, char c);
-char	**split_args_general(char *s, char c, int keep_quotes);
 int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
 void	init_num_cmds(t_shell *sh);
 char	*ft_add_spaces(char *s);
@@ -144,6 +140,13 @@ void	test_split_args_leave_quotes(char *input, char c);
 void	test_split_args_remove_quotes(char *input, char c);
 void	print_command(t_cmd *cmd);
 void	test_echo_command(char *argv[], t_shell *shell);
+
+//split arguments
+char	**split_args_remove_quotes(char *s, char c);
+char	**split_args_leave_quotes(char *s, char c);
+void	process_quotes(char **s, int *in_quotes, char *quote_type);
+char	**split_args_helper(char *s, size_t i, char **result,
+			t_split_opts *opts);
 
 //check syntax
 int		check_syntax(char *input);
