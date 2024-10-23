@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   builtin-pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 12:36:23 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 10:51:06 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/23 16:02:40 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 int	pwd(void)
@@ -25,7 +26,8 @@ int	pwd(void)
 	}
 	else
 	{
-		ft_putstr_fd("getcwd: cannot access directories: No such file or directory\n", 2);
+		ft_putstr_fd("getcwd: cannot access directories: \
+			No such file or directory\n", 2);
 		return (1);
 	}
 	return (0);

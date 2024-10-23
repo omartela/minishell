@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:29:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/23 13:02:25 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 13:43:21 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ static int	process_arguments(t_redirection *data)
 	return (0);
 }
 
-static int	init_redirection(t_redirection *data, t_shell *sh, t_cmd *cmd, int is_exit)
+static int	init_redirection(t_redirection *data, t_shell *sh,
+	t_cmd *cmd, int is_exit)
 {
 	int	arg_count;
 

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:29:22 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/22 16:44:49 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 14:43:14 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	init_cmd_args_and_path(t_cmd **cmd, char *command, t_shell *sh)
 {
 	char	*temp;
 
-	temp = ft_add_spaces(command);
+	temp = add_spaces(command);
 	if (!(temp))
 	{
 		error_sys("malloc failed for add_spaces\n");
