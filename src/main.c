@@ -6,17 +6,17 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/22 16:58:14 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 10:50:14 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int is_open_quote(char *str)
+int	is_open_quote(char *str)
 {
-	int i;
-	int in_single_quotes;
-	int in_double_quotes;
+	int	i;
+	int	in_single_quotes;
+	int	in_double_quotes;
 
 	i = 0;
 	in_single_quotes = 0;
@@ -36,7 +36,7 @@ int is_open_quote(char *str)
 
 int	add_prompt(t_shell *sh, char *input)
 {
-	char *temp;
+	char	*temp;
 
 	if (sh->promt)
 	{
@@ -58,12 +58,11 @@ int	add_prompt(t_shell *sh, char *input)
 static void	process_input(t_shell *sh, char *input)
 {
 	int		len;
-	char 	*split_input;
+	char	*split_input;
 	char	*next_input;
 
 	next_input = NULL;
 	split_input = NULL;
-
 	split_input = trim_spaces(input);
 	if (check_syntax(split_input))
 	{
