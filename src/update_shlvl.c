@@ -63,7 +63,7 @@ static int	update_shlvl_value(t_shell *sh, char *value)
 
 static int	handle_value(t_shell *sh, int i)
 {
-	char *value;
+	char	*value;
 
 	value = get_value(sh->envp[i]);
 	if (value)
