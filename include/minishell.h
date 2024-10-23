@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 14:42:06 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 16:00:58 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ int		execute_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
 char	*get_key(char *args);
 int		is_check_key_equal(char *args, const char *variable);
 char	*get_value(char *args);
-int	is_only_numbers(char *str);
+int		is_only_numbers(char *str);
 
 // environment.c
 int		set_table(char ***table, const char *variable, const char *value);
