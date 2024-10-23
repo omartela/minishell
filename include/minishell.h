@@ -172,12 +172,12 @@ int		cleanup_on_error_redir(t_redirection *data, int error_code);
 int		echo(char *argv[]);
 
 // utilities.c
-char	*expand_tilde(t_shell *sh);
 int		is_builtin(t_cmd *cmd);
 int		execute_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
 char	*get_key(char *args);
 int		is_check_key_equal(char *args, const char *variable);
 char	*get_value(char *args);
+int	is_only_numbers(char *str);
 
 // environment.c
 int		set_table(char ***table, const char *variable, const char *value);
@@ -226,8 +226,12 @@ int		unset(t_shell *sh, char **args);
 // signals.c
 int		init_signal(t_shell *sh);
 int		reset_signals(t_shell *sh);
+int		change_signal_handler(void);
 
 // update-underscore-variable
 int		update_underscore(t_shell *sh, t_cmd *cmd);
+
+// update_shlvl
+int		update_shlvl(t_shell *sh);
 
 #endif
