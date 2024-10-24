@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/24 16:33:22 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:16:06 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,25 +105,14 @@ typedef struct s_redirection
 // main functions
 void	initialize_shell(t_shell *sh, char ***envp);
 void	process_input(t_shell *sh, char *input);
-int		add_prompt(t_shell *sh, char *input);
-char	*trim_spaces(char *str);
-int		is_open_quote(char *str);
-void	process_quotes(char **s, int *in_quotes, char *quote_type);
-char	*expand_input(char *str, t_shell *sh);
-int		handle_heredoc_if_needed(t_shell *sh, char *input);
-int		trim_and_check_syntax(t_shell *sh, char **input);
-int		expand_and_add_spaces(t_shell *sh, char **input);
-int		handle_continued_input(t_shell *sh, char **input, int len);
-int		join_input_with_next(t_shell *sh, char **input, char *next_input);
-int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
 void	init_num_cmds(t_shell *sh);
-char	*add_spaces(char *s);
+int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
 int		init_pipes(t_pipes *pipes, int num_cmds);
 void	execute_pipes(t_shell *sh);
-void	execute_command(t_shell *sh, t_cmd *cmd, char **envp);
-void	check_permissions(t_shell *sh, t_cmd *cmd, int is_abs_relative);
 void	exec_child(t_shell *sh, t_cmd *cmd, int i);
 int		exec_in_parent(t_shell *sh, t_cmd *cmd);
+void	execute_command(t_shell *sh, t_cmd *cmd, char **envp);
+void	check_permissions(t_shell *sh, t_cmd *cmd, int is_abs_relative);
 void	wait_for_children(t_pipes *pipes, t_shell *sh);
 
 // free functions
@@ -154,6 +143,19 @@ void	test_split_args_leave_quotes(char *input, char c);
 void	test_split_args_remove_quotes(char *input, char c);
 void	print_command(t_cmd *cmd);
 void	test_echo_command(char *argv[], t_shell *shell);
+
+//process input
+int		add_prompt(t_shell *sh, char *input);
+char	*trim_spaces(char *str);
+char	*add_spaces(char *s);
+int		is_open_quote(char *str);
+void	process_quotes(char **s, int *in_quotes, char *quote_type);
+char	*expand_input(char *str, t_shell *sh);
+int		handle_heredoc_if_needed(t_shell *sh, char *input);
+int		trim_and_check_syntax(t_shell *sh, char **input);
+int		expand_and_add_spaces(t_shell *sh, char **input);
+int		handle_continued_input(t_shell *sh, char **input, int len);
+int		join_input_with_next(t_shell *sh, char **input, char *next_input);
 
 //split arguments
 char	**split_args_remove_quotes(char *s, char c);
