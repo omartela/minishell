@@ -6,7 +6,7 @@
 #    By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 22:33:20 by irychkov          #+#    #+#              #
-#    Updated: 2024/10/24 16:32:07 by irychkov         ###   ########.fr        #
+#    Updated: 2024/10/24 17:11:12 by irychkov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,12 +15,13 @@ NAME = minishell
 SRCS = src/main.c \
 		src/process_input.c src/process_input_utilities.c \
 		src/process_input_utilities2.c \
-		src/split_args.c src/split_args_helper.c \
+		src/split_args.c src/split_args_utilities.c \
 		src/init_pipes.c src/init_cmd.c src/init_shell.c \
-		src/here_doc.c src/here_doc2.c \
+		src/here_doc.c src/here_doc_utilities.c \
 		src/parse_add_spaces.c \
-		src/parse_redirect.c src/parse_redirect2.c \
-		src/check_syntax.c src/check_syntax2.c src/check_syntax3.c\
+		src/parse_redirect.c src/parse_redirect_utilities.c \
+		src/check_syntax.c \
+		src/check_syntax_utilities.c src/check_syntax_utilities2.c\
 		src/parse_trim_spaces.c \
 		src/exec_child.c src/exec_in_parent.c \
 		src/exec_cmd.c src/exec_pipes.c \
