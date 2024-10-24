@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 14:43:07 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/24 13:51:34 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,58 @@ int	add_prompt(t_shell *sh, char *input)
 	return (0);
 }
 
+static int	trim_and_check_syntax(t_shell *sh, char **input)
+{
+	char	*trimmed_input;
+
+	trimmed_input = trim_spaces(*input);
+	if (check_syntax(trimmed_input))
+	{
+		sh->exit_status = 2;
+		return 1;
+	}
+	*input = trimmed_input;
+	return 0;
+}
+
+static int	expand_and_add_spaces(t_shell *sh, char **input)
+{
+	char	*expanded_input;
+	char	*spaced_input;
+
+	expanded_input = expand_input(*input, sh);
+	if (!expanded_input)
+	{
+		error_sys("expand_input failed\n");
+		sh->exit_status = 1;
+		return (1);
+	}
+	spaced_input = add_spaces(expanded_input);
+	free(expanded_input);
+	if (!spaced_input)
+	{
+		error_sys("add_spaces failed\n");
+		sh->exit_status = 1;
+		return (1);
+	}
+	*input = spaced_input;
+	return (0);
+}
+
+static int	handle_heredoc_if_needed(t_shell *sh, char *input)
+{
+	if (is_heredoc(input))
+	{
+		if (handle_here_doc(sh, input))
+		{
+			error_sys("handle_here_doc failed\n");
+			free(input);
+			return 1;
+		}
+	}
+	return 0;
+}
+
 static void	process_input(t_shell *sh, char *input)
 {
 	int		len;
@@ -63,13 +115,17 @@ static void	process_input(t_shell *sh, char *input)
 
 	next_input = NULL;
 	split_input = NULL;
-	split_input = trim_spaces(input);
+	if (trim_and_check_syntax(sh, &input))
+		return ;
+	/* split_input = trim_spaces(input);
 	if (check_syntax(split_input))
 	{
 		sh->exit_status = 2;
 		return ;
-	}
-	input = expand_input(split_input, sh);
+	} */
+	if (expand_and_add_spaces(sh, &input))
+		return ;
+	/* input = expand_input(split_input, sh);
 	if (!input)
 	{
 		error_sys("expand_input failed\n");
@@ -84,8 +140,10 @@ static void	process_input(t_shell *sh, char *input)
 		sh->exit_status = 1;
 		return ;
 	}
-	input = split_input;
-	if (is_heredoc(input))
+	input = split_input; */
+	if (handle_heredoc_if_needed(sh, input))
+		return;
+	/* if (is_heredoc(input))
 	{
 		if (handle_here_doc(sh, input))
 		{
@@ -93,7 +151,7 @@ static void	process_input(t_shell *sh, char *input)
 			free(input);
 			return ;
 		}
-	}
+	} */
 	len = ft_strlen(input);
 	while ((len > 0 && input[len - 1] == '|') || (len > 2 && input[len - 1] == '&' && input[len - 2] == '&') || (len > 0 && is_open_quote(input)))
 	{
@@ -155,7 +213,7 @@ static void	process_input(t_shell *sh, char *input)
 		}
 		next_input = split_input;
 		if (is_heredoc(next_input))
-		{	
+		{
 			if (handle_here_doc(sh, next_input))
 			{
 				error_sys("handle_here_doc failed\n");
