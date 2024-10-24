@@ -77,8 +77,8 @@ typedef struct s_split_opts
 
 typedef struct s_expand_state
 {
-	int		in_single_quotes;
-	int		in_double_quotes;
+	int		in_s_quotes;
+	int		in_d_quotes;
 	int		i;
 	char	*result;
 }	t_expand_state;
@@ -185,16 +185,25 @@ int		handle_output_redirection(t_redirection *data, int append_flag);
 void	handle_heredoc_redirection(t_redirection *data);
 int		cleanup_on_error_redir(t_redirection *data, int error_code);
 
-// echo_command
-int		echo(char *argv[]);
-
 // utilities.c
 int		is_builtin(t_cmd *cmd);
-int		execute_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
 char	*get_key(char *args);
 int		is_check_key_equal(char *args, const char *variable);
 char	*get_value(char *args);
 int		is_only_numbers(char *str);
+
+// execute-builtin-command-utilities.c
+int		in_pipe(int (*b_in)(t_shell *, char **), t_shell *sh, t_cmd *cmd);
+int		not_in_pipe(int (*b_in)(t_shell *, char **), t_shell *sh, t_cmd *cmd);
+
+// execute-builtin-exit-cd-export-env.c
+int		execute_exit_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
+
+// execute-builtin-commands.c
+int		execute_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
+int		execute_export_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
+int		execute_env_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
+int		execute_cd_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
 
 // environment.c
 int		set_table(char ***table, const char *variable, const char *value);
@@ -217,14 +226,21 @@ void	copy_env(char **envp, t_shell *shell);
 int		set_variables(t_shell *shell, char *variable, char *value);
 int		set_table(char ***table, const char *var, const char *value);
 
+// echo_command
+int		echo(char *argv[]);
+
 //exit command
 int		exit_shell(t_shell *sh, t_cmd *cmd);
 
-//export command
+//builtin-export.c
 int		export(t_shell *shell, char **arguments);
 
-//cd command
+//cd-command.c
 int		cd(t_shell *sh, char **args);
+
+//cd-command-utilities.c
+int		set_currentpwd(t_shell *sh);
+int		set_oldpwd(t_shell *sh, char *oldpwd);
 
 //env	command
 int		env(t_shell *shell, char **arguments);
@@ -233,9 +249,34 @@ int		env(t_shell *shell, char **arguments);
 int		pwd(void);
 
 // expand-dollar.c
-int		parse_dollar_sign(t_cmd	*cmd, t_shell *sh);
-void	is_expandable(t_cmd *cmd);
+char	*handle_dollar(t_shell *sh, t_expand_state *state, char *str);
+
+//expand tilde.c
+int		is_only_tilde(char *str, t_expand_state *state);
+int		is_tilde_middle(char *str, t_expand_state *state);
+char	*handle_only_tilde(t_shell *sh, char *result, char *str, int i);
+char	*handle_tilde_middle(t_shell *sh, char *result);
+
+//expand_utilities.c
+char	*extract_key_and_expand(t_shell *sh, char *str, int *i, int key_len);
+int		var_name_len(char *str, int *i);
+char	*append_characters(char *result, char *str, int i);
+char	*get_exit_code(t_shell *sh);
 char	*expand(char **envp, char *variable);
+
+//expand.c
+void	handle_quotes(char c, int *in_single_quote, int *in_double_quote);
+char	*parse_and_expand(t_shell *sh, t_expand_state *state, char *str);
+char	*expand_input(char *str, t_shell *sh);
+
+//builtin-export-argument-validation
+int		is_valid_export_argument(char *variable, char *value, char *equal);
+
+//builtin-export-utilities.c
+int		display_local_shellvars(t_shell *shell);
+int		export_add_local(t_shell *sh, char *variable);
+int		export_add_both(t_shell *sh, char *variable, char *value);
+int		export_append_both(t_shell *sh, char *variable, char *value);
 
 // unset command
 int		unset(t_shell *sh, char **args);

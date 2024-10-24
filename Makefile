@@ -27,14 +27,21 @@ SRCS = src/main.c \
 		src/errors.c src/sys_errors.c\
 		src/free.c src/free_cmd.c src/free_shell.c \
 		src/test_split.c src/test_parse_redirect.c \
-		src/environment.c src/builtin-export.c \
+		src/environment.c \
+		src/builtin-export.c \
+		src/builtin-export-argument-validation.c \
+		src/builtin-export-utilities.c \
 		src/utilities.c src/builtin-env.c \
 		src/cd-command.c \
+		src/cd-command-utilities.c \
 		src/builtin-pwd.c \
 		src/builtin-unset.c \
 		src/builtin-echo.c \
 		src/builtin-exit.c \
 		src/expand-dollar.c \
+		src/expand.c \
+		src/expand_tilde.c \
+		src/expand_utilities.c \
 		src/signals.c \
 		src/update-underscore-variable.c \
 		src/set_environment.c \
@@ -42,6 +49,8 @@ SRCS = src/main.c \
 		src/environment_utilities.c \
 		src/update_shlvl.c \
 		src/execute-builtin-commands.c \
+		src/execute-builtin-commands-utilities.c \
+		src/execute-builtin-exit-cd-export-env.c \
 
 OBJS = $(SRCS:src/%.c=src/%.o)
 
