@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 11:18:27 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 13:15:01 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/24 18:58:59 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ int	reset_signals(t_shell *sh)
 {
 	if (sigaction(SIGINT, &sh->org_sig_int, NULL) == -1)
 	{
-		error_sys("Error resetting SIGINT handler");
+		error_sys("Error resetting SIGINT handler\n");
 		return (1);
 	}
 	if (sigaction(SIGQUIT, &sh->org_sig_quit, NULL) == -1)
 	{
-		error_sys("Error resetting SIGQUIT handler");
+		error_sys("Error resetting SIGQUIT handler\n");
 		return (1);
 	}
 	return (0);
