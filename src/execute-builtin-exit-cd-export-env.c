@@ -23,23 +23,23 @@ int	execute_exit_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 int	execute_export_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 {
 	if (is_in_pipe)
-		return (handle_in_pipe(export, sh, cmd));
+		return (in_pipe(export, sh, cmd));
 	else
-		return (handle_not_in_pipe(export, sh, cmd));
+		return (not_in_pipe(export, sh, cmd));
 }
 
 int	execute_env_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 {
 	if (is_in_pipe)
-		return (handle_in_pipe(env, sh, cmd));
+		return (in_pipe(env, sh, cmd));
 	else
-		return (handle_not_in_pipe(env, sh, cmd));
+		return (not_in_pipe(env, sh, cmd));
 }
 
 int	execute_cd_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 {
 	if (is_in_pipe)
-		return (handle_in_pipe(cd, sh, cmd));
+		return (in_pipe(cd, sh, cmd));
 	else
-		return (handle_not_in_pipe(cd, sh, cmd));
+		return (not_in_pipe(cd, sh, cmd));
 }

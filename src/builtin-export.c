@@ -100,7 +100,8 @@ int	export(t_shell *shell, char **args)
 		while (i < argc)
 		{
 			if (parse_export_arg_and_add(shell, args[i]))
-				return (show_error_return(1, args[i], "not a valid identifier"));
+				return (show_error_return(1, args[i], "not a \
+			valid identifier"));
 			++i;
 		}
 	}

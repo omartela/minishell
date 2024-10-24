@@ -124,10 +124,6 @@ int	append_table(char ***table, const char *variable, const char *value)
 		return (0);
 	}
 	else
-	{
-		if (add_table(table, variable, value))
-			return (1);
-		return (0);
-	}
+		return (add_table(table, variable, value));
 	return (1);
 }

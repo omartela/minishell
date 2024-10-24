@@ -15,9 +15,9 @@
 int	execute_unset_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 {
 	if (is_in_pipe)
-		return (handle_in_pipe(unset, sh, cmd));
+		return (in_pipe(unset, sh, cmd));
 	else
-		return (handle_not_in_pipe(unset, sh, cmd));
+		return (not_in_pipe(unset, sh, cmd));
 }
 
 int	execute_pwd_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
