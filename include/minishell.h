@@ -186,8 +186,8 @@ char	*get_value(char *args);
 int		is_only_numbers(char *str);
 
 // execute-builtin-command-utilities.c
-int		in_pipe(int (*builtin)(t_shell *, char **), t_shell *sh, t_cmd *cmd);
-int		not_in_pipe(int (*builtin)(t_shell *, char **), t_shell *sh, t_cmd *cmd);
+int		in_pipe(int (*b_in)(t_shell *, char **), t_shell *sh, t_cmd *cmd);
+int		not_in_pipe(int (*b_in)(t_shell *, char **), t_shell *sh, t_cmd *cmd);
 
 // execute-builtin-exit-cd-export-env.c
 int		execute_exit_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);

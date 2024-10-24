@@ -12,17 +12,17 @@
 
 #include "../include/minishell.h"
 
-int	in_pipe(int (*builtin)(t_shell *, char **), t_shell *sh, t_cmd *cmd)
+int	in_pipe(int (*b_in)(t_shell *, char **), t_shell *sh, t_cmd *cmd)
 {
-	if (builtin(sh, cmd->args))
+	if (b_in(sh, cmd->args))
 		exit_and_free(sh, cmd, 1);
 	exit_and_free(sh, cmd, 0);
 	return (1);
 }
 
-int	not_in_pipe(int (*builtin)(t_shell *, char **), t_shell *sh, t_cmd *cmd)
+int	not_in_pipe(int (*b_in)(t_shell *, char **), t_shell *sh, t_cmd *cmd)
 {
-	if (builtin(sh, cmd->args))
+	if (b_in(sh, cmd->args))
 	{
 		sh->exit_status = 1;
 		return (1);
