@@ -213,11 +213,15 @@ int		set_table(char ***table, const char *var, const char *value);
 //exit command
 int		exit_shell(t_shell *sh, t_cmd *cmd);
 
-//export command
+//builtin-export.c
 int		export(t_shell *shell, char **arguments);
 
-//cd command
+//cd-command.c
 int		cd(t_shell *sh, char **args);
+
+//cd-command-utilities.c
+int		set_currentpwd(t_shell *sh);
+int		set_oldpwd(t_shell *sh, char *oldpwd);
 
 //env	command
 int		env(t_shell *shell, char **arguments);
@@ -246,6 +250,14 @@ void	handle_quotes(char c, int *in_single_quote, int *in_double_quote);
 char	*parse_and_expand(t_shell *sh, t_expand_state *state, char *str);
 char	*expand_input(char *str, t_shell *sh);
 
+//builtin-export-argument-validation
+int		is_valid_export_argument(char *variable, char *value, char *equal);
+
+//builtin-export-utilities.c
+int		display_local_shellvars(t_shell *shell);
+int		export_add_local(t_shell *sh, char *variable);
+int		export_add_both(t_shell *sh, char *variable, char *value);
+int		export_append_both(t_shell *sh, char *variable, char *value);
 
 // unset command
 int		unset(t_shell *sh, char **args);

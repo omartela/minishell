@@ -24,9 +24,13 @@ SRCS = src/main.c src/split_args.c src/split_args_helper.c \
 		src/errors.c src/sys_errors.c\
 		src/free.c src/free_cmd.c src/free_shell.c \
 		src/test_split.c src/test_parse_redirect.c \
-		src/environment.c src/builtin-export.c \
+		src/environment.c \
+		src/builtin-export.c \
+		src/builtin-export-argument-validation.c \
+		src/builtin-export-utilities.c \
 		src/utilities.c src/builtin-env.c \
 		src/cd-command.c \
+		src/cd-command-utilities.c \
 		src/builtin-pwd.c \
 		src/builtin-unset.c \
 		src/builtin-echo.c \
