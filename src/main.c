@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/24 13:51:34 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/24 14:03:26 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,27 @@ static int	handle_heredoc_if_needed(t_shell *sh, char *input)
 		}
 	}
 	return 0;
+}
+
+static void	finalize_input(t_shell *sh, char **input)
+{
+	if (sh->promt && sh->promt[0] != '\0')
+		add_history(sh->promt);
+	sh->commands = split_args_leave_quotes(*input, '|');
+	free(*input);
+	if (sh->commands)
+	{
+		init_num_cmds(sh);
+		if (sh->num_cmds > 0)
+			execute_pipes(sh);
+		else
+			sh->exit_status = 0;
+	}
+	else
+	{
+		error_sys("split_args_leave_quotes failed\n");
+		sh->exit_status = 1;
+	}
 }
 
 static void	process_input(t_shell *sh, char *input)
@@ -249,7 +270,7 @@ static void	process_input(t_shell *sh, char *input)
 		input = split_input;
 		len = ft_strlen(input);
 	}
-	if (sh->promt && sh->promt[0] != '\0')
+	/* if (sh->promt && sh->promt[0] != '\0')
 		add_history(sh->promt);
 	if (next_input)
 		free(next_input);
@@ -270,7 +291,8 @@ static void	process_input(t_shell *sh, char *input)
 		error_sys("split_args_leave_quotes failed\n");
 		sh->exit_status = 1;
 		return ;
-	}
+	} */
+	finalize_input(sh, &input);
 }
 
 static int	userprompt(int status, char ***envp)
