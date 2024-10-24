@@ -77,8 +77,8 @@ typedef struct s_split_opts
 
 typedef struct s_expand_state
 {
-	int		in_single_quotes;
-	int		in_double_quotes;
+	int		in_s_quotes;
+	int		in_d_quotes;
 	int		i;
 	char	*result;
 }	t_expand_state;

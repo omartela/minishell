@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-char	*handle_dollarvarname(t_shell *sh, char *result, char *str, int *i)
+static char	*handle_dollarvar(t_shell *sh, char *result, char *str, int *i)
 {
 	int		key_len;
 	char	*insert;
@@ -36,7 +36,7 @@ char	*handle_dollarvarname(t_shell *sh, char *result, char *str, int *i)
 	return (result);
 }
 
-char	*handle_exit_code(t_shell *sh, char *result)
+static char	*handle_exit_code(t_shell *sh, char *result)
 {
 	char	*insert;
 	char	*temp;
@@ -54,7 +54,7 @@ char	*handle_exit_code(t_shell *sh, char *result)
 	return (result);
 }
 
-char	*only_dollar(t_expand_state *state)
+static char	*only_dollar(t_expand_state *state)
 {
 	char	*temp;
 
@@ -67,27 +67,31 @@ char	*only_dollar(t_expand_state *state)
 	return (state->result);
 }
 
+static void	dollar_helper(t_shell *sh, t_expand_state *state, char *str)
+{
+	if (str[state->i + 1] == '?')
+	{
+		state->result = handle_exit_code(sh, state->result);
+		state->i += 2;
+	}
+	else if (ft_isdigit(str[state->i + 1]) && !state->in_d_quotes)
+	{
+		handle_quotes(str[state->i + 1], &state->in_s_quotes, &state->in_d_quotes);
+		state->i += 2;
+	}
+	else if ((str[state->i + 1] == '\'' || str[state->i + 1] == '\"') \
+	&& !state->in_d_quotes)
+		state->i += 1;
+	else if (ft_isalpha(str[state->i + 1]) || str[state->i + 1] == '_')
+		state->result = handle_dollarvar(sh, state->result, str, &state->i);
+	else
+		state->result = only_dollar(state);
+}
+
 char	*handle_dollar(t_shell *sh, t_expand_state *state, char *str)
 {
-	if (str[state->i] == '$' && !state->in_single_quotes)
-	{
-		if (str[state->i + 1] == '?')
-		{
-			state->result = handle_exit_code(sh, state->result);
-			state->i += 2;
-		}
-		else if (ft_isdigit(str[state->i + 1]) && !state->in_double_quotes)
-		{
-			handle_quotes(str[state->i + 1], &state->in_single_quotes, &state->in_double_quotes);
-			state->i += 2;
-		}
-		else if ((str[state->i + 1] == '\'' || str[state->i + 1] == '\"') && !state->in_double_quotes)
-			state->i += 1;
-		else if (ft_isalpha(str[state->i + 1]) || str[state->i + 1] == '_')
-			state->result = handle_dollarvarname(sh, state->result, str, &state->i);
-		else
-			state->result = only_dollar(state);
-	}
+	if (str[state->i] == '$' && !state->in_s_quotes)
+		dollar_helper(sh, state, str);
 	else
 	{
 		state->result = append_characters(state->result, str, state->i);

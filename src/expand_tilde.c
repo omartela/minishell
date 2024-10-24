@@ -6,7 +6,7 @@
 /*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 12:06:18 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/24 12:30:25 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/24 13:45:28 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 
 int	is_only_tilde(char *str, t_expand_state *state)
 {
-	if (state->i == 0 && (ft_strncmp(str, "~\0", 2) == 0 || ft_strncmp(&str[state->i], "~/", 2) == 0))
+	if (state->i == 0 && (ft_strncmp(str, "~\0", 2) == 0 || \
+	ft_strncmp(&str[state->i], "~/", 2) == 0))
 	{
-		if (!state->in_double_quotes && !state->in_single_quotes)
+		if (!state->in_d_quotes && !state->in_s_quotes)
 			return (1);
 	}
 	return (0);
@@ -24,9 +25,11 @@ int	is_only_tilde(char *str, t_expand_state *state)
 
 int	is_tilde_middle(char *str, t_expand_state *state)
 {
-	if ((ft_strncmp(&str[state->i], " ~ ", 3) == 0 || ft_strncmp(&str[state->i], " ~\0", 3) == 0 || ft_strncmp(&str[state->i], " ~/", 3) == 0))
+	if ((ft_strncmp(&str[state->i], " ~ ", 3) == 0 || \
+	ft_strncmp(&str[state->i], " ~\0", 3) == 0 || \
+	ft_strncmp(&str[state->i], " ~/", 3) == 0))
 	{
-		if (!state->in_double_quotes && !state->in_single_quotes)
+		if (!state->in_d_quotes && !state->in_s_quotes)
 			return (1);
 	}
 	return (0);

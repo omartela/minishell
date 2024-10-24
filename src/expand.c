@@ -24,7 +24,7 @@ char	*parse_and_expand(t_shell *sh, t_expand_state *state, char *str)
 {
 	while (str[state->i])
 	{
-		handle_quotes(str[state->i], &state->in_single_quotes, &state->in_double_quotes);
+		handle_quotes(str[state->i], &state->in_s_quotes, &state->in_d_quotes);
 		if (is_only_tilde(str, state))
 		{
 			state->result = handle_only_tilde(sh, state->result, str, state->i);

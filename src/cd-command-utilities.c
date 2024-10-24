@@ -29,7 +29,8 @@ int	set_currentpwd(t_shell *sh)
 	else
 	{
 		error_sys("cd: error retrieving current directory: \
-        getcwd: cannot access parent directories: No such file or directory\n");
+        getcwd: cannot access parent directories: \
+        No such file or directory\n");
 		return (1);
 	}
 	return (0);
@@ -48,7 +49,8 @@ int	set_oldpwd(t_shell *sh, char *oldpwd)
 	else
 	{
 		error_sys("cd: error retrieving current directory: \
-        getcwd: cannot access parent directories: No such file or directory\n");
+        getcwd: cannot access parent directories: \
+        No such file or directory\n");
 		return (1);
 	}
 	return (0);
