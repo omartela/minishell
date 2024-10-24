@@ -46,6 +46,8 @@ SRCS = src/main.c src/split_args.c src/split_args_helper.c \
 		src/environment_utilities.c \
 		src/update_shlvl.c \
 		src/execute-builtin-commands.c \
+		src/execute-builtin-commands-utilities.c \
+		src/execute-builtin-exit-cd-export-env.c \
 
 OBJS = $(SRCS:src/%.c=src/%.o)
 

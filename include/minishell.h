@@ -186,11 +186,17 @@ char	*get_value(char *args);
 int		is_only_numbers(char *str);
 
 // execute-builtin-command-utilities.c
-int	handle_in_pipe(int (*builtin_func)(t_shell *, char **), t_shell *sh, t_cmd *cmd);
-int	handle_not_in_pipe(int (*builtin_func)(t_shell *, char **), t_shell *sh, t_cmd *cmd);
+int		handle_in_pipe(int (*builtin_func)(t_shell *, char **), t_shell *sh, t_cmd *cmd);
+int		handle_not_in_pipe(int (*builtin_func)(t_shell *, char **), t_shell *sh, t_cmd *cmd);
+
+// execute-builtin-exit-cd-export-env.c
+int		execute_exit_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
 
 // execute-builtin-commands.c
 int		execute_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
+int		execute_export_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
+int		execute_env_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
+int		execute_cd_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
 
 // environment.c
 int		set_table(char ***table, const char *variable, const char *value);
