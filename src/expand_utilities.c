@@ -85,10 +85,10 @@ char	*extract_key_and_expand(t_shell *sh, char *str, int *i, int key_len)
 	char	*key;
 	char	*insert;
 
-	key = ft_substr(str, *i, key_len); // Extract the variable name
+	key = ft_substr(str, *i, key_len);
 	if (!key)
 		return (NULL);
-	insert = expand(sh->envp, key); // Expand the variable
+	insert = expand(sh->envp, key);
 	free(key);
 	return (insert);
 }
