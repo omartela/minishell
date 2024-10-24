@@ -76,7 +76,8 @@ static void	dollar_helper(t_shell *sh, t_expand_state *state, char *str)
 	}
 	else if (ft_isdigit(str[state->i + 1]) && !state->in_d_quotes)
 	{
-		handle_quotes(str[state->i + 1], &state->in_s_quotes, &state->in_d_quotes);
+		handle_quotes(str[state->i + 1], \
+		&state->in_s_quotes, &state->in_d_quotes);
 		state->i += 2;
 	}
 	else if ((str[state->i + 1] == '\'' || str[state->i + 1] == '\"') \
