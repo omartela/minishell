@@ -178,16 +178,19 @@ int		handle_output_redirection(t_redirection *data, int append_flag);
 void	handle_heredoc_redirection(t_redirection *data);
 int		cleanup_on_error_redir(t_redirection *data, int error_code);
 
-// echo_command
-int		echo(char *argv[]);
-
 // utilities.c
 int		is_builtin(t_cmd *cmd);
-int		execute_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
 char	*get_key(char *args);
 int		is_check_key_equal(char *args, const char *variable);
 char	*get_value(char *args);
 int		is_only_numbers(char *str);
+
+// execute-builtin-command-utilities.c
+int	handle_in_pipe(int (*builtin_func)(t_shell *, char **), t_shell *sh, t_cmd *cmd);
+int	handle_not_in_pipe(int (*builtin_func)(t_shell *, char **), t_shell *sh, t_cmd *cmd);
+
+// execute-builtin-commands.c
+int		execute_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe);
 
 // environment.c
 int		set_table(char ***table, const char *variable, const char *value);
@@ -209,6 +212,9 @@ void	copy_env(char **envp, t_shell *shell);
 // set_environment.c
 int		set_variables(t_shell *shell, char *variable, char *value);
 int		set_table(char ***table, const char *var, const char *value);
+
+// echo_command
+int		echo(char *argv[]);
 
 //exit command
 int		exit_shell(t_shell *sh, t_cmd *cmd);

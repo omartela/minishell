@@ -12,25 +12,6 @@
 
 #include "../include/minishell.h"
 
-int	handle_in_pipe(int (*builtin_func)(t_shell *, char **), t_shell *sh, t_cmd *cmd)
-{
-	if (builtin_func(sh, cmd->args))
-		exit_and_free(sh, cmd, 1);
-	exit_and_free(sh, cmd, 0);
-	return (1);
-}
-
-int	handle_not_in_pipe(int (*builtin_func)(t_shell *, char **), t_shell *sh, t_cmd *cmd)
-{
-	if (builtin_func(sh, cmd->args))
-	{
-		sh->exit_status = 1;
-		return (1);
-	}
-	sh->exit_status = 0;
-	return (0);
-}
-
 int	execute_exit_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 {
 	if (is_in_pipe)
