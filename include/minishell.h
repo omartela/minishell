@@ -226,9 +226,26 @@ int		env(t_shell *shell, char **arguments);
 int		pwd(void);
 
 // expand-dollar.c
-int		parse_dollar_sign(t_cmd	*cmd, t_shell *sh);
-void	is_expandable(t_cmd *cmd);
+char	*handle_dollar(t_shell *sh, t_expand_state *state, char *str);
+
+//expand tilde.c
+int		is_only_tilde(char *str, t_expand_state *state);
+int		is_tilde_middle(char *str, t_expand_state *state);
+char	*handle_only_tilde(t_shell *sh, char *result, char *str, int i);
+char	*handle_tilde_middle(t_shell *sh, char *result);
+
+//expand_utilities.c
+char	*extract_key_and_expand(t_shell *sh, char *str, int *i, int key_len);
+int		var_name_len(char *str, int *i);
+char	*append_characters(char *result, char *str, int i);
+char	*get_exit_code(t_shell *sh);
 char	*expand(char **envp, char *variable);
+
+//expand.c
+void	handle_quotes(char c, int *in_single_quote, int *in_double_quote);
+char	*parse_and_expand(t_shell *sh, t_expand_state *state, char *str);
+char	*expand_input(char *str, t_shell *sh);
+
 
 // unset command
 int		unset(t_shell *sh, char **args);

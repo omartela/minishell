@@ -32,6 +32,9 @@ SRCS = src/main.c src/split_args.c src/split_args_helper.c \
 		src/builtin-echo.c \
 		src/builtin-exit.c \
 		src/expand-dollar.c \
+		src/expand.c \
+		src/expand_tilde.c \
+		src/expand_utilities.c \
 		src/signals.c \
 		src/update-underscore-variable.c \
 		src/set_environment.c \

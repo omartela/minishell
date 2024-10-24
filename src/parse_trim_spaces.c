@@ -32,13 +32,13 @@ static void	trim_leading_trailing_spaces(char *str)
 	str[len] = '\0';
 }
 
-static void	handle_quotes(char c, int *in_single_quote, int *in_double_quote)
+/* static void	handle_quotes(char c, int *in_single_quote, int *in_double_quote)
 {
 	if (c == '\'' && !(*in_double_quote))
 		*in_single_quote = !(*in_single_quote);
 	else if (c == '\"' && !(*in_single_quote))
 		*in_double_quote = !(*in_double_quote);
-}
+} */
 
 static void	reduce_multiple_spaces(char *str)
 {
