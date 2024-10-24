@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 10:34:04 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/22 15:50:57 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/24 14:21:27 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ char	*append_characters(char *result, char *str, int i)
 	}
 	temp = ft_strjoin(result, temp_str);
 	free(result);
+	free(temp_str);
 	if (!temp)
 		result = NULL;
 	else

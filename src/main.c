@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/24 14:03:26 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/24 14:24:28 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,19 @@ static void	process_input(t_shell *sh, char *input)
 			free(next_input);
 			return ;
 		}
-		split_input = expand_input(next_input, sh);
+		if (trim_and_check_syntax(sh, &next_input))
+		{
+			free(input);
+			free(next_input);
+			return ;
+		}
+		if (expand_and_add_spaces(sh, &next_input))
+		{
+			free(input);
+			free(next_input);
+			return ;
+		}
+		/* split_input = expand_input(next_input, sh);
 		free(next_input);
 		if (!split_input)
 		{
@@ -214,8 +226,8 @@ static void	process_input(t_shell *sh, char *input)
 			free(input);
 			sh->exit_status = 1;
 			return ;
-		}
-		next_input = trim_spaces(split_input);
+		} */
+		/* next_input = trim_spaces(split_input);
 		if (check_syntax(next_input))
 		{
 			free(input);
@@ -232,8 +244,13 @@ static void	process_input(t_shell *sh, char *input)
 			sh->exit_status = 1;
 			return ;
 		}
-		next_input = split_input;
-		if (is_heredoc(next_input))
+		next_input = split_input; */
+		if (handle_heredoc_if_needed(sh, next_input))
+		{
+			free(input);
+			return ;
+		}
+		/* if (is_heredoc(next_input))
 		{
 			if (handle_here_doc(sh, next_input))
 			{
@@ -242,7 +259,7 @@ static void	process_input(t_shell *sh, char *input)
 				free(next_input);
 				return ;
 			}
-		}
+		} */
 		if (is_open_quote(input))
 		{
 			char *temp = ft_strjoin(input, "\n");
@@ -268,6 +285,7 @@ static void	process_input(t_shell *sh, char *input)
 			return ;
 		}
 		input = split_input;
+		free(next_input);
 		len = ft_strlen(input);
 	}
 	/* if (sh->promt && sh->promt[0] != '\0')
