@@ -97,7 +97,8 @@ int	is_builtin(t_cmd *cmd)
 	}
 	while (str[i])
 	{
-		if (cmd->args[0] && ft_strncmp(cmd->args[0], str[i], ft_strlen(str[i]) + 1) == 0)
+		if (cmd->args[0] && \
+		ft_strncmp(cmd->args[0], str[i], ft_strlen(str[i]) + 1) == 0)
 			is_builtin = 1;
 		i++;
 	}
