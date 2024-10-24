@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 17:35:57 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 22:40:47 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,10 +123,14 @@ void	wait_for_children(t_pipes *pipes, t_shell *sh);
 void	close_sh_hd_fds(t_shell *sh, t_cmd *cmd);
 void	free_array_back(char **array, size_t i);
 void	free_array(char ***array);
+void	free_commands_and_promt(t_shell *sh);
+void	free_envp_and_shellvars(t_shell *sh);
+void	free_heredoc_fds(t_shell *sh);
+void	free_homepath(t_shell *sh);
+void	free_pipes(t_shell *sh);
 void	free_shell(t_shell *sh);
 void	free_partial(t_shell *sh);
 void	free_cmd(t_cmd **cmd);
-void	free_pipes(t_shell *sh);
 void	exit_and_free(t_shell *sh, t_cmd *cmd, int status);
 
 // errors

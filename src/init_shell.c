@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 16:05:06 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/23 16:35:37 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/24 11:21:24 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ int	initialize_environment(t_shell *sh)
 {
 	if (update_shlvl(sh))
 	{
-		free_array(&sh->envp);
-		free_array(&sh->local_shellvars);
+		free_envp_and_shellvars(sh);
 		return (1);
 	}
 	return (0);
@@ -39,8 +38,7 @@ int	initialize_homepath(t_shell *sh, char **envp)
 	if (!sh->homepath)
 	{
 		error_sys("Expand home failed\n");
-		free_array(&sh->envp);
-		free_array(&sh->local_shellvars);
+		free_envp_and_shellvars(sh);
 		return (1);
 	}
 	return (0);
@@ -52,9 +50,8 @@ int	initialize_heredoc(t_shell *sh)
 	if (!sh->hd)
 	{
 		error_sys("t_heredoc failed\n");
-		free(sh->homepath);
-		free_array(&sh->envp);
-		free_array(&sh->local_shellvars);
+		free_homepath(sh);
+		free_envp_and_shellvars(sh);
 		return (1);
 	}
 	return (0);
