@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 16:05:06 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/24 11:21:24 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:59:56 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	init_num_cmds(t_shell *sh)
 	sh->num_cmds = i;
 }
 
-int	initialize_environment(t_shell *sh)
+static int	initialize_environment(t_shell *sh)
 {
 	if (update_shlvl(sh))
 	{
@@ -32,7 +32,7 @@ int	initialize_environment(t_shell *sh)
 	return (0);
 }
 
-int	initialize_homepath(t_shell *sh, char **envp)
+static int	initialize_homepath(t_shell *sh, char **envp)
 {
 	sh->homepath = expand(envp, "HOME");
 	if (!sh->homepath)
@@ -44,7 +44,7 @@ int	initialize_homepath(t_shell *sh, char **envp)
 	return (0);
 }
 
-int	initialize_heredoc(t_shell *sh)
+static int	initialize_heredoc(t_shell *sh)
 {
 	sh->hd = ft_calloc(1, sizeof(t_heredoc));
 	if (!sh->hd)
@@ -60,11 +60,13 @@ int	initialize_heredoc(t_shell *sh)
 void	initialize_shell(t_shell *sh, char ***envp)
 {
 	ft_memset(sh, 0, sizeof(t_shell));
+	if (!*envp || !(*envp)[0])
+		initialize_default_env(envp);
 	copy_env(*envp, sh);
 	*envp = sh->envp;
 	if (initialize_environment(sh))
 		exit(1);
-	if (initialize_homepath(sh, *envp))
+	if (initialize_homepath(sh, sh->envp))
 		exit(1);
 	if (initialize_heredoc(sh))
 		exit(1);
