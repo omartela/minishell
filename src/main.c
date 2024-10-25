@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/24 16:41:19 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:36:16 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ static int	userprompt(int status, char ***envp)
 		}
 		process_input(&sh, input);
 		free_partial(&sh);
-		free(input);
 	}
 	status = sh.exit_status;
 	free_shell(&sh);

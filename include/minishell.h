@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/25 13:18:58 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:21:45 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ void	process_quotes(char **s, int *in_quotes, char *quote_type);
 char	*expand_input(char *str, t_shell *sh);
 int		handle_heredoc_if_needed(t_shell *sh, char *input);
 int		trim_and_check_syntax(t_shell *sh, char **input);
-int		expand_and_add_spaces(t_shell *sh, char **input, int free_flag);
+int		expand_and_add_spaces(t_shell *sh, char **input);
 int		handle_continued_input(t_shell *sh, char **input, int len);
 int		join_input_with_next(t_shell *sh, char **input, char *next_input);
 
