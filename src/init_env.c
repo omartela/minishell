@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:07:15 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/25 10:38:32 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:40:46 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ void	copy_env(char **envp, t_shell *shell)
 	sarray = 0;
 	copied_envp = NULL;
 	local_shellvars = NULL;
-	// think what to do if envp is "empty" or does not exist
 	sarray = calculate_table_size(&envp);
 	alloc_tables(shell, &copied_envp, &local_shellvars, sarray);
 	copy_vars(envp, copied_envp, local_shellvars, sarray);
