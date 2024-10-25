@@ -1,34 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin-pwd.c                                      :+:      :+:    :+:   */
+/*   execute-builtin-commands-utilities.c               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/23 12:36:23 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/24 18:46:31 by irychkov         ###   ########.fr       */
+/*   Created: 2024/10/24 13:08:13 by omartela          #+#    #+#             */
+/*   Updated: 2024/10/24 13:08:26 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	pwd(void)
+int	in_pipe(int (*b_in)(t_shell *, char **), t_shell *sh, t_cmd *cmd)
 {
-	char	cwd[PATH_MAX];
-	char	*str;
+	if (b_in(sh, cmd->args))
+		exit_and_free(sh, cmd, 1);
+	exit_and_free(sh, cmd, 0);
+	return (1);
+}
 
-	str = getcwd(cwd, sizeof(cwd));
-	if (str != NULL)
+int	not_in_pipe(int (*b_in)(t_shell *, char **), t_shell *sh, t_cmd *cmd)
+{
+	if (b_in(sh, cmd->args))
 	{
-		ft_putstr_fd(str, 1);
-		write(1, "\n", 1);
-		return (0);
-	}
-	else
-	{
-		ft_putstr_fd("getcwd: cannot access directories: \
-No such file or directory\n", 2);
+		sh->exit_status = 1;
 		return (1);
 	}
+	sh->exit_status = 0;
 	return (0);
 }

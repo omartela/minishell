@@ -6,11 +6,22 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:06:00 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/14 15:41:17 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 15:50:33 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+int	is_only_numbers(char *str)
+{
+	while (*str)
+	{
+		if (!ft_isdigit(*str))
+			return (0);
+		++str;
+	}
+	return (1);
+}
 
 char	*get_value(char *args)
 {
@@ -39,7 +50,7 @@ char	*get_key(char *args)
 	char	**split;
 	char	*key;
 
-	split= ft_split(args, '=');
+	split = ft_split(args, '=');
 	if (!split)
 		return (NULL);
 	key = ft_strdup(split[0]);
@@ -72,9 +83,9 @@ int	is_check_key_equal(char *args, const char *variable)
 
 int	is_builtin(t_cmd *cmd)
 {
-	char **str;
-	int i;
-	int is_builtin;
+	char	**str;
+	int		i;
+	int		is_builtin;
 
 	str = ft_split("exit,export,cd,env,unset,pwd,echo", ',');
 	i = 0;
@@ -86,138 +97,12 @@ int	is_builtin(t_cmd *cmd)
 	}
 	while (str[i])
 	{
-		if (cmd->args[0] && ft_strncmp(cmd->args[0], str[i], ft_strlen(str[i]) + 1) == 0)
+		if (cmd->args[0] && \
+		ft_strncmp(cmd->args[0], str[i], ft_strlen(str[i]) + 1) == 0)
 			is_builtin = 1;
 		i++;
 	}
 	i = 0;
 	free_array(&str);
 	return (is_builtin);
-}
-
-int	execute_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
-{
-	if (ft_strncmp(cmd->args[0], "exit\0", 5) == 0)
-	{
-		if (!is_in_pipe)
-			return (exit_shell(sh, cmd));
-		else
-			exit(exit_shell(sh, cmd));
-	}
-	if (ft_strncmp(cmd->args[0], "export\0", 7) == 0)
-	{
-		if (!is_in_pipe)
-		{
-			if (export(sh, cmd->args))
-			{
-				sh->exit_status = 1;
-				return (1);
-			}
-			sh->exit_status = 0;
-			return (0);
-		}
-		else
-		{
-			if (export(sh, cmd->args))
-				exit_and_free(sh, cmd, 1);
-			exit_and_free(sh, cmd, 0);
-		}
-	}
-	if (ft_strncmp(cmd->args[0], "env\0", 4) == 0)
-	{
-		if (!is_in_pipe)
-		{
-			if (env(sh, cmd->args))
-			{
-				sh->exit_status = 1;
-				return (1);
-			}
-			sh->exit_status = 0;
-			return (0);
-		}
-		else
-		{
-			if (env(sh, cmd->args))
-				exit_and_free(sh, cmd, 1);
-			exit_and_free(sh, cmd, 0);
-		}
-	}
-	if (ft_strncmp(cmd->args[0], "cd\0", 3) == 0)
-	{
-		if (!is_in_pipe)
-		{
-			if (cd(sh, cmd->args))
-			{
-				sh->exit_status = 1;
-				return (1);
-			}
-			sh->exit_status = 0;
-			return (0);
-		}
-		else
-		{
-			if (cd(sh, cmd->args))
-				exit_and_free(sh, cmd, 1);
-			exit_and_free(sh, cmd, 0);
-		}
-	}
-	if (ft_strncmp(cmd->args[0], "unset\0", 6) == 0)
-	{
-		if (!is_in_pipe)
-		{
-			if (unset(sh, cmd->args))
-			{
-				sh->exit_status = 1;
-				return (1);
-			}
-			sh->exit_status = 0;
-			return (0);
-		}
-		else
-		{
-			if (unset(sh, cmd->args))
-				exit_and_free(sh, cmd, 1);
-			exit_and_free(sh, cmd, 0);
-		}
-	}
-	if (ft_strncmp(cmd->args[0], "pwd\0", 4) == 0)
-	{
-		if (!is_in_pipe)
-		{
-			if (pwd())
-			{
-				sh->exit_status = 1;
-				return (1);
-			}
-			sh->exit_status = 0;
-			return (0);
-		}
-		else
-		{
-			if (pwd())
-				exit_and_free(sh, cmd, 1);
-			exit_and_free(sh, cmd, 0);
-		}
-	}
-	if (ft_strncmp(cmd->args[0], "echo\0", 5) == 0)
-	{
-		if (!is_in_pipe)
-		{	
-			if (echo(cmd->args))
-			{
-				sh->exit_status = 1;
-				return (1);
-			}
-			sh->exit_status = 0;
-			return (0);
-		}
-		else
-		{
-			if (echo(cmd->args))
-				exit_and_free(sh, cmd, 1);
-			exit_and_free(sh, cmd, 0);
-		}
-
-	}
-	return (1);
 }

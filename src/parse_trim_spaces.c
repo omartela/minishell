@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   trim_spaces.c                                      :+:      :+:    :+:   */
+/*   parse_trim_spaces.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:36:54 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/14 16:50:25 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/23 14:43:53 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,6 @@ static void	trim_leading_trailing_spaces(char *str)
 	if (len > 0)
 		ft_memmove(str, str + start, len);
 	str[len] = '\0';
-}
-
-static void	handle_quotes(char c, int *in_single_quote, int *in_double_quote)
-{
-	if (c == '\'' && !(*in_double_quote))
-		*in_single_quote = !(*in_single_quote);
-	else if (c == '\"' && !(*in_single_quote))
-		*in_double_quote = !(*in_double_quote);
 }
 
 static void	reduce_multiple_spaces(char *str)

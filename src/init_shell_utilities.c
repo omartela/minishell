@@ -1,39 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   init_shell_utilities.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 11:11:40 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/22 11:11:43 by irychkov         ###   ########.fr       */
+/*   Created: 2024/10/24 19:46:07 by irychkov          #+#    #+#             */
+/*   Updated: 2024/10/24 19:48:27 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#include "minishell.h"
 
-static void	userprompt(void)
+void	initialize_default_env(char ***envp)
 {
-	char	*input;
-
-	while (1)
-	{
-		input = readline("minishell> ");
-		if (input == NULL)
-		{
-			printf("Exit \n");
-			break ;
-		}
-		printf("You entered: %s\n", input);
-		free(input);
-	}
-}
-
-int	main(void)
-{
-	userprompt();
-	return (0);
+	(*envp)[0] = "PATH=/usr/bin:/bin";
+	(*envp)[1] = NULL;
 }

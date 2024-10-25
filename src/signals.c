@@ -6,11 +6,19 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 11:18:27 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/18 15:53:08 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/24 18:58:59 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+static void	sig_handler_sigint_2(int signum)
+{
+	if (signum == SIGINT)
+	{
+		printf("\n");
+	}
+}
 
 static void	sig_handler_sigint(int signum)
 {
@@ -23,36 +31,39 @@ static void	sig_handler_sigint(int signum)
 	}
 }
 
-int	reset_signals(t_shell *sh) 
+int	reset_signals(t_shell *sh)
 {
-	(void)sh;
-	/* if (sigaction(SIGINT, &sh->org_sig_int, NULL) == -1) 
+	if (sigaction(SIGINT, &sh->org_sig_int, NULL) == -1)
 	{
-		error_sys("Error resetting SIGINT handler");
+		error_sys("Error resetting SIGINT handler\n");
 		return (1);
-	} */
-	signal(SIGINT, SIG_DFL);
-	/* if (sigaction(SIGQUIT, &sh->org_sig_quit, NULL) == -1) 
+	}
+	if (sigaction(SIGQUIT, &sh->org_sig_quit, NULL) == -1)
 	{
-		error_sys("Error resetting SIGQUIT handler");
+		error_sys("Error resetting SIGQUIT handler\n");
 		return (1);
-	} */
-	signal(SIGQUIT, SIG_DFL);
+	}
+	return (0);
+}
+
+int	change_signal_handler(void)
+{
+	struct sigaction	sa_int;
+
+	ft_memset(&sa_int, 0, sizeof(sa_int));
+	if (sigemptyset(&sa_int.sa_mask) == -1)
+		return (1);
+	sa_int.sa_flags = SA_RESTART;
+	sa_int.sa_handler = sig_handler_sigint_2;
+	if (sigaction(SIGINT, &sa_int, NULL) == -1)
+		return (1);
 	return (0);
 }
 
 int	init_signal(t_shell *sh)
 {
-	(void)sh;
-	signal(SIGINT, sig_handler_sigint);
-	signal(SIGQUIT, SIG_IGN);
-	return (0);
-}
-/* int	init_signal(t_shell *sh)
-{
 	struct sigaction	sa_int;
 	struct sigaction	sa_quit;
-	
 
 	ft_memset(&sa_int, 0, sizeof(sa_int));
 	if (sigemptyset(&sa_int.sa_mask) == -1)
@@ -70,4 +81,3 @@ int	init_signal(t_shell *sh)
 		return (1);
 	return (0);
 }
- */

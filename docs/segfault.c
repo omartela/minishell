@@ -1,8 +1,20 @@
-# include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   segfault.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/22 11:10:08 by irychkov          #+#    #+#             */
+/*   Updated: 2024/10/22 11:11:15 by irychkov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int main(void)
+#include <stdio.h>
+
+int	main(void)
 {
-	char *str;
+	char	*str;
 
 	str = NULL;
 	printf("char is {%c}", str[2]);

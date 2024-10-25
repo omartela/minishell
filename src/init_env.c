@@ -6,43 +6,72 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:07:15 by irychkov          #+#    #+#             */
-/*   Updated: 2024/09/08 00:40:07 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:40:46 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
-static int	count_env_vars(char **envp)
+static void	alloc_tables(t_shell *sh, char ***c_envp, char ***l_vars, size_t i)
 {
-	int	count;
-
-	count = 0;
-	while (envp[count])
-		count++;
-	return (count);
+	*c_envp = ft_calloc(i + 1, sizeof(char *));
+	*l_vars = ft_calloc(i + 1, sizeof(char *));
+	if (!c_envp || !l_vars)
+	{
+		if (c_envp)
+			free(c_envp);
+		if (l_vars)
+			free(l_vars);
+		sh->envp = NULL;
+		sh->local_shellvars = NULL;
+		error_sys("Copy environment failed..\n");
+		exit(1);
+	}
 }
 
-char	**copy_envp(char **envp)
+static void	copy_vars(char **envp, char **c_envp, char **l_vars, size_t sarray)
 {
-	int		i;
-	int		env_count;
-	char	**env_copy;
+	size_t	i;
 
 	i = 0;
-	env_count = count_env_vars(envp);
-	env_copy = (char **)malloc((env_count + 1) * sizeof(char *));
-	if (!env_copy)
-		return (NULL);
-	while (i < env_count)
+	while (i < sarray)
 	{
-		env_copy[i] = strdup(envp[i]);
-		if (!env_copy[i])
+		c_envp[i] = ft_strdup(envp[i]);
+		if (!c_envp[i])
 		{
-			free_array_back(env_copy, i);
-			return (NULL);
+			free_array_back(c_envp, i);
+			free_array_back(l_vars, i);
+			error_sys("Copy environment failed..\n");
+			exit(1);
 		}
-		i++;
+		l_vars[i] = ft_strdup(envp[i]);
+		if (!l_vars[i])
+		{
+			free_array_back(l_vars, i);
+			free_array_back(c_envp, i + 1);
+			error_sys("Copy environment failed..\n");
+			exit(1);
+		}
+		++i;
 	}
-	env_copy[env_count] = NULL;
-	return (env_copy);
+}
+
+void	copy_env(char **envp, t_shell *shell)
+{
+	size_t	sarray;
+	char	**copied_envp;
+	char	**local_shellvars;
+
+	sarray = 0;
+	copied_envp = NULL;
+	local_shellvars = NULL;
+	sarray = calculate_table_size(&envp);
+	alloc_tables(shell, &copied_envp, &local_shellvars, sarray);
+	copy_vars(envp, copied_envp, local_shellvars, sarray);
+	copied_envp[sarray] = NULL;
+	local_shellvars[sarray] = NULL;
+	if (sarray > 1)
+		local_shellvars = sort_table(local_shellvars);
+	shell->envp = copied_envp;
+	shell->local_shellvars = local_shellvars;
 }

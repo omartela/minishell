@@ -1,39 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 11:11:40 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/22 11:11:43 by irychkov         ###   ########.fr       */
+/*   Created: 2024/10/21 10:21:17 by omartela          #+#    #+#             */
+/*   Updated: 2024/10/23 10:43:15 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#include "libft.h"
 
-static void	userprompt(void)
+char	*ft_strndup(const char *s1, size_t n)
 {
-	char	*input;
+	size_t	i;
+	char	*dst;
 
-	while (1)
+	i = 0;
+	dst = (char *)malloc(sizeof(char) * (n + 1));
+	if (dst == NULL)
+		return (NULL);
+	while (i < n)
 	{
-		input = readline("minishell> ");
-		if (input == NULL)
-		{
-			printf("Exit \n");
-			break ;
-		}
-		printf("You entered: %s\n", input);
-		free(input);
+		dst[i] = s1[i];
+		i++;
 	}
-}
-
-int	main(void)
-{
-	userprompt();
-	return (0);
+	dst[i] = '\0';
+	return (dst);
 }
