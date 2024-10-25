@@ -6,7 +6,7 @@
 #    By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 22:33:20 by irychkov          #+#    #+#              #
-#    Updated: 2024/10/24 17:11:12 by irychkov         ###   ########.fr        #
+#    Updated: 2024/10/24 19:49:13 by irychkov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,8 @@ SRCS = src/main.c \
 		src/process_input.c src/process_input_utilities.c \
 		src/process_input_utilities2.c \
 		src/split_args.c src/split_args_utilities.c \
-		src/init_pipes.c src/init_cmd.c src/init_shell.c \
+		src/init_pipes.c src/init_cmd.c \
+		src/init_shell.c src/init_shell_utilities.c \
 		src/here_doc.c src/here_doc_utilities.c \
 		src/parse_add_spaces.c \
 		src/parse_redirect.c src/parse_redirect_utilities.c \

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:07:15 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/23 11:32:32 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/25 10:38:32 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static void	alloc_tables(t_shell *sh, char ***c_envp, char ***l_vars, size_t i)
 {
-	*c_envp = ft_calloc(i, sizeof(char *) + 1);
-	*l_vars = ft_calloc(i, sizeof(char *) + 1);
+	*c_envp = ft_calloc(i + 1, sizeof(char *));
+	*l_vars = ft_calloc(i + 1, sizeof(char *));
 	if (!c_envp || !l_vars)
 	{
 		if (c_envp)
@@ -63,13 +63,16 @@ void	copy_env(char **envp, t_shell *shell)
 	char	**local_shellvars;
 
 	sarray = 0;
+	copied_envp = NULL;
+	local_shellvars = NULL;
 	// think what to do if envp is "empty" or does not exist
 	sarray = calculate_table_size(&envp);
 	alloc_tables(shell, &copied_envp, &local_shellvars, sarray);
 	copy_vars(envp, copied_envp, local_shellvars, sarray);
 	copied_envp[sarray] = NULL;
 	local_shellvars[sarray] = NULL;
-	local_shellvars = sort_table(local_shellvars);
+	if (sarray > 1)
+		local_shellvars = sort_table(local_shellvars);
 	shell->envp = copied_envp;
 	shell->local_shellvars = local_shellvars;
 }
