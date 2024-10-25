@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd-command-utilities.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <omartela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 12:58:56 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/24 12:59:09 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/24 18:47:40 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ int	set_currentpwd(t_shell *sh)
 	else
 	{
 		error_sys("cd: error retrieving current directory: \
-        getcwd: cannot access parent directories: \
-        No such file or directory\n");
+getcwd: cannot access parent directories: \
+No such file or directory\n");
 		return (1);
 	}
 	return (0);
@@ -49,8 +49,8 @@ int	set_oldpwd(t_shell *sh, char *oldpwd)
 	else
 	{
 		error_sys("cd: error retrieving current directory: \
-        getcwd: cannot access parent directories: \
-        No such file or directory\n");
+getcwd: cannot access parent directories: \
+No such file or directory\n");
 		return (1);
 	}
 	return (0);

@@ -1,34 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin-pwd.c                                      :+:      :+:    :+:   */
+/*   init_shell_utilities.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/23 12:36:23 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/24 18:46:31 by irychkov         ###   ########.fr       */
+/*   Created: 2024/10/24 19:46:07 by irychkov          #+#    #+#             */
+/*   Updated: 2024/10/24 19:48:27 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "minishell.h"
 
-int	pwd(void)
+void	initialize_default_env(char ***envp)
 {
-	char	cwd[PATH_MAX];
-	char	*str;
-
-	str = getcwd(cwd, sizeof(cwd));
-	if (str != NULL)
+	*envp = malloc(sizeof(char *) * 2);
+	if (!*envp)
 	{
-		ft_putstr_fd(str, 1);
-		write(1, "\n", 1);
-		return (0);
+		error_sys("Failed to allocate memory for environment\n");
+		exit(1);
 	}
-	else
-	{
-		ft_putstr_fd("getcwd: cannot access directories: \
-No such file or directory\n", 2);
-		return (1);
-	}
-	return (0);
+	(*envp)[0] = ft_strdup("PATH=/usr/bin:/bin");
+	(*envp)[1] = NULL;
 }

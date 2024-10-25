@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:19:37 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/24 16:51:15 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:39:06 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,16 @@ int	is_open_quote(char *str)
 
 static int	process_next_input(t_shell *sh, char **input, char *next_input)
 {
-	if (add_prompt(sh, next_input)
-		|| trim_and_check_syntax(sh, &next_input)
-		|| expand_and_add_spaces(sh, &next_input))
+	if (add_prompt(sh, next_input))
 	{
 		free(*input);
 		free(next_input);
+		return (1);
+	}
+	if (trim_and_check_syntax(sh, &next_input)
+		|| expand_and_add_spaces(sh, &next_input))
+	{
+		free(*input);
 		return (1);
 	}
 	if (handle_heredoc_if_needed(sh, next_input))

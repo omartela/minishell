@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:16:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/24 16:31:08 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:25:08 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	trim_and_check_syntax(t_shell *sh, char **input)
 	if (check_syntax(trimmed_input))
 	{
 		sh->exit_status = 2;
+		free(*input);
 		return (1);
 	}
 	*input = trimmed_input;
@@ -32,6 +33,7 @@ int	expand_and_add_spaces(t_shell *sh, char **input)
 	char	*spaced_input;
 
 	expanded_input = expand_input(*input, sh);
+	free(*input);
 	if (!expanded_input)
 	{
 		error_sys("expand_input failed\n");

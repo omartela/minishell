@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/24 17:16:06 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:21:45 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,7 @@ char	*get_key(char *args);
 int		is_check_key_equal(char *args, const char *variable);
 char	*get_value(char *args);
 int		is_only_numbers(char *str);
+void	initialize_default_env(char ***envp);
 
 // execute-builtin-command-utilities.c
 int		in_pipe(int (*b_in)(t_shell *, char **), t_shell *sh, t_cmd *cmd);

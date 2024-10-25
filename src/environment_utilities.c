@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 20:59:50 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 10:45:34 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/25 10:41:25 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int	find_index(char ***table, const char *var, int *found, size_t *i)
 	int		keyok;
 
 	size = 0;
+	*found = 0;
 	while ((*table)[size])
 	{
 		keyok = is_check_key_equal((*table)[size], var);

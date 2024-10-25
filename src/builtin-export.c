@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 14:13:39 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 13:22:37 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/24 18:50:41 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	export(t_shell *shell, char **args)
 		{
 			if (parse_export_arg_and_add(shell, args[i]))
 				return (show_error_return(1, args[i], "not a \
-			valid identifier"));
+valid identifier"));
 			++i;
 		}
 	}
