@@ -14,12 +14,6 @@
 
 void	initialize_default_env(char ***envp)
 {
-	*envp = malloc(sizeof(char *) * 2);
-	if (!*envp)
-	{
-		error_sys("Failed to allocate memory for environment\n");
-		exit(1);
-	}
-	(*envp)[0] = ft_strdup("PATH=/usr/bin:/bin");
+	(*envp)[0] = "PATH=/usr/bin:/bin";
 	(*envp)[1] = NULL;
 }
