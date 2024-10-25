@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:19:37 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/24 16:51:15 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/25 13:17:42 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	process_next_input(t_shell *sh, char **input, char *next_input)
 {
 	if (add_prompt(sh, next_input)
 		|| trim_and_check_syntax(sh, &next_input)
-		|| expand_and_add_spaces(sh, &next_input))
+		|| expand_and_add_spaces(sh, &next_input, 1))
 	{
 		free(*input);
 		free(next_input);

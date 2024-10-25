@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:16:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/24 16:31:08 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/25 13:42:45 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,17 @@ int	trim_and_check_syntax(t_shell *sh, char **input)
 	return (0);
 }
 
-int	expand_and_add_spaces(t_shell *sh, char **input)
+int	expand_and_add_spaces(t_shell *sh, char **input, int free_flag)
 {
 	char	*expanded_input;
 	char	*spaced_input;
 
 	expanded_input = expand_input(*input, sh);
+	if (free_flag)
+	{
+		free(*input);
+		*input = NULL;
+	}
 	if (!expanded_input)
 	{
 		error_sys("expand_input failed\n");
@@ -91,7 +96,7 @@ void	process_input(t_shell *sh, char *input)
 
 	if (trim_and_check_syntax(sh, &input))
 		return ;
-	if (expand_and_add_spaces(sh, &input))
+	if (expand_and_add_spaces(sh, &input, 0))
 		return ;
 	if (handle_heredoc_if_needed(sh, input))
 		return ;
