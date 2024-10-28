@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:27:15 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/22 20:58:20 by omartela         ###   ########.fr       */
+/*   Updated: 2024/10/28 11:48:07 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,13 @@ static int	process_check_synax(t_check *check, char *input, int is_continue)
 		if (is_redirection_operator(input[i]) && check->redirect == 0)
 			is_continue = handle_first_redirect(check, input, &i);
 		else if (is_pipe(input[i]) && is_pipe(input[i + 1]))
-			is_continue = handle_or(check, &i);
+			is_continue = handle_or(check, input, &i);
 		else if (is_pipe(input[i]))
-			is_continue = handle_pipe(check);
+			is_continue = handle_pipe(check, input);
 		else if (is_ampersand(input[i]) && is_ampersand(input[i + 1]))
-			is_continue = handle_and(check, &i);
+			is_continue = handle_and(check, input, &i);
 		else if (is_ampersand(input[i]))
-			is_continue = handle_ampersand(check);
+			is_continue = handle_ampersand(check, input);
 		else if (is_redirection_operator(input[i]) && check->redirect == 1)
 			is_continue = handle_second_redirect(input, i);
 		else if (input[i] != ' ')
@@ -72,7 +72,7 @@ int	check_syntax(char *input)
 		return (1);
 	if (check.redirect == 1)
 	{
-		show_syntax_error("newline");
+		show_syntax_error("newline", input);
 		return (1);
 	}
 	return (0);
