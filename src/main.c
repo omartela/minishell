@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/28 14:10:46 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:18:55 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static void	loop_userpromt(t_shell *sh)
 		input = readline("minishell> ");
 		if (input == NULL)
 		{
-			printf("Exit \n");
+			printf("exit\n");
 			break ;
 		}
 		if (add_prompt(sh, input))
