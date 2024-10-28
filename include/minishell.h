@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/28 11:48:18 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/28 13:51:13 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,12 +137,6 @@ int		show_error_return(int code, char *name, char *msg);
 void	error_sys(char *msg);
 void	error_dup(t_shell *sh, t_cmd *cmd);
 void	error_execve_and_permission(t_shell *sh, t_cmd *cmd, int is_abs_rel);
-
-// test functions
-void	test_split_args_leave_quotes(char *input, char c);
-void	test_split_args_remove_quotes(char *input, char c);
-void	print_command(t_cmd *cmd);
-void	test_echo_command(char *argv[], t_shell *shell);
 
 //process input
 int		add_prompt(t_shell *sh, char *input);
