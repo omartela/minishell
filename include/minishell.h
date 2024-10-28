@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/25 15:21:45 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/28 11:48:18 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ void	exit_and_free(t_shell *sh, t_cmd *cmd, int status);
 
 // errors
 void	show_error(char *name, char *msg);
-void	show_syntax_error(char *element);
+void	show_syntax_error(char *element, char *input);
 void	show_error_free_cmd_exit(int code, char *name, char *msg, t_cmd *cmd);
 int		show_error_return(int code, char *name, char *msg);
 void	error_sys(char *msg);
@@ -167,10 +167,10 @@ char	**split_args_helper(char *s, size_t i, char **result,
 //check syntax
 int		check_syntax(char *input);
 int		is_redirection_operator(char c);
-int		handle_or(t_check *check, size_t *i);
-int		handle_pipe(t_check *check);
-int		handle_and(t_check *check, size_t *i);
-int		handle_ampersand(t_check *check);
+int		handle_or(t_check *check, char *input, size_t *i);
+int		handle_pipe(t_check *check, char *input);
+int		handle_and(t_check *check, char *input, size_t *i);
+int		handle_ampersand(t_check *check, char *input);
 void	handle_text(t_check *check, char *input, size_t *i);
 int		handle_first_redirect(t_check *check, char *input, size_t *i);
 int		handle_second_redirect(char *input, size_t i);

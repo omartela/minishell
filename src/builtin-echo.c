@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:29:58 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/10 19:44:27 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/28 12:28:40 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	echo(char *argv[])
 {
 	int	i;
 	int	no_nl;
-	int check_options;
+	int	check_options;
 
 	check_options = 1;
 	i = 1;
