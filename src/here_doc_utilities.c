@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:02:33 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/28 13:52:53 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:39:39 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,8 @@ int	add_promt_and_expand(t_shell *sh, char **line, int *fd, int expand_flag)
 	return (0);
 }
 
-int	setup_pipe_and_prompt(int *pipe_fd, int *flag, t_shell *sh)
+int	setup_pipe_and_prompt(int *pipe_fd, t_shell *sh)
 {
-	(*flag) = 0;
 	if (pipe(pipe_fd) == -1)
 		return (-1);
 	if (add_prompt(sh, "\n"))
@@ -75,29 +74,28 @@ int	setup_pipe_and_prompt(int *pipe_fd, int *flag, t_shell *sh)
 
 int	here_doc_input(char *delimiter, t_shell *sh, int expand_flag)
 {
-	int		flag;
 	int		pipe_fd[2];
 	char	*line;
 
-	if (setup_pipe_and_prompt(pipe_fd, &flag, sh) == -1)
+	if (setup_pipe_and_prompt(pipe_fd, sh) == -1)
 		return (-1);
 	while (1)
 	{
 		ft_putstr_fd("heredoc> ", 1);
 		line = get_next_line(0);
 		if (!line)
+		{
+			printf("\nwarning: here-document delimited by \
+end-of-file (wanted `%s')\n", delimiter);
 			break ;
+		}
 		if (add_promt_and_expand(sh, &line, pipe_fd, expand_flag))
 			return (-1);
 		if (!is_continue(line, delimiter))
 			break ;
 		write(pipe_fd[1], line, ft_strlen(line));
 		free(line);
-		flag = 1;
 	}
-	if (!flag)
-		printf("warning: here-document delimited by \
-end-of-file (wanted `%s')\n", delimiter);
 	close(pipe_fd[1]);
 	return (pipe_fd[0]);
 }

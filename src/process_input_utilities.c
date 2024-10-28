@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:19:37 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/28 14:18:49 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:06:45 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ int	handle_continued_input(t_shell *sh, char **input, int len)
 		if (!next_input)
 		{
 			free(*input);
-			printf("exit\n");
 			return (1);
 		}
 		if (process_next_input(sh, input, next_input))
