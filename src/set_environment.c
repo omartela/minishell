@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:40:31 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/28 12:28:01 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/28 16:32:51 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,7 @@ int	set_variables(t_shell *shell, char *variable, char *value)
 	if (success1 || success2)
 		return (1);
 	if (success2 == 0)
-	{
 		sort_table(shell->local_shellvars);
-	}
 	return (0);
 }
 

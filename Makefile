@@ -6,7 +6,7 @@
 #    By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 22:33:20 by irychkov          #+#    #+#              #
-#    Updated: 2024/10/24 19:49:13 by irychkov         ###   ########.fr        #
+#    Updated: 2024/10/28 14:54:24 by irychkov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,6 @@ SRCS = src/main.c \
 		src/exec_cmd.c src/exec_pipes.c \
 		src/errors.c src/sys_errors.c\
 		src/free.c src/free_cmd.c src/free_shell.c \
-		src/test_split.c src/test_parse_redirect.c \
 		src/environment.c \
 		src/builtin-export.c \
 		src/builtin-export-argument-validation.c \
@@ -62,7 +61,7 @@ LIBFT_DIR = ./libft
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 LDFLAGS = -lreadline
 
 CC = cc

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/28 11:48:18 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:48:08 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ typedef struct s_redirection
 
 // main functions
 void	initialize_shell(t_shell *sh, char ***envp);
+void	initialize_env(t_shell *sh, char ***envp);
 void	process_input(t_shell *sh, char *input);
 void	init_num_cmds(t_shell *sh);
 int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
@@ -137,12 +138,6 @@ int		show_error_return(int code, char *name, char *msg);
 void	error_sys(char *msg);
 void	error_dup(t_shell *sh, t_cmd *cmd);
 void	error_execve_and_permission(t_shell *sh, t_cmd *cmd, int is_abs_rel);
-
-// test functions
-void	test_split_args_leave_quotes(char *input, char c);
-void	test_split_args_remove_quotes(char *input, char c);
-void	print_command(t_cmd *cmd);
-void	test_echo_command(char *argv[], t_shell *shell);
 
 //process input
 int		add_prompt(t_shell *sh, char *input);
@@ -193,7 +188,7 @@ char	*get_key(char *args);
 int		is_check_key_equal(char *args, const char *variable);
 char	*get_value(char *args);
 int		is_only_numbers(char *str);
-void	initialize_default_env(char ***envp);
+void	initialize_default_env(char ***envp, int *allocated);
 
 // execute-builtin-command-utilities.c
 int		in_pipe(int (*b_in)(t_shell *, char **), t_shell *sh, t_cmd *cmd);
@@ -223,7 +218,7 @@ int		update_t_var(char ***t, const char *var, const char *val, size_t *i);
 int		append_table_value(char ***table, size_t index, const char *value);
 
 // init_env.c
-void	copy_env(char **envp, t_shell *shell);
+int		copy_env(char **envp, t_shell *shell);
 
 // set_environment.c
 int		set_variables(t_shell *shell, char *variable, char *value);

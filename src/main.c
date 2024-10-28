@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/25 15:36:16 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:18:55 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,43 +39,39 @@ int	add_prompt(t_shell *sh, char *input)
 	return (0);
 }
 
-static int	userprompt(int status, char ***envp)
+static void	loop_userpromt(t_shell *sh)
 {
-	t_shell	sh;
 	char	*input;
 
-	initialize_shell(&sh, envp);
 	while (1)
 	{
-		if (init_signal(&sh))
+		if (init_signal(sh))
 		{
 			error_sys("Init signals failed\n");
 			continue ;
 		}
-		//Snippet for tester
-		if (isatty(fileno(stdin)))
-			input = readline("minishell> ");
-		else
-		{
-			char *line;
-			line = get_next_line(fileno(stdin));
-			input = ft_strtrim(line, "\n");
-			free(line);
-		}
-		//input = readline("minishell> ");
+		input = readline("minishell> ");
 		if (input == NULL)
 		{
-			//printf("Exit \n");
+			printf("exit\n");
 			break ;
 		}
-		if (add_prompt(&sh, input))
+		if (add_prompt(sh, input))
 		{
 			free(input);
 			continue ;
 		}
-		process_input(&sh, input);
-		free_partial(&sh);
+		process_input(sh, input);
+		free_partial(sh);
 	}
+}
+
+static int	userprompt(int status, char ***envp)
+{
+	t_shell	sh;
+
+	initialize_shell(&sh, envp);
+	loop_userpromt(&sh);
 	status = sh.exit_status;
 	free_shell(&sh);
 	rl_clear_history();
