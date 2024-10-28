@@ -33,11 +33,8 @@ static void	add_new_line(int no_nl)
 		write(1, "\n", 1);
 }
 
-static int	echo_print_str(char **argv, int i)
+static int	echo_print_str(char **argv, int i, int *check_options)
 {
-	int	check_options;
-
-	check_options = 1;
 	while (argv[i])
 	{
 		if (argv[i] && (ft_strncmp(argv[i], "-\0", 2) == 0))
@@ -48,11 +45,11 @@ static int	echo_print_str(char **argv, int i)
 			++i;
 			continue ;
 		}
-		if (!check_dash_n(argv[i]) && check_options)
+		if (!check_dash_n(argv[i]) && *check_options)
 			++i;
 		else
 		{
-			check_options = 0;
+			*check_options = 0;
 			ft_putstr_fd(argv[i], 1);
 			if (argv[i + 1])
 				write(1, " ", 1);
@@ -66,7 +63,9 @@ int	echo(char *argv[])
 {
 	int	i;
 	int	no_nl;
+	int check_options;
 
+	check_options = 1;
 	i = 1;
 	no_nl = 0;
 	if (!argv[1])
@@ -79,7 +78,9 @@ int	echo(char *argv[])
 		i = 2;
 		no_nl = 1;
 	}
-	if (echo_print_str(argv, i))
+	else
+		check_options = 0;
+	if (echo_print_str(argv, i, &check_options))
 		return (1);
 	add_new_line(no_nl);
 	return (0);
