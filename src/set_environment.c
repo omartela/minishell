@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:40:31 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 10:47:53 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/28 12:28:01 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,22 +32,22 @@ int	set_table(char ***table, const char *var, const char *value)
 {
 	size_t	i;
 	size_t	len;
-	char	l_c;
-	char	*t_var;
 
 	i = 0;
 	len = ft_strlen(var);
 	while ((*table)[i])
 	{
-		t_var = (*table)[i];
-		l_c = (*table)[i][len];
-		if (ft_strncmp(t_var, var, len + 1) == 0 && !value)
-			return (0);
-		if (ft_strncmp(t_var, var, len) == 0 && (l_c == '=' || l_c == '\0'))
+		if (len <= ft_strlen((*table)[i]))
 		{
-			if (update_t_var(table, var, value, &i))
-				return (1);
-			return (0);
+			if (!value && ft_strncmp((*table)[i], var, len + 1) == 0)
+				return (0);
+			if (ft_strncmp((*table)[i], var, len) == 0
+				&& ((*table)[i][len] == '=' || (*table)[i][len] == '\0'))
+			{
+				if (update_t_var(table, var, value, &i))
+					return (1);
+				return (0);
+			}
 		}
 		++i;
 	}
