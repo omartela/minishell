@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/28 14:18:55 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/29 10:39:47 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,11 @@ int	main(int ac, char **av, char **envp)
 	int	status;
 
 	status = 0;
-	(void)ac;
+	if (ac != 1)
+	{
+		printf("The minishell doesn't handle arguments\n");
+		return (0);
+	}
 	(void)av;
 	return (userprompt(status, &envp));
 }
