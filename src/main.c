@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/28 17:53:10 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/29 16:15:13 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static void	loop_userpromt(t_shell *sh)
 
 	while (1)
 	{
-		if (init_signal(sh))
+		if (init_signal())
 		{
 			error_sys("Init signals failed\n");
 			continue ;

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:02:33 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/29 11:29:42 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/29 16:21:18 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	here_doc_input(char *delimiter, t_shell *sh, int expand_flag)
 	{
 		/* line = readline("heredoc> "); */
 		if (isatty(fileno(stdin)))
-			line = readline("minishell> ");
+			line = readline("heredoc> ");
 		else
 		{
 			char *input;
