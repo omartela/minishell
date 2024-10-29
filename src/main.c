@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/28 14:18:55 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:53:10 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,20 @@ static void	loop_userpromt(t_shell *sh)
 			error_sys("Init signals failed\n");
 			continue ;
 		}
-		input = readline("minishell> ");
+		//Snippet for tester
+		if (isatty(fileno(stdin)))
+			input = readline("minishell> ");
+		else
+		{
+			char *line;
+			line = get_next_line(fileno(stdin));
+			input = ft_strtrim(line, "\n");
+			free(line);
+		}
+		//input = readline("minishell> ");
 		if (input == NULL)
 		{
-			printf("exit\n");
+			/* printf("exit\n"); */
 			break ;
 		}
 		if (add_prompt(sh, input))

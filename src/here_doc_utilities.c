@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:02:33 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/28 17:39:39 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:54:39 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,12 +81,12 @@ int	here_doc_input(char *delimiter, t_shell *sh, int expand_flag)
 		return (-1);
 	while (1)
 	{
-		ft_putstr_fd("heredoc> ", 1);
+		/* ft_putstr_fd("heredoc> ", 1); */
 		line = get_next_line(0);
 		if (!line)
 		{
-			printf("\nwarning: here-document delimited by \
-end-of-file (wanted `%s')\n", delimiter);
+			/* printf("\nwarning: here-document delimited by \
+end-of-file (wanted `%s')\n", delimiter); */
 			break ;
 		}
 		if (add_promt_and_expand(sh, &line, pipe_fd, expand_flag))
