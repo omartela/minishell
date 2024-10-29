@@ -48,8 +48,6 @@ typedef struct s_shell
 	char				**local_shellvars;
 	struct s_pipes		*pipes;
 	struct s_heredoc	*hd;
-	struct sigaction	org_sig_quit;
-	struct sigaction	org_sig_int;
 }	t_shell;
 
 typedef struct s_cmd
@@ -280,8 +278,8 @@ int		export_append_both(t_shell *sh, char *variable, char *value);
 int		unset(t_shell *sh, char **args);
 
 // signals.c
-int		init_signal(t_shell *sh);
-int		reset_signals(t_shell *sh);
+int		init_signal();
+int		reset_signals();
 int		change_signal_handler(void);
 
 // update-underscore-variable

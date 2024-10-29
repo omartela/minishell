@@ -64,8 +64,6 @@ void	initialize_shell(t_shell *sh, char ***envp)
 	if (initialize_shlvl(sh) || initialize_homepath(sh, sh->envp)
 		|| (initialize_heredoc(sh)))
 		exit(1);
-	ft_memset(&sh->org_sig_int, 0, sizeof(sh->org_sig_int));
-	ft_memset(&sh->org_sig_quit, 0, sizeof(sh->org_sig_quit));
 	if (init_signal(sh))
 	{
 		error_sys("Error when initializing signal\n");

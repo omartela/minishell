@@ -14,7 +14,7 @@
 
 static void	sig_handler_sigint_2(int signum)
 {
-	if (signum == SIGINT)
+	if (signum == SIGINT || signum == SIGQUIT)
 	{
 		printf("\n");
 	}
@@ -31,53 +31,23 @@ static void	sig_handler_sigint(int signum)
 	}
 }
 
-int	reset_signals(t_shell *sh)
+int	reset_signals()
 {
-	if (sigaction(SIGINT, &sh->org_sig_int, NULL) == -1)
-	{
-		error_sys("Error resetting SIGINT handler\n");
-		return (1);
-	}
-	if (sigaction(SIGQUIT, &sh->org_sig_quit, NULL) == -1)
-	{
-		error_sys("Error resetting SIGQUIT handler\n");
-		return (1);
-	}
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
 	return (0);
 }
 
 int	change_signal_handler(void)
 {
-	struct sigaction	sa_int;
-
-	ft_memset(&sa_int, 0, sizeof(sa_int));
-	if (sigemptyset(&sa_int.sa_mask) == -1)
-		return (1);
-	sa_int.sa_flags = SA_RESTART;
-	sa_int.sa_handler = sig_handler_sigint_2;
-	if (sigaction(SIGINT, &sa_int, NULL) == -1)
-		return (1);
+	signal(SIGINT, sig_handler_sigint_2);
+	signal(SIGQUIT, sig_handler_sigint_2);
 	return (0);
 }
 
-int	init_signal(t_shell *sh)
+int	init_signal()
 {
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
-
-	ft_memset(&sa_int, 0, sizeof(sa_int));
-	if (sigemptyset(&sa_int.sa_mask) == -1)
-		return (1);
-	sa_int.sa_flags = SA_RESTART;
-	sa_int.sa_handler = sig_handler_sigint;
-	if (sigaction(SIGINT, &sa_int, &sh->org_sig_int) == -1)
-		return (1);
-	ft_memset(&sa_quit, 0, sizeof(sa_quit));
-	if (sigemptyset(&sa_quit.sa_mask) == -1)
-		return (1);
-	sa_quit.sa_flags = 0;
-	sa_quit.sa_handler = SIG_IGN;
-	if (sigaction(SIGQUIT, &sa_quit, &sh->org_sig_quit) == -1)
-		return (1);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, sig_handler_sigint);
 	return (0);
 }
