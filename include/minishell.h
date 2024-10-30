@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/30 21:11:40 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/30 22:07:16 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ typedef struct s_heredoc
 	int		*heredoc_fds;
 }	t_heredoc;
 
-typedef struct s_heredoc_args {
+typedef struct s_heredoc_args
+{
 	char	**args;
 	char	**args_with_quotes;
 	char	*input;
@@ -179,7 +180,9 @@ int		handle_second_redirect(char *input, size_t i);
 //heredoc
 int		is_heredoc(char *input);
 int		handle_here_doc(t_shell *sh, char *input);
-int	here_doc_input(t_shell *sh, t_heredoc_args *hd_args, char *delimiter, int expand_flag);
+int		loop_args(t_shell *sh, t_heredoc_args *hd_args, int *expand);
+int		here_doc_input(t_shell *sh, t_heredoc_args *hd_args, char *delimiter,
+			int expand_flag);
 
 //parse redirection
 int		parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit);

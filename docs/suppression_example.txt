@@ -8,3 +8,7 @@ valgrind --show-leak-kinds=all --leak-check=full --track-fds=yes --suppressions=
 
 echo $(echo -e "cat << lim\ntest\nlim\n" | ./minishell)
 echo $(echo -e "cat << lim\ntest\nlim\n" | bash)
+
+char *temp = ft_strdup(line);
+free(line);
+line = temp;
