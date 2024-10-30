@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/30 14:32:41 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/30 17:01:00 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ static int	allocate_heredocs_fds(t_heredoc *hd, char **args)
 	return (0);
 }
 
-static int	save_heredoc_fds(t_shell *sh, char **args, int *expand, int i)
+static int	save_heredoc_fds(t_shell *sh, char **args, char **args_w_q, int *expand, int i, char *input)
 {
 	sh->hd->heredoc_fds[sh->hd->num_heredocs]
-		= here_doc_input(args[i + 1], sh, *expand);
+		= here_doc_input(args, args_w_q, args[i + 1], sh, *expand, input);
 	if (sh->hd->heredoc_fds[sh->hd->num_heredocs] == -1)
 	{
 		free_array(&args);
@@ -71,7 +71,7 @@ static int	save_heredoc_fds(t_shell *sh, char **args, int *expand, int i)
 }
 
 static int	loop_args(t_shell *sh, char **args,
-	char **args_with_quotes, int *expand)
+	char **args_with_quotes, char *input, int *expand)
 {
 	int	i;
 	int	catch_error;
@@ -92,7 +92,7 @@ static int	loop_args(t_shell *sh, char **args,
 				free_array(&args_with_quotes);
 				return (1);
 			}
-			catch_error = save_heredoc_fds(sh, args, expand, i);
+			catch_error = save_heredoc_fds(sh, args, args_with_quotes, expand, i, input);
 			if (catch_error == 1)
 			{
 				free_array(&args_with_quotes);
@@ -129,7 +129,7 @@ int	handle_here_doc(t_shell *sh, char *input)
 		free(args);
 		return (1);
 	}
-	catch_error = loop_args(sh, args, args_with_quotes, &expand_flag);
+	catch_error = loop_args(sh, args, args_with_quotes, input, &expand_flag);
 	if (catch_error == 1)
 		return (1);
 	else if (catch_error == -1)

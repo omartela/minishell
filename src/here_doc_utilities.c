@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:02:33 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/30 14:58:43 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/30 17:05:36 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	init_signal_heredoc(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-int	here_doc_input(char *delimiter, t_shell *sh, int expand_flag)
+int	here_doc_input(char **args, char **args_w_q, char *delimiter, t_shell *sh, int expand_flag, char *input)
 {
 	int		pipe_fd[2];
 	char	*line;
@@ -113,6 +113,10 @@ int	here_doc_input(char *delimiter, t_shell *sh, int expand_flag)
 			free(line);
 		}
 		close(pipe_fd[1]);
+		rl_clear_history();
+		free(input);
+		free_array(&args);
+		free_array(&args_w_q);
 		free_shell(sh);
 		exit(0);
 	}

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/30 10:17:58 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/30 17:00:10 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ int		handle_second_redirect(char *input, size_t i);
 //heredoc
 int		is_heredoc(char *input);
 int		handle_here_doc(t_shell *sh, char *input);
-int		here_doc_input(char *delimiter, t_shell *sh, int expand_flag);
+int	here_doc_input(char **args, char **args_w_q, char *delimiter, t_shell *sh, int expand_flag, char *input);
 
 //parse redirection
 int		parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit);
