@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/28 17:48:08 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/30 10:17:58 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,9 +280,9 @@ int		export_append_both(t_shell *sh, char *variable, char *value);
 int		unset(t_shell *sh, char **args);
 
 // signals.c
-int		init_signal(t_shell *sh);
-int		reset_signals(t_shell *sh);
-int		change_signal_handler(void);
+void	init_signal(void);
+void	reset_signals(void);
+void	change_signal_handler(void);
 
 // update-underscore-variable
 int		update_underscore(t_shell *sh, t_cmd *cmd);

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:13 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/23 22:43:59 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/30 10:38:07 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,7 @@ static int	pipe_and_fork(t_shell *sh, t_cmd *cmd, int i)
 		return (exec_in_parent(sh, cmd));
 	else if (is_build == -1)
 		return (1);
-	if (change_signal_handler())
-	{
-		error_sys("Changing signal handler failed\n");
-		return (1);
-	}
+	change_signal_handler();
 	sh->pipes->pid[i] = fork();
 	if (sh->pipes->pid[i] == -1)
 	{
