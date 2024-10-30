@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:02:33 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/30 17:05:36 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/30 21:14:45 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	init_signal_heredoc(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-int	here_doc_input(char **args, char **args_w_q, char *delimiter, t_shell *sh, int expand_flag, char *input)
+int	here_doc_input(t_shell *sh, t_heredoc_args *hd_args, char *delimiter, int expand_flag)
 {
 	int		pipe_fd[2];
 	char	*line;
@@ -90,7 +90,7 @@ int	here_doc_input(char **args, char **args_w_q, char *delimiter, t_shell *sh, i
 	{
 		error_sys("fork failed\n");
 		return (-1);
-	} 
+	}
 	if (pid == 0)
 	{
 		init_signal_heredoc();
@@ -114,9 +114,9 @@ int	here_doc_input(char **args, char **args_w_q, char *delimiter, t_shell *sh, i
 		}
 		close(pipe_fd[1]);
 		rl_clear_history();
-		free(input);
-		free_array(&args);
-		free_array(&args_w_q);
+		free(hd_args->input);
+		free_array(&hd_args->args);
+		free_array(&hd_args->args_with_quotes);
 		free_shell(sh);
 		exit(0);
 	}

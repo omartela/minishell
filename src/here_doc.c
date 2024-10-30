@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/30 17:01:00 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/30 21:12:27 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,54 +53,53 @@ static int	allocate_heredocs_fds(t_heredoc *hd, char **args)
 	return (0);
 }
 
-static int	save_heredoc_fds(t_shell *sh, char **args, char **args_w_q, int *expand, int i, char *input)
+static int	save_heredoc_fds(t_shell *sh, t_heredoc_args *hd_args, int *expand, int i)
 {
 	sh->hd->heredoc_fds[sh->hd->num_heredocs]
-		= here_doc_input(args, args_w_q, args[i + 1], sh, *expand, input);
+		= here_doc_input(sh, hd_args, hd_args->args[i + 1], *expand);
 	if (sh->hd->heredoc_fds[sh->hd->num_heredocs] == -1)
 	{
-		free_array(&args);
+		free_array(&hd_args->args);
 		return (1);
 	}
 	if (sh->hd->heredoc_fds[sh->hd->num_heredocs] == -2)
 	{
-		free_array(&args);
+		free_array(&hd_args->args);
 		return (-1);
 	}
 	return (0);
 }
 
-static int	loop_args(t_shell *sh, char **args,
-	char **args_with_quotes, char *input, int *expand)
+static int	loop_args(t_shell *sh, t_heredoc_args *hd_args, int *expand)
 {
 	int	i;
 	int	catch_error;
 
 	catch_error = 0;
 	i = 0;
-	while (args[i])
+	while (hd_args->args[i])
 	{
 		*expand = 0;
-		if (ft_strncmp(args[i], "<<\0", 3) == 0 && args[i + 1])
+		if (ft_strncmp(hd_args->args[i], "<<\0", 3) == 0 && hd_args->args[i + 1])
 		{
-			if ((ft_strncmp(args[i + 1], args_with_quotes[i + 1],
-						ft_strlen(args[i + 1])) == 0)
-				|| args_with_quotes[i + 1][0] == '\"')
+			if ((ft_strncmp(hd_args->args[i + 1], hd_args->args_with_quotes[i + 1],
+						ft_strlen(hd_args->args[i + 1])) == 0)
+				|| hd_args->args_with_quotes[i + 1][0] == '\"')
 				*expand = 1;
-			if (allocate_heredocs_fds(sh->hd, args))
+			if (allocate_heredocs_fds(sh->hd, hd_args->args))
 			{
-				free_array(&args_with_quotes);
+				free_array(&hd_args->args_with_quotes);
 				return (1);
 			}
-			catch_error = save_heredoc_fds(sh, args, args_with_quotes, expand, i, input);
+			catch_error = save_heredoc_fds(sh, hd_args, expand, i);
 			if (catch_error == 1)
 			{
-				free_array(&args_with_quotes);
+				free_array(&hd_args->args_with_quotes);
 				return (1);
 			}
 			else if (catch_error == -1)
 			{
-				free_array(&args_with_quotes);
+				free_array(&hd_args->args_with_quotes);
 				return (-1);
 			}
 			sh->hd->num_heredocs++;
@@ -114,27 +113,28 @@ static int	loop_args(t_shell *sh, char **args,
 
 int	handle_here_doc(t_shell *sh, char *input)
 {
-	char	**args;
-	char	**args_with_quotes;
-	int		expand_flag;
-	int	catch_error;
+	t_heredoc_args	hd_args;
+	int				expand_flag;
+	int				catch_error;
 
+	ft_memset(&hd_args, 0, sizeof(t_heredoc_args));
+	hd_args.input = input;
 	expand_flag = 0;
-	args = split_args_remove_quotes(input, ' ');
-	if (!args)
+	hd_args.args = split_args_remove_quotes(hd_args.input, ' ');
+	if (!hd_args.args)
 		return (1);
-	args_with_quotes = split_args_leave_quotes(input, ' ');
-	if (!args_with_quotes)
+	hd_args.args_with_quotes = split_args_leave_quotes(hd_args.input, ' ');
+	if (!hd_args.args_with_quotes)
 	{
-		free(args);
+		free(hd_args.args);
 		return (1);
 	}
-	catch_error = loop_args(sh, args, args_with_quotes, input, &expand_flag);
+	catch_error = loop_args(sh, &hd_args, &expand_flag);
 	if (catch_error == 1)
 		return (1);
 	else if (catch_error == -1)
 		return (-1);
-	free_array(&args);
-	free_array(&args_with_quotes);
+	free_array(&hd_args.args);
+	free_array(&hd_args.args_with_quotes);
 	return (0);
 }
