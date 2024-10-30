@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:16:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/25 15:25:08 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/30 14:43:51 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,21 @@ int	expand_and_add_spaces(t_shell *sh, char **input)
 
 int	handle_heredoc_if_needed(t_shell *sh, char *input)
 {
+	int	catch_error;
+
+	catch_error = 0;
 	if (is_heredoc(input))
 	{
-		if (handle_here_doc(sh, input))
+		catch_error = handle_here_doc(sh, input);
+		if (catch_error == 1)
 		{
 			error_sys("handle_here_doc failed\n");
+			free(input);
+			return (1);
+		}
+		if (catch_error == -1)
+		{
+			add_history(input);
 			free(input);
 			return (1);
 		}

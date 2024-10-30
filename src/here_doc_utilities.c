@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:02:33 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/29 11:25:21 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/30 14:58:43 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,12 @@ static int	setup_pipe_and_prompt(int *pipe_fd, t_shell *sh)
 	return (0);
 }
 
+void	init_signal_heredoc(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN);
+}
+
 int	here_doc_input(char *delimiter, t_shell *sh, int expand_flag)
 {
 	int		pipe_fd[2];
@@ -79,23 +85,50 @@ int	here_doc_input(char *delimiter, t_shell *sh, int expand_flag)
 
 	if (setup_pipe_and_prompt(pipe_fd, sh) == -1)
 		return (-1);
-	while (1)
+	pid_t pid = fork();
+	if (pid < 0)
 	{
-		line = readline("heredoc> ");
-		if (!line)
+		error_sys("fork failed\n");
+		return (-1);
+	} 
+	if (pid == 0)
+	{
+		init_signal_heredoc();
+		close(pipe_fd[0]);
+		while (1)
 		{
-			printf("warning: here-document delimited by \
-end-of-file (wanted `%s')\n", delimiter);
-			break ;
+			line = readline("heredoc> ");
+			if (!line)
+			{
+				printf("warning: here-document delimited by \
+	end-of-file (wanted `%s')\n", delimiter);
+				break ;
+			}
+			if (add_promt_and_expand(sh, &line, pipe_fd, expand_flag))
+				return (-1);
+			if (!is_continue(line, delimiter))
+				break ;
+			write(pipe_fd[1], line, ft_strlen(line));
+			write(pipe_fd[1], "\n", 1);
+			free(line);
 		}
-		if (add_promt_and_expand(sh, &line, pipe_fd, expand_flag))
-			return (-1);
-		if (!is_continue(line, delimiter))
-			break ;
-		write(pipe_fd[1], line, ft_strlen(line));
-		write(pipe_fd[1], "\n", 1);
-		free(line);
+		close(pipe_fd[1]);
+		free_shell(sh);
+		exit(0);
 	}
+	signal(SIGINT, SIG_IGN);
 	close(pipe_fd[1]);
+	int status;
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
+		printf("\n");
+		return (-2);
+	}
+	else if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+	{
+		error_sys("Child heredoc process failed\n");
+		return (-1);
+	}
 	return (pipe_fd[0]);
 }

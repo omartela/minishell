@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/23 10:16:18 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/30 14:32:41 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,11 @@ static int	save_heredoc_fds(t_shell *sh, char **args, int *expand, int i)
 		free_array(&args);
 		return (1);
 	}
+	if (sh->hd->heredoc_fds[sh->hd->num_heredocs] == -2)
+	{
+		free_array(&args);
+		return (-1);
+	}
 	return (0);
 }
 
@@ -69,7 +74,9 @@ static int	loop_args(t_shell *sh, char **args,
 	char **args_with_quotes, int *expand)
 {
 	int	i;
+	int	catch_error;
 
+	catch_error = 0;
 	i = 0;
 	while (args[i])
 	{
@@ -80,11 +87,21 @@ static int	loop_args(t_shell *sh, char **args,
 						ft_strlen(args[i + 1])) == 0)
 				|| args_with_quotes[i + 1][0] == '\"')
 				*expand = 1;
-			if (allocate_heredocs_fds(sh->hd, args)
-				|| save_heredoc_fds(sh, args, expand, i))
+			if (allocate_heredocs_fds(sh->hd, args))
 			{
 				free_array(&args_with_quotes);
 				return (1);
+			}
+			catch_error = save_heredoc_fds(sh, args, expand, i);
+			if (catch_error == 1)
+			{
+				free_array(&args_with_quotes);
+				return (1);
+			}
+			else if (catch_error == -1)
+			{
+				free_array(&args_with_quotes);
+				return (-1);
 			}
 			sh->hd->num_heredocs++;
 			i += 2;
@@ -100,6 +117,7 @@ int	handle_here_doc(t_shell *sh, char *input)
 	char	**args;
 	char	**args_with_quotes;
 	int		expand_flag;
+	int	catch_error;
 
 	expand_flag = 0;
 	args = split_args_remove_quotes(input, ' ');
@@ -111,8 +129,11 @@ int	handle_here_doc(t_shell *sh, char *input)
 		free(args);
 		return (1);
 	}
-	if (loop_args(sh, args, args_with_quotes, &expand_flag))
+	catch_error = loop_args(sh, args, args_with_quotes, &expand_flag);
+	if (catch_error == 1)
 		return (1);
+	else if (catch_error == -1)
+		return (-1);
 	free_array(&args);
 	free_array(&args_with_quotes);
 	return (0);
