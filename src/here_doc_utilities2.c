@@ -6,11 +6,17 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 11:53:12 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/31 13:01:04 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/31 17:50:42 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	free_and_return(char **array, int error_code)
+{
+	free_array(&array);
+	return (error_code);
+}
 
 static int	allocate_heredocs_fds(t_heredoc *hd, char **args)
 {
@@ -21,10 +27,7 @@ static int	allocate_heredocs_fds(t_heredoc *hd, char **args)
 				sizeof(int) * hd->num_heredocs,
 				sizeof(int) * (hd->num_heredocs + 1));
 	if (!hd->heredoc_fds)
-	{
-		free_array(&args);
-		return (1);
-	}
+		return (free_and_return(args, 1));
 	return (0);
 }
 
@@ -33,14 +36,12 @@ static int	save_heredoc_fds(t_shell *sh, char **args, int *expand, int i)
 	sh->hd->heredoc_fds[sh->hd->num_heredocs]
 		= here_doc_input(args[i + 1], sh, *expand);
 	if (sh->hd->heredoc_fds[sh->hd->num_heredocs] == -1)
-	{
-		free_array(&args);
-		return (1);
-	}
+		return (free_and_return(args, 1));
 	if (sh->hd->heredoc_fds[sh->hd->num_heredocs] == -2)
 	{
-		free_array(&args);
-		return (-1);
+		if (sh->promt && sh->promt[0] != '\0')
+			add_history(sh->promt);
+		return (free_and_return(args, -1));
 	}
 	return (0);
 }
@@ -68,16 +69,10 @@ int	loop_args(t_shell *sh, char **args, char **args_with_quotes, int *expand)
 		{
 			*expand = needs_expansion(args, args_with_quotes, i);
 			if (allocate_heredocs_fds(sh->hd, args))
-			{
-				free_array(&args_with_quotes);
-				return (1);
-			}
+				return (free_and_return(args_with_quotes, 1));
 			catch_error = save_heredoc_fds(sh, args, expand, i);
 			if (catch_error)
-			{
-				free_array(&args_with_quotes);
-				return (catch_error);
-			}
+				return (free_and_return(args_with_quotes, catch_error));
 			sh->hd->num_heredocs++;
 			i += 2;
 		}

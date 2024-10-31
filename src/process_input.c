@@ -6,71 +6,61 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:16:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/31 16:18:32 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/31 17:26:37 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	trim_and_check_syntax(t_shell *sh, char **input)
+int	add_prompt(t_shell *sh, char *input)
 {
-	char	*trimmed_input;
+	char	*temp;
 
-	trimmed_input = trim_spaces(*input);
-	if (check_syntax(trimmed_input))
+	if (sh->promt)
 	{
-		sh->exit_status = 2;
-		free(*input);
-		return (1);
+		temp = ft_strjoin(sh->promt, input);
+		if (!temp)
+		{
+			error_sys("add_prompt failed\n");
+			return (1);
+		}
+		free(sh->promt);
+		sh->promt = temp;
 	}
-	*input = trimmed_input;
+	else
+	{
+		sh->promt = ft_strdup(input);
+		if (!sh->promt)
+		{
+			error_sys("add_prompt failed\n");
+			return (1);
+		}
+	}
 	return (0);
 }
 
-int	expand_and_add_spaces(t_shell *sh, char **input)
-{
-	char	*expanded_input;
-	char	*spaced_input;
-
-	expanded_input = expand_input(*input, sh);
-	free(*input);
-	if (!expanded_input)
-	{
-		error_sys("expand_input failed\n");
-		sh->exit_status = 1;
-		return (1);
-	}
-	spaced_input = add_spaces(expanded_input);
-	free(expanded_input);
-	if (!spaced_input)
-	{
-		error_sys("add_spaces failed\n");
-		sh->exit_status = 1;
-		return (1);
-	}
-	*input = spaced_input;
-	return (0);
-}
-
-int	handle_heredoc_if_needed(t_shell *sh, char *input)
+int	handle_heredoc_if_needed(t_shell *sh, char *input, int saved_stdin)
 {
 	int	catch_error;
 
 	catch_error = 0;
-	if (is_heredoc(input))
+	if (!is_heredoc(input))
+		return (0);
+	catch_error = handle_here_doc(sh, input);
+	if (catch_error == 1)
 	{
-		catch_error = handle_here_doc(sh, input);
-		if (catch_error == 1)
-		{
-			error_sys("handle_here_doc failed\n");
-			free(input);
-			return (1);
-		}
-		if (catch_error == -1)
-		{
-			free(input);
-			return (1);
-		}
+		error_sys("handle_here_doc failed\n");
+		free(input);
+		return (1);
+	}
+	if (catch_error == -1)
+	{
+		if (dup2(saved_stdin, STDIN_FILENO) == -1)
+			error_sys("dup2 failed to restore STDIN\n");
+		close(saved_stdin);
+		printf("\n");
+		free(input);
+		return (1);
 	}
 	return (0);
 }
@@ -111,21 +101,12 @@ void	process_input(t_shell *sh, char *input)
 		error_sys("dup failed\n");
 		return ;
 	}
-	if (handle_heredoc_if_needed(sh, input))
-	{
-		if (dup2(saved_stdin, STDIN_FILENO) == -1)
-		{
-			error_sys("dup2 failed to restore STDIN\n");
-			return ;
-		}
-		printf("\n");
-		close(saved_stdin);
+	if (handle_heredoc_if_needed(sh, input, saved_stdin))
 		return ;
-	}
-	close(saved_stdin);
 	len = ft_strlen(input);
-	if (handle_continued_input(sh, &input, len))
+	if (handle_continued_input(sh, &input, len, saved_stdin))
 		return ;
 	g_sig = 0;
+	close(saved_stdin);
 	finalize_input(sh, &input);
 }

@@ -6,11 +6,17 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/31 12:11:58 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/31 17:55:08 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	signal_handler_hd(int signal)
+{
+	close(STDIN_FILENO);
+	g_sig = signal;
+}
 
 int	is_heredoc(char *input)
 {
@@ -62,4 +68,31 @@ int	handle_here_doc(t_shell *sh, char *input)
 	free_array(&args);
 	free_array(&args_with_quotes);
 	return (0);
+}
+
+static int	setup_pipe_and_prompt(int *pipe_fd, t_shell *sh)
+{
+	signal(SIGINT, signal_handler_hd);
+	if (pipe(pipe_fd) == -1)
+		return (-1);
+	if (add_prompt(sh, "\n"))
+	{
+		error_sys("add_prompt failed\n");
+		return (close_fd_and_return(pipe_fd[0], pipe_fd[1], -1));
+	}
+	return (0);
+}
+
+int	here_doc_input(char *delimiter, t_shell *sh, int expand_flag)
+{
+	int	result;
+	int	pipe_fd[2];
+
+	g_sig = 0;
+	if (setup_pipe_and_prompt(pipe_fd, sh) == -1)
+		return (-1);
+	result = read_hd_lines(pipe_fd, sh, delimiter, expand_flag);
+	if (result == 0)
+		return (pipe_fd[0]);
+	return (result);
 }

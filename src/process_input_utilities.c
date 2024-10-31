@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:19:37 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/28 17:06:45 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/31 17:23:52 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,48 @@ int	is_open_quote(char *str)
 	return (0);
 }
 
-static int	process_next_input(t_shell *sh, char **input, char *next_input)
+int	trim_and_check_syntax(t_shell *sh, char **input)
+{
+	char	*trimmed_input;
+
+	trimmed_input = trim_spaces(*input);
+	if (check_syntax(trimmed_input))
+	{
+		sh->exit_status = 2;
+		free(*input);
+		return (1);
+	}
+	*input = trimmed_input;
+	return (0);
+}
+
+int	expand_and_add_spaces(t_shell *sh, char **input)
+{
+	char	*expanded_input;
+	char	*spaced_input;
+
+	expanded_input = expand_input(*input, sh);
+	free(*input);
+	if (!expanded_input)
+	{
+		error_sys("expand_input failed\n");
+		sh->exit_status = 1;
+		return (1);
+	}
+	spaced_input = add_spaces(expanded_input);
+	free(expanded_input);
+	if (!spaced_input)
+	{
+		error_sys("add_spaces failed\n");
+		sh->exit_status = 1;
+		return (1);
+	}
+	*input = spaced_input;
+	return (0);
+}
+
+static int	process_next_input(t_shell *sh, char **input,
+			char *next_input, int saved_stdin)
 {
 	if (add_prompt(sh, next_input))
 	{
@@ -48,7 +89,7 @@ static int	process_next_input(t_shell *sh, char **input, char *next_input)
 		free(*input);
 		return (1);
 	}
-	if (handle_heredoc_if_needed(sh, next_input))
+	if (handle_heredoc_if_needed(sh, next_input, saved_stdin))
 	{
 		free(*input);
 		return (1);
@@ -58,7 +99,7 @@ static int	process_next_input(t_shell *sh, char **input, char *next_input)
 	return (0);
 }
 
-int	handle_continued_input(t_shell *sh, char **input, int len)
+int	handle_continued_input(t_shell *sh, char **input, int len, int saved_stdin)
 {
 	char	*next_input;
 
@@ -73,7 +114,7 @@ int	handle_continued_input(t_shell *sh, char **input, int len)
 			free(*input);
 			return (1);
 		}
-		if (process_next_input(sh, input, next_input))
+		if (process_next_input(sh, input, next_input, saved_stdin))
 			return (1);
 		len = ft_strlen(*input);
 	}

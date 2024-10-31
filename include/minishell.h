@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/31 16:01:00 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/31 17:58:03 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,10 +148,11 @@ char	*add_spaces(char *s);
 int		is_open_quote(char *str);
 void	process_quotes(char **s, int *in_quotes, char *quote_type);
 char	*expand_input(char *str, t_shell *sh);
-int		handle_heredoc_if_needed(t_shell *sh, char *input);
+int		handle_heredoc_if_needed(t_shell *sh, char *input, int saved_stdin);
 int		trim_and_check_syntax(t_shell *sh, char **input);
 int		expand_and_add_spaces(t_shell *sh, char **input);
-int		handle_continued_input(t_shell *sh, char **input, int len);
+int		handle_continued_input(t_shell *sh, char **input,
+		int len, int saved_stdin);
 int		join_input_with_next(t_shell *sh, char **input, char *next_input);
 
 //split arguments
@@ -173,9 +174,12 @@ int		handle_first_redirect(t_check *check, char *input, size_t *i);
 int		handle_second_redirect(char *input, size_t i);
 
 //heredoc
+void	signal_handler_hd(int signal);
 int		is_heredoc(char *input);
 int		handle_here_doc(t_shell *sh, char *input);
 int		here_doc_input(char *delimiter, t_shell *sh, int expand_flag);
+int		read_hd_lines(int *pipe_fd, t_shell *sh, char *delim, int expand_flag);
+int		close_fd_and_return(int fd0, int fd1, int error);
 int		loop_args(t_shell *sh, char **args,
 			char **args_with_quotes, int *expand);
 
