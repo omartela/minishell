@@ -17,6 +17,19 @@
    match-leak-kinds: reachable
    fun:malloc
    fun:xmalloc
+   fun:add_history
+   fun:finalize_input
+   fun:process_input
+   fun:loop_userpromt
+   fun:userprompt
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
    fun:alloc_history_entry
    fun:add_history
    fun:finalize_input
