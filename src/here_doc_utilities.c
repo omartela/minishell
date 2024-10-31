@@ -6,11 +6,13 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:02:33 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/29 11:25:21 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/31 13:01:59 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	g_sig;
 
 static int	is_continue(char *line, char *delimiter)
 {
@@ -72,16 +74,29 @@ static int	setup_pipe_and_prompt(int *pipe_fd, t_shell *sh)
 	return (0);
 }
 
+void	signal_handler_hd(int signal)
+{
+	close(STDIN_FILENO);
+	g_sig = signal;
+}
+
 int	here_doc_input(char *delimiter, t_shell *sh, int expand_flag)
 {
 	int		pipe_fd[2];
 	char	*line;
 
+	g_sig = 0;
 	if (setup_pipe_and_prompt(pipe_fd, sh) == -1)
 		return (-1);
+	signal(SIGINT, signal_handler_hd);
 	while (1)
 	{
 		line = readline("heredoc> ");
+		if (g_sig == SIGINT)
+		{
+			printf("\n");
+			return (-2);
+		}
 		if (!line)
 		{
 			printf("warning: here-document delimited by \
@@ -96,6 +111,7 @@ end-of-file (wanted `%s')\n", delimiter);
 		write(pipe_fd[1], "\n", 1);
 		free(line);
 	}
+	init_signal();
 	close(pipe_fd[1]);
 	return (pipe_fd[0]);
 }

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:16:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/25 15:25:08 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/31 13:09:41 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,20 @@ int	expand_and_add_spaces(t_shell *sh, char **input)
 
 int	handle_heredoc_if_needed(t_shell *sh, char *input)
 {
+	int	catch_error;
+
+	catch_error = 0;
 	if (is_heredoc(input))
 	{
-		if (handle_here_doc(sh, input))
+		catch_error = handle_here_doc(sh, input);
+		if (catch_error == 1)
 		{
 			error_sys("handle_here_doc failed\n");
+			free(input);
+			return (1);
+		}
+		if (catch_error == -1)
+		{
 			free(input);
 			return (1);
 		}
@@ -90,13 +99,29 @@ static void	finalize_input(t_shell *sh, char **input)
 void	process_input(t_shell *sh, char *input)
 {
 	int	len;
+	int	saved_stdin;
 
 	if (trim_and_check_syntax(sh, &input))
 		return ;
 	if (expand_and_add_spaces(sh, &input))
 		return ;
-	if (handle_heredoc_if_needed(sh, input))
+	saved_stdin = dup(STDIN_FILENO);
+	if (saved_stdin == -1)
+	{
+		error_sys("dup failed\n");
 		return ;
+	}
+	if (handle_heredoc_if_needed(sh, input))
+	{
+		if (dup2(saved_stdin, STDIN_FILENO) == -1)
+		{
+			error_sys("dup2 failed to restore STDIN\n");
+			return ;
+		}
+		close(saved_stdin);
+		return ;
+	}
+	close(saved_stdin);
 	len = ft_strlen(input);
 	if (handle_continued_input(sh, &input, len))
 		return ;
