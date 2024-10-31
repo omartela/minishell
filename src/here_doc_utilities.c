@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:02:33 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/31 17:57:36 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:39:30 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,22 @@ int	read_hd_lines(int *pipe_fd, t_shell *sh, char *delim, int expand_flag)
 
 	while (1)
 	{
-		line = readline("heredoc> ");
+		if (isatty(fileno(stdin)))
+			line = readline("heredoc> ");
+		else
+		{
+			char *input;
+			input = get_next_line(fileno(stdin));
+			line = ft_strtrim(input, "\n");
+			free(input);
+		}
+		//line = readline("heredoc> ");
 		if (g_sig == SIGINT)
 			return (close_fd_and_return(pipe_fd[0], pipe_fd[1], -2));
 		if (!line)
 		{
-			printf("warning: here-document delimited by \
-end-of-file (wanted `%s')\n", delim);
+			/* printf("warning: here-document delimited by \
+end-of-file (wanted `%s')\n", delim); */
 			break ;
 		}
 		if (add_promt_and_expand(sh, &line, pipe_fd, expand_flag))

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:19:37 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/31 17:23:52 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/31 19:31:29 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ int	trim_and_check_syntax(t_shell *sh, char **input)
 	if (check_syntax(trimmed_input))
 	{
 		sh->exit_status = 2;
+		if (sh->promt && sh->promt[0] != '\0')
+			add_history(sh->promt);
 		free(*input);
 		return (1);
 	}
@@ -108,7 +110,16 @@ int	handle_continued_input(t_shell *sh, char **input, int len, int saved_stdin)
 		|| (len > 2 && (*input)[len - 1] == '&'
 		&& (*input)[len - 2] == '&') || (len > 0 && is_open_quote(*input)))
 	{
-		next_input = readline("> ");
+		//Snippet for tester
+		if (isatty(fileno(stdin)))
+			next_input = readline("> ");
+		else
+		{
+			char *line = get_next_line(fileno(stdin));
+			next_input = ft_strtrim(line, "\n");
+			free(line);
+		}
+		//next_input = readline("> ");
 		if (!next_input)
 		{
 			free(*input);
