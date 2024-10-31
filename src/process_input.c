@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:16:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/31 13:09:41 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:18:32 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ void	process_input(t_shell *sh, char *input)
 			error_sys("dup2 failed to restore STDIN\n");
 			return ;
 		}
+		printf("\n");
 		close(saved_stdin);
 		return ;
 	}
@@ -125,5 +126,6 @@ void	process_input(t_shell *sh, char *input)
 	len = ft_strlen(input);
 	if (handle_continued_input(sh, &input, len))
 		return ;
+	g_sig = 0;
 	finalize_input(sh, &input);
 }

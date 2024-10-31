@@ -6,11 +6,13 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/30 10:36:56 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:15:26 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+int g_sig = 0;
 
 int	add_prompt(t_shell *sh, char *input)
 {
@@ -39,13 +41,27 @@ int	add_prompt(t_shell *sh, char *input)
 	return (0);
 }
 
+void	sig_handler_sigint_g(int signum)
+{
+	if (signum == SIGINT)
+	{
+		/* rl_replace_line("", 0); */
+		/*printf("comes from\n"); */
+		rl_on_new_line();
+		rl_redisplay();
+	}
+}
+
 static void	loop_userpromt(t_shell *sh)
 {
 	char	*input;
 
 	while (1)
 	{
-		init_signal();
+		if (g_sig == 2)
+			signal(SIGINT, sig_handler_sigint_g);
+		else
+			init_signal();
 		input = readline("minishell> ");
 		if (input == NULL)
 		{

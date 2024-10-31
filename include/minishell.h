@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/31 13:00:28 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:01:00 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # include <unistd.h>
 # include <limits.h>
 # include <signal.h>
+
+extern int	g_sig;
 
 typedef struct s_heredoc
 {

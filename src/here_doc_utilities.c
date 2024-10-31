@@ -6,13 +6,11 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:02:33 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/31 13:01:59 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:19:34 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	g_sig;
 
 static int	is_continue(char *line, char *delimiter)
 {
@@ -94,7 +92,7 @@ int	here_doc_input(char *delimiter, t_shell *sh, int expand_flag)
 		line = readline("heredoc> ");
 		if (g_sig == SIGINT)
 		{
-			printf("\n");
+			/* printf("\n"); */
 			return (-2);
 		}
 		if (!line)
@@ -111,7 +109,6 @@ end-of-file (wanted `%s')\n", delimiter);
 		write(pipe_fd[1], "\n", 1);
 		free(line);
 	}
-	init_signal();
 	close(pipe_fd[1]);
 	return (pipe_fd[0]);
 }
