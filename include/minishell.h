@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/31 19:52:41 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/01 14:22:20 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,6 @@ typedef struct s_shell
 	char				**local_shellvars;
 	struct s_pipes		*pipes;
 	struct s_heredoc	*hd;
-	struct sigaction	org_sig_quit;
-	struct sigaction	org_sig_int;
 }	t_shell;
 
 typedef struct s_cmd
