@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:16:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/31 19:50:19 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/01 13:02:40 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,23 @@ int	add_prompt(t_shell *sh, char *input)
 
 	if (sh->promt)
 	{
-		temp = ft_strjoin(sh->promt, " ");
-		free(sh->promt);
+		temp = ft_strjoin(sh->promt, input);
 		if (!temp)
 		{
 			error_sys("add_prompt failed\n");
 			return (1);
 		}
-		sh->promt = ft_strjoin(temp, input);
-		free(temp);
+		free(sh->promt);
+		sh->promt = temp;
 	}
 	else
-		sh->promt = ft_strdup(input);
-	if (!sh->promt)
 	{
-		error_sys("add_prompt failed\n");
-		return (1);
+		sh->promt = ft_strdup(input);
+		if (!sh->promt)
+		{
+			error_sys("add_prompt failed\n");
+			return (1);
+		}
 	}
 	return (0);
 }

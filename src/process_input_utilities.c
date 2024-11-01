@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:19:37 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/31 19:31:29 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/01 13:02:37 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	expand_and_add_spaces(t_shell *sh, char **input)
 static int	process_next_input(t_shell *sh, char **input,
 			char *next_input, int saved_stdin)
 {
-	if (add_prompt(sh, next_input))
+	if (add_prompt(sh, " ") || add_prompt(sh, next_input))
 	{
 		free(*input);
 		free(next_input);
