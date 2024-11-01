@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/31 19:56:06 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/01 15:33:21 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,24 +33,12 @@ static void	loop_userpromt(t_shell *sh)
 			signal(SIGINT, sig_handler_sigint_g);
 		else
 			init_signal();
-		//input = readline("minishell> ");
-		if (isatty(fileno(stdin)))
-			input = readline("minishell> ");
-		else
-		{
-			char *line;
-			line = get_next_line(fileno(stdin));
-			input = ft_strtrim(line, "\n");
-			free(line);
-		}
+		input = readline("minishell> ");
 		if (input == NULL)
 		{
-			/* printf("exit\n"); */
+			printf("exit\n");
 			break ;
 		}
-		char *temp = ft_strdup(input);
-		free(input);
-		input = temp;
 		if (add_prompt(sh, input))
 		{
 			free(input);

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:19:37 by irychkov          #+#    #+#             */
-/*   Updated: 2024/11/01 13:11:12 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/01 15:42:46 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,24 +110,14 @@ int	handle_continued_input(t_shell *sh, char **input, int len, int saved_stdin)
 		|| (len > 2 && (*input)[len - 1] == '&'
 		&& (*input)[len - 2] == '&') || (len > 0 && is_open_quote(*input)))
 	{
-		//Snippet for tester
-		if (isatty(fileno(stdin)))
-			next_input = readline("> ");
-		else
-		{
-			char *line = get_next_line(fileno(stdin));
-			next_input = ft_strtrim(line, "\n");
-			free(line);
-		}
-		//next_input = readline("> ");
+		next_input = readline("> ");
 		if (!next_input)
 		{
+			if (sh->promt && sh->promt[0] != '\0')
+				add_history(sh->promt);
 			free(*input);
 			return (1);
 		}
-		char *temp = ft_strdup(next_input);
-		free(next_input);
-		next_input = temp;
 		if (process_next_input(sh, input, next_input, saved_stdin))
 			return (1);
 		len = ft_strlen(*input);
