@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:02:33 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/31 18:39:30 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/01 13:10:52 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,9 @@ int	read_hd_lines(int *pipe_fd, t_shell *sh, char *delim, int expand_flag)
 end-of-file (wanted `%s')\n", delim); */
 			break ;
 		}
+		char *temp = ft_strdup(line);
+		free(line);
+		line = temp;
 		if (add_promt_and_expand(sh, &line, pipe_fd, expand_flag))
 			return (-1);
 		if (!is_continue(line, delim))
