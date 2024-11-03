@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/11/01 15:33:21 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/03 20:39:01 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	sig_handler_sigint_g(int signum)
 {
 	if (signum == SIGINT)
 	{
+		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 	}
@@ -29,6 +30,7 @@ static void	loop_userpromt(t_shell *sh)
 
 	while (1)
 	{
+		/* printf("g_sig = %d\n", g_sig); */
 		if (g_sig == 2)
 			signal(SIGINT, sig_handler_sigint_g);
 		else
@@ -44,7 +46,11 @@ static void	loop_userpromt(t_shell *sh)
 			free(input);
 			continue ;
 		}
-		process_input(sh, input);
+		if (process_input(sh, input))
+		{
+			printf("exit\n");
+			break ;
+		}
 		free_partial(sh);
 	}
 }

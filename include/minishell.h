@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/11/01 14:22:20 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/03 15:48:55 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ typedef struct s_redirection
 // main functions
 void	initialize_shell(t_shell *sh, char ***envp);
 void	initialize_env(t_shell *sh, char ***envp);
-void	process_input(t_shell *sh, char *input);
+int		process_input(t_shell *sh, char *input);
 void	init_num_cmds(t_shell *sh);
 int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
 int		init_pipes(t_pipes *pipes, int num_cmds);
