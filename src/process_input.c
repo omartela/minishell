@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:16:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/11/03 15:47:25 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/03 17:32:04 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,16 @@ int	process_input(t_shell *sh, char *input)
 	{
 		close(saved_stdin);
 		return (check_eof);
+	}
+	if (check_eof == -2)
+	{
+		if (dup2(saved_stdin, STDIN_FILENO) == -1)
+			error_sys("dup2 failed to restore STDIN\n");
+		if (sh->promt && sh->promt[0] != '\0')
+			add_history(sh->promt);
+		printf("\n");
+		close(saved_stdin);
+		return (0);
 	}
 	g_sig = 0;
 	close(saved_stdin);

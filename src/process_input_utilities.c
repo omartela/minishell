@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:19:37 by irychkov          #+#    #+#             */
-/*   Updated: 2024/11/03 15:47:31 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/03 17:52:24 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ int	handle_continued_input(t_shell *sh, char **input, int len, int saved_stdin)
 	char	*next_input;
 
 	next_input = NULL;
+	g_sig = 0;
+	signal(SIGINT, signal_handler_hd);
 	while ((len > 0 && (*input)[len - 1] == '|')
 		|| (len > 2 && (*input)[len - 1] == '&'
 		&& (*input)[len - 2] == '&') || (len > 0 && is_open_quote(*input)))
@@ -120,8 +122,14 @@ int	handle_continued_input(t_shell *sh, char **input, int len, int saved_stdin)
 			free(line);
 		}
 		//next_input = readline("> ");
+		if (g_sig == SIGINT)
+		{
+			free(*input);
+			return (-2);
+		}
 		if (!next_input)
 		{
+			error_sys("syntax error: unexpected end of file\n");
 			free(*input);
 			return (-1);
 		}
