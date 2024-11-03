@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:16:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/11/01 13:54:05 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/03 15:47:25 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,30 +86,33 @@ static void	finalize_input(t_shell *sh, char **input)
 	}
 }
 
-void	process_input(t_shell *sh, char *input)
+int	process_input(t_shell *sh, char *input)
 {
 	int	len;
 	int	saved_stdin;
+	int	check_eof;
 
 	if (trim_and_check_syntax(sh, &input))
-		return ;
+		return (0);
 	if (expand_and_add_spaces(sh, &input))
-		return ;
+		return (0);
 	saved_stdin = dup(STDIN_FILENO);
 	if (saved_stdin == -1)
 	{
 		error_sys("dup failed\n");
-		return ;
+		return (0);
 	}
 	if (handle_heredoc_if_needed(sh, input, saved_stdin))
-		return ;
+		return (0);
 	len = ft_strlen(input);
-	if (handle_continued_input(sh, &input, len, saved_stdin))
+	check_eof = handle_continued_input(sh, &input, len, saved_stdin);
+	if (check_eof == -1 || check_eof == 0)
 	{
 		close(saved_stdin);
-		return ;
+		return (check_eof);
 	}
 	g_sig = 0;
 	close(saved_stdin);
 	finalize_input(sh, &input);
+	return (0);
 }

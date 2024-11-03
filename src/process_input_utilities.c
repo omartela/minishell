@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:19:37 by irychkov          #+#    #+#             */
-/*   Updated: 2024/11/01 13:11:12 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/03 15:47:31 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,14 +123,14 @@ int	handle_continued_input(t_shell *sh, char **input, int len, int saved_stdin)
 		if (!next_input)
 		{
 			free(*input);
-			return (1);
+			return (-1);
 		}
 		char *temp = ft_strdup(next_input);
 		free(next_input);
 		next_input = temp;
 		if (process_next_input(sh, input, next_input, saved_stdin))
-			return (1);
+			return (0);
 		len = ft_strlen(*input);
 	}
-	return (0);
+	return (1);
 }
