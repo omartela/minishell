@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:02:33 by irychkov          #+#    #+#             */
-/*   Updated: 2024/11/04 13:16:48 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 14:27:32 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,13 @@ static int	add_promt_and_expand(t_shell *sh, char **line, int *fd,
 	return (0);
 }
 
+static void	write_and_free(char *line, int fd1)
+{
+	write(fd1, line, ft_strlen(line));
+	write(fd1, "\n", 1);
+	free(line);
+}
+
 int	read_hd_lines(int *pipe_fd, t_shell *sh, char *delim, int expand_flag)
 {
 	char	*line;
@@ -68,7 +75,11 @@ int	read_hd_lines(int *pipe_fd, t_shell *sh, char *delim, int expand_flag)
 	{
 		line = readline("heredoc> ");
 		if (g_sig == SIGINT)
+		{
+			g_sig = 0;
+			sh->promtflag = 1;
 			return (close_fd_and_return(pipe_fd[0], pipe_fd[1], -2));
+		}
 		if (!line)
 		{
 			printf("warning: here-document delimited by \
@@ -80,9 +91,7 @@ end-of-file (wanted `%s')\n", delim);
 			return (-1);
 		if (!is_continue(line, delim))
 			break ;
-		write(pipe_fd[1], line, ft_strlen(line));
-		write(pipe_fd[1], "\n", 1);
-		free(line);
+		write_and_free(line, pipe_fd[1]);
 	}
 	close(pipe_fd[1]);
 	return (0);

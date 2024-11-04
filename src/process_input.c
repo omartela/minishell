@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:16:43 by irychkov          #+#    #+#             */
-/*   Updated: 2024/11/04 13:04:37 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 13:58:30 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,6 @@ int	process_input(t_shell *sh, char *input)
 	check_return = handle_signal_if_needed(sh, check_sig, saved_stdin);
 	if (check_return != 1)
 		return (check_return);
-	g_sig = 0;
 	close(saved_stdin);
 	finalize_input(sh, &input);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/11/04 13:16:02 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 14:23:03 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	g_sig = 0;
 
 void	init_signal(t_shell *sh)
 {
-	if (g_sig == 2 || sh->promtflag)
+	if (sh->promtflag)
 		init_signal_updated();
 	else
 		init_signal_first();

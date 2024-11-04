@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:19:37 by irychkov          #+#    #+#             */
-/*   Updated: 2024/11/04 13:16:26 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 14:02:42 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ static int	handle_signal_if_needed2(t_shell *sh, char **input,
 {
 	if (g_sig == SIGINT)
 	{
+		g_sig = 0;
+		sh->promtflag = 1;
 		free(*input);
 		return (-2);
 	}
@@ -115,7 +117,6 @@ int	handle_continued_input(t_shell *sh, char **input, int len, int saved_stdin)
 	int		sig_error;
 
 	next_input = NULL;
-	g_sig = 0;
 	sig_error = 1;
 	signal(SIGINT, signal_handler_hd);
 	while ((len > 0 && (*input)[len - 1] == '|')
