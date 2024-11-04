@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:19:37 by irychkov          #+#    #+#             */
-/*   Updated: 2024/11/04 10:39:10 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 11:38:33 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	trim_and_check_syntax(t_shell *sh, char **input)
 	if (check_syntax(trimmed_input))
 	{
 		sh->exit_status = 2;
+		sh->promtflag = 0;
 		if (sh->promt && sh->promt[0] != '\0')
 			add_history(sh->promt);
 		free(*input);
@@ -130,13 +131,14 @@ int	handle_continued_input(t_shell *sh, char **input, int len, int saved_stdin)
 		if (!next_input && is_open_quote(*input))
 		{
 			error_sys("syntax error: unexpected end of file\n");
-			g_sig = 2;
+			sh->promtflag = 1;
 			free(*input);
 			return (0);
 		}
 		else if (!next_input)
 		{
 			error_sys("syntax error: unexpected end of file\n");
+			sh->promtflag = 1;
 			free(*input);
 			return (-1);
 		}

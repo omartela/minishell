@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/11/03 15:48:55 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 11:03:42 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_pipes
 
 typedef struct s_shell
 {
+	int					promtflag;
 	int					exit_status;
 	int					num_cmds;
 	char				**commands;

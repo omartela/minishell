@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/11/04 09:39:55 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 11:23:52 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,11 @@ static void	loop_userpromt(t_shell *sh)
 	while (1)
 	{
 		/* printf("g_sig = %d\n", g_sig); */
-		if (g_sig == 2)
+		if (g_sig == 2 || sh->promtflag)
+		{
 			signal(SIGINT, sig_handler_sigint_g);
+			signal(SIGQUIT, SIG_IGN);
+		}
 		else
 			init_signal();
 		//input = readline("minishell> ");
