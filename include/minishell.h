@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/28 17:48:08 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 11:03:42 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # include <limits.h>
 # include <signal.h>
 
+extern int	g_sig;
+
 typedef struct s_heredoc
 {
 	int		num_heredocs;
@@ -39,6 +41,7 @@ typedef struct s_pipes
 
 typedef struct s_shell
 {
+	int					promtflag;
 	int					exit_status;
 	int					num_cmds;
 	char				**commands;
@@ -48,8 +51,6 @@ typedef struct s_shell
 	char				**local_shellvars;
 	struct s_pipes		*pipes;
 	struct s_heredoc	*hd;
-	struct sigaction	org_sig_quit;
-	struct sigaction	org_sig_int;
 }	t_shell;
 
 typedef struct s_cmd
@@ -105,7 +106,7 @@ typedef struct s_redirection
 // main functions
 void	initialize_shell(t_shell *sh, char ***envp);
 void	initialize_env(t_shell *sh, char ***envp);
-void	process_input(t_shell *sh, char *input);
+int		process_input(t_shell *sh, char *input);
 void	init_num_cmds(t_shell *sh);
 int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
 int		init_pipes(t_pipes *pipes, int num_cmds);
@@ -132,7 +133,7 @@ void	exit_and_free(t_shell *sh, t_cmd *cmd, int status);
 
 // errors
 void	show_error(char *name, char *msg);
-void	show_syntax_error(char *element, char *input);
+void	show_syntax_error(char *element);
 void	show_error_free_cmd_exit(int code, char *name, char *msg, t_cmd *cmd);
 int		show_error_return(int code, char *name, char *msg);
 void	error_sys(char *msg);
@@ -146,10 +147,11 @@ char	*add_spaces(char *s);
 int		is_open_quote(char *str);
 void	process_quotes(char **s, int *in_quotes, char *quote_type);
 char	*expand_input(char *str, t_shell *sh);
-int		handle_heredoc_if_needed(t_shell *sh, char *input);
+int		handle_heredoc_if_needed(t_shell *sh, char *input, int saved_stdin);
 int		trim_and_check_syntax(t_shell *sh, char **input);
 int		expand_and_add_spaces(t_shell *sh, char **input);
-int		handle_continued_input(t_shell *sh, char **input, int len);
+int		handle_continued_input(t_shell *sh, char **input,
+			int len, int saved_stdin);
 int		join_input_with_next(t_shell *sh, char **input, char *next_input);
 
 //split arguments
@@ -162,18 +164,23 @@ char	**split_args_helper(char *s, size_t i, char **result,
 //check syntax
 int		check_syntax(char *input);
 int		is_redirection_operator(char c);
-int		handle_or(t_check *check, char *input, size_t *i);
-int		handle_pipe(t_check *check, char *input);
-int		handle_and(t_check *check, char *input, size_t *i);
-int		handle_ampersand(t_check *check, char *input);
+int		handle_or(t_check *check, size_t *i);
+int		handle_pipe(t_check *check);
+int		handle_and(t_check *check, size_t *i);
+int		handle_ampersand(t_check *check);
 void	handle_text(t_check *check, char *input, size_t *i);
 int		handle_first_redirect(t_check *check, char *input, size_t *i);
 int		handle_second_redirect(char *input, size_t i);
 
 //heredoc
+void	signal_handler_hd(int signal);
 int		is_heredoc(char *input);
 int		handle_here_doc(t_shell *sh, char *input);
 int		here_doc_input(char *delimiter, t_shell *sh, int expand_flag);
+int		read_hd_lines(int *pipe_fd, t_shell *sh, char *delim, int expand_flag);
+int		close_fd_and_return(int fd0, int fd1, int error);
+int		loop_args(t_shell *sh, char **args,
+			char **args_with_quotes, int *expand);
 
 //parse redirection
 int		parse_redirections(t_shell *sh, t_cmd *cmd, int is_exit);
@@ -280,9 +287,9 @@ int		export_append_both(t_shell *sh, char *variable, char *value);
 int		unset(t_shell *sh, char **args);
 
 // signals.c
-int		init_signal(t_shell *sh);
-int		reset_signals(t_shell *sh);
-int		change_signal_handler(void);
+void	init_signal(void);
+void	reset_signals(void);
+void	change_signal_handler(void);
 
 // update-underscore-variable
 int		update_underscore(t_shell *sh, t_cmd *cmd);

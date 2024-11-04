@@ -6,37 +6,22 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/29 10:39:47 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 11:23:52 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	add_prompt(t_shell *sh, char *input)
-{
-	char	*temp;
+int	g_sig = 0;
 
-	if (sh->promt)
+void	sig_handler_sigint_g(int signum)
+{
+	if (signum == SIGINT)
 	{
-		temp = ft_strjoin(sh->promt, input);
-		if (!temp)
-		{
-			error_sys("add_prompt failed\n");
-			return (1);
-		}
-		free(sh->promt);
-		sh->promt = temp;
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
 	}
-	else
-	{
-		sh->promt = ft_strdup(input);
-		if (!sh->promt)
-		{
-			error_sys("add_prompt failed\n");
-			return (1);
-		}
-	}
-	return (0);
 }
 
 static void	loop_userpromt(t_shell *sh)
@@ -45,23 +30,42 @@ static void	loop_userpromt(t_shell *sh)
 
 	while (1)
 	{
-		if (init_signal(sh))
+		/* printf("g_sig = %d\n", g_sig); */
+		if (g_sig == 2 || sh->promtflag)
 		{
-			error_sys("Init signals failed\n");
-			continue ;
+			signal(SIGINT, sig_handler_sigint_g);
+			signal(SIGQUIT, SIG_IGN);
 		}
-		input = readline("minishell> ");
+		else
+			init_signal();
+		//input = readline("minishell> ");
+		if (isatty(fileno(stdin)))
+			input = readline("minishell> ");
+		else
+		{
+			char *line;
+			line = get_next_line(fileno(stdin));
+			input = ft_strtrim(line, "\n");
+			free(line);
+		}
 		if (input == NULL)
 		{
-			printf("exit\n");
+			/* printf("exit\n"); */
 			break ;
 		}
+		char *temp = ft_strdup(input);
+		free(input);
+		input = temp;
 		if (add_prompt(sh, input))
 		{
 			free(input);
 			continue ;
 		}
-		process_input(sh, input);
+		if (process_input(sh, input))
+		{
+			/* printf("exit\n"); */
+			break ;
+		}
 		free_partial(sh);
 	}
 }
