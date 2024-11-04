@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/11/03 17:50:37 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 09:39:55 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void	loop_userpromt(t_shell *sh)
 		}
 		if (process_input(sh, input))
 		{
-			printf("exit\n");
+			/* printf("exit\n"); */
 			break ;
 		}
 		free_partial(sh);

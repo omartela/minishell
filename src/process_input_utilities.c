@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:19:37 by irychkov          #+#    #+#             */
-/*   Updated: 2024/11/03 17:52:24 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 10:39:10 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,14 @@ int	handle_continued_input(t_shell *sh, char **input, int len, int saved_stdin)
 			free(*input);
 			return (-2);
 		}
-		if (!next_input)
+		if (!next_input && is_open_quote(*input))
+		{
+			error_sys("syntax error: unexpected end of file\n");
+			g_sig = 2;
+			free(*input);
+			return (0);
+		}
+		else if (!next_input)
 		{
 			error_sys("syntax error: unexpected end of file\n");
 			free(*input);
