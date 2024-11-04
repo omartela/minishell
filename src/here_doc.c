@@ -6,17 +6,11 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/31 19:52:04 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 12:27:46 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	signal_handler_hd(int signal)
-{
-	close(STDIN_FILENO);
-	g_sig = signal;
-}
 
 int	is_heredoc(char *input)
 {

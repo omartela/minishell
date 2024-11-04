@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:19:37 by irychkov          #+#    #+#             */
-/*   Updated: 2024/11/04 11:38:33 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 13:16:26 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,24 +31,6 @@ int	is_open_quote(char *str)
 	}
 	if (in_single_quotes || in_double_quotes)
 		return (1);
-	return (0);
-}
-
-int	trim_and_check_syntax(t_shell *sh, char **input)
-{
-	char	*trimmed_input;
-
-	trimmed_input = trim_spaces(*input);
-	if (check_syntax(trimmed_input))
-	{
-		sh->exit_status = 2;
-		sh->promtflag = 0;
-		if (sh->promt && sh->promt[0] != '\0')
-			add_history(sh->promt);
-		free(*input);
-		return (1);
-	}
-	*input = trimmed_input;
 	return (0);
 }
 
@@ -102,49 +84,48 @@ static int	process_next_input(t_shell *sh, char **input,
 	return (0);
 }
 
+static int	handle_signal_if_needed2(t_shell *sh, char **input,
+		char *next_input)
+{
+	if (g_sig == SIGINT)
+	{
+		free(*input);
+		return (-2);
+	}
+	if (!next_input && is_open_quote(*input))
+	{
+		error_sys("syntax error: unexpected end of file\n");
+		sh->promtflag = 1;
+		free(*input);
+		return (0);
+	}
+	else if (!next_input)
+	{
+		error_sys("syntax error: unexpected end of file\n");
+		sh->promtflag = 1;
+		free(*input);
+		return (-1);
+	}
+	return (1);
+}
+
 int	handle_continued_input(t_shell *sh, char **input, int len, int saved_stdin)
 {
 	char	*next_input;
+	int		sig_error;
 
 	next_input = NULL;
 	g_sig = 0;
+	sig_error = 1;
 	signal(SIGINT, signal_handler_hd);
 	while ((len > 0 && (*input)[len - 1] == '|')
 		|| (len > 2 && (*input)[len - 1] == '&'
 		&& (*input)[len - 2] == '&') || (len > 0 && is_open_quote(*input)))
 	{
-		//Snippet for tester
-		if (isatty(fileno(stdin)))
-			next_input = readline("> ");
-		else
-		{
-			char *line = get_next_line(fileno(stdin));
-			next_input = ft_strtrim(line, "\n");
-			free(line);
-		}
-		//next_input = readline("> ");
-		if (g_sig == SIGINT)
-		{
-			free(*input);
-			return (-2);
-		}
-		if (!next_input && is_open_quote(*input))
-		{
-			error_sys("syntax error: unexpected end of file\n");
-			sh->promtflag = 1;
-			free(*input);
-			return (0);
-		}
-		else if (!next_input)
-		{
-			error_sys("syntax error: unexpected end of file\n");
-			sh->promtflag = 1;
-			free(*input);
-			return (-1);
-		}
-		char *temp = ft_strdup(next_input);
-		free(next_input);
-		next_input = temp;
+		next_input = readline("> ");
+		sig_error = handle_signal_if_needed2(sh, input, next_input);
+		if (sig_error != 1)
+			return (sig_error);
 		if (process_next_input(sh, input, next_input, saved_stdin))
 			return (0);
 		len = ft_strlen(*input);

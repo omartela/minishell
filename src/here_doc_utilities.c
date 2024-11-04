@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:02:33 by irychkov          #+#    #+#             */
-/*   Updated: 2024/11/04 11:15:41 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 13:16:48 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,16 +66,7 @@ int	read_hd_lines(int *pipe_fd, t_shell *sh, char *delim, int expand_flag)
 
 	while (1)
 	{
-		if (isatty(fileno(stdin)))
-			line = readline("heredoc> ");
-		else
-		{
-			char *input;
-			input = get_next_line(fileno(stdin));
-			line = ft_strtrim(input, "\n");
-			free(input);
-		}
-		//line = readline("heredoc> ");
+		line = readline("heredoc> ");
 		if (g_sig == SIGINT)
 			return (close_fd_and_return(pipe_fd[0], pipe_fd[1], -2));
 		if (!line)
@@ -85,9 +76,6 @@ end-of-file (wanted `%s')\n", delim);
 			sh->promtflag = 1;
 			break ;
 		}
-		char *temp = ft_strdup(line);
-		free(line);
-		line = temp;
 		if (add_promt_and_expand(sh, &line, pipe_fd, expand_flag))
 			return (-1);
 		if (!is_continue(line, delim))

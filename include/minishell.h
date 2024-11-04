@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/11/04 11:03:42 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 12:22:29 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ typedef struct s_redirection
 // main functions
 void	initialize_shell(t_shell *sh, char ***envp);
 void	initialize_env(t_shell *sh, char ***envp);
+void	init_signal(t_shell *sh);
 int		process_input(t_shell *sh, char *input);
 void	init_num_cmds(t_shell *sh);
 int		init_cmd(t_cmd **cmd, char *command, t_shell *sh);
@@ -286,8 +287,9 @@ int		export_append_both(t_shell *sh, char *variable, char *value);
 // unset command
 int		unset(t_shell *sh, char **args);
 
-// signals.c
-void	init_signal(void);
+// signals
+void	init_signal_first(void);
+void	init_signal_updated(void);
 void	reset_signals(void);
 void	change_signal_handler(void);
 
