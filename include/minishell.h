@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:44:35 by omartela          #+#    #+#             */
-/*   Updated: 2024/11/04 12:22:29 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/05 17:32:56 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,7 +252,7 @@ int		set_oldpwd(t_shell *sh, char *oldpwd);
 int		env(t_shell *shell, char **arguments);
 
 // pwd command
-int		pwd(void);
+int		pwd(t_shell *sh);
 
 // expand-dollar.c
 char	*handle_dollar(t_shell *sh, t_expand_state *state, char *str);

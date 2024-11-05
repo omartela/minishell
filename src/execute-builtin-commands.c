@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute-builtin-commands.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omartela <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 14:29:37 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/23 15:45:21 by omartela         ###   ########.fr       */
+/*   Updated: 2024/11/05 17:35:04 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ int	execute_pwd_builtin(t_shell *sh, t_cmd *cmd, int is_in_pipe)
 {
 	if (is_in_pipe)
 	{
-		if (pwd())
+		if (pwd(sh))
 			exit_and_free(sh, cmd, 1);
 		exit_and_free(sh, cmd, 0);
 	}
 	else
 	{
-		if (pwd())
+		if (pwd(sh))
 		{
 			sh->exit_status = 1;
 			return (1);
