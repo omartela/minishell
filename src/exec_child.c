@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 16:21:56 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/23 16:38:04 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/30 10:38:34 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,7 @@ void	exec_child(t_shell *sh, t_cmd *cmd, int i)
 	int	is_build;
 
 	rl_clear_history();
-	if (reset_signals(sh))
-		exit(1);
+	reset_signals();
 	parse_redirections(sh, cmd, 1);
 	child_io(sh, cmd, i);
 	is_build = is_builtin(cmd);

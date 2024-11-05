@@ -6,11 +6,29 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 14:58:40 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/25 13:34:34 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 12:46:35 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	trim_and_check_syntax(t_shell *sh, char **input)
+{
+	char	*trimmed_input;
+
+	trimmed_input = trim_spaces(*input);
+	if (check_syntax(trimmed_input))
+	{
+		sh->exit_status = 2;
+		sh->promtflag = 0;
+		if (sh->promt && sh->promt[0] != '\0')
+			add_history(sh->promt);
+		free(*input);
+		return (1);
+	}
+	*input = trimmed_input;
+	return (0);
+}
 
 static int	join_with_open_quote(t_shell *sh, char **input, char *next_input)
 {

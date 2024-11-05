@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 22:00:30 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/23 22:17:33 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/10/28 11:57:26 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	free_heredoc_fds(t_shell *sh)
 		}
 		free(sh->hd->heredoc_fds);
 		sh->hd->heredoc_fds = NULL;
+		sh->hd->heredoc_index = 0;
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 16:05:06 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/24 19:59:56 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 13:05:49 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	init_num_cmds(t_shell *sh)
 	sh->num_cmds = i;
 }
 
-static int	initialize_environment(t_shell *sh)
+static int	initialize_shlvl(t_shell *sh)
 {
 	if (update_shlvl(sh))
 	{
@@ -60,22 +60,9 @@ static int	initialize_heredoc(t_shell *sh)
 void	initialize_shell(t_shell *sh, char ***envp)
 {
 	ft_memset(sh, 0, sizeof(t_shell));
-	if (!*envp || !(*envp)[0])
-		initialize_default_env(envp);
-	copy_env(*envp, sh);
-	*envp = sh->envp;
-	if (initialize_environment(sh))
+	initialize_env(sh, envp);
+	if (initialize_shlvl(sh) || initialize_homepath(sh, sh->envp)
+		|| (initialize_heredoc(sh)))
 		exit(1);
-	if (initialize_homepath(sh, sh->envp))
-		exit(1);
-	if (initialize_heredoc(sh))
-		exit(1);
-	ft_memset(&sh->org_sig_int, 0, sizeof(sh->org_sig_int));
-	ft_memset(&sh->org_sig_quit, 0, sizeof(sh->org_sig_quit));
-	if (init_signal(sh))
-	{
-		error_sys("Error when initializing signal\n");
-		free_shell(sh);
-		exit (1);
-	}
+	init_signal_first();
 }

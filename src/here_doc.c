@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/23 10:16:18 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 14:00:00 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,66 +37,9 @@ int	is_heredoc(char *input)
 	return (0);
 }
 
-static int	allocate_heredocs_fds(t_heredoc *hd, char **args)
-{
-	if (!hd->heredoc_fds)
-		hd->heredoc_fds = ft_calloc(1, sizeof(int));
-	else
-		hd->heredoc_fds = ft_recalloc(hd->heredoc_fds,
-				sizeof(int) * hd->num_heredocs,
-				sizeof(int) * (hd->num_heredocs + 1));
-	if (!hd->heredoc_fds)
-	{
-		free_array(&args);
-		return (1);
-	}
-	return (0);
-}
-
-static int	save_heredoc_fds(t_shell *sh, char **args, int *expand, int i)
-{
-	sh->hd->heredoc_fds[sh->hd->num_heredocs]
-		= here_doc_input(args[i + 1], sh, *expand);
-	if (sh->hd->heredoc_fds[sh->hd->num_heredocs] == -1)
-	{
-		free_array(&args);
-		return (1);
-	}
-	return (0);
-}
-
-static int	loop_args(t_shell *sh, char **args,
-	char **args_with_quotes, int *expand)
-{
-	int	i;
-
-	i = 0;
-	while (args[i])
-	{
-		*expand = 0;
-		if (ft_strncmp(args[i], "<<\0", 3) == 0 && args[i + 1])
-		{
-			if ((ft_strncmp(args[i + 1], args_with_quotes[i + 1],
-						ft_strlen(args[i + 1])) == 0)
-				|| args_with_quotes[i + 1][0] == '\"')
-				*expand = 1;
-			if (allocate_heredocs_fds(sh->hd, args)
-				|| save_heredoc_fds(sh, args, expand, i))
-			{
-				free_array(&args_with_quotes);
-				return (1);
-			}
-			sh->hd->num_heredocs++;
-			i += 2;
-		}
-		else
-			i++;
-	}
-	return (0);
-}
-
 int	handle_here_doc(t_shell *sh, char *input)
 {
+	int		catch_error;
 	char	**args;
 	char	**args_with_quotes;
 	int		expand_flag;
@@ -111,9 +54,38 @@ int	handle_here_doc(t_shell *sh, char *input)
 		free(args);
 		return (1);
 	}
-	if (loop_args(sh, args, args_with_quotes, &expand_flag))
+	catch_error = loop_args(sh, args, args_with_quotes, &expand_flag);
+	if (catch_error == 1)
 		return (1);
+	else if (catch_error == -1)
+		return (-1);
 	free_array(&args);
 	free_array(&args_with_quotes);
 	return (0);
+}
+
+static int	setup_pipe_and_prompt(int *pipe_fd, t_shell *sh)
+{
+	signal(SIGINT, signal_handler_hd);
+	if (pipe(pipe_fd) == -1)
+		return (-1);
+	if (add_prompt(sh, "\n"))
+	{
+		error_sys("add_prompt failed\n");
+		return (close_fd_and_return(pipe_fd[0], pipe_fd[1], -1));
+	}
+	return (0);
+}
+
+int	here_doc_input(char *delimiter, t_shell *sh, int expand_flag)
+{
+	int	result;
+	int	pipe_fd[2];
+
+	if (setup_pipe_and_prompt(pipe_fd, sh) == -1)
+		return (-1);
+	result = read_hd_lines(pipe_fd, sh, delimiter, expand_flag);
+	if (result == 0)
+		return (pipe_fd[0]);
+	return (result);
 }

@@ -1,36 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin-env.c                                      :+:      :+:    :+:   */
+/*   signals_utilities.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/11 17:40:47 by omartela          #+#    #+#             */
-/*   Updated: 2024/11/04 11:03:39 by irychkov         ###   ########.fr       */
+/*   Created: 2024/11/04 12:26:44 by irychkov          #+#    #+#             */
+/*   Updated: 2024/11/04 12:35:22 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "minishell.h"
 
-int	env(t_shell *shell, char **args)
+void	signal_handler_hd(int signal)
 {
-	int	argc;
-	int	i;
+	close(STDIN_FILENO);
+	g_sig = signal;
+}
 
-	argc = 0;
-	i = 0;
-	while (args[argc])
-		++argc;
-	if (argc == 1)
+static void	sig_handler_sigint_g(int signum)
+{
+	if (signum == SIGINT)
 	{
-		while (shell->envp[i])
-		{
-			ft_printf("%s\n", shell->envp[i]);
-			++i;
-		}
-		return (0);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
 	}
-	else
-		return (show_error_return(1, args[0], "does \
-not handle options or arguments!"));
+}
+
+void	init_signal_updated(void)
+{
+	signal(SIGINT, sig_handler_sigint_g);
+	signal(SIGQUIT, SIG_IGN);
 }

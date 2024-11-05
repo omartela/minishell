@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 12:19:32 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/17 16:46:03 by omartela         ###   ########.fr       */
+/*   Updated: 2024/11/04 13:17:21 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	exit_shell(t_shell *sh, t_cmd *cmd)
 {
 	int	exit_code;
 
-	//ft_putstr_fd("exit\n", 2);
+	ft_putstr_fd("exit\n", 2);
 	if ((cmd->args[1] && !is_numeric(cmd->args[1])) \
 		|| (cmd->args[1] && cmd->args[1][0] == '\0'))
 	{

@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 12:58:56 by omartela          #+#    #+#             */
-/*   Updated: 2024/10/24 18:47:40 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/05 17:28:33 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,6 @@ int	set_oldpwd(t_shell *sh, char *oldpwd)
 			error_sys("cd syserror: Setting oldpwd failed\n");
 			return (1);
 		}
-	}
-	else
-	{
-		error_sys("cd: error retrieving current directory: \
-getcwd: cannot access parent directories: \
-No such file or directory\n");
-		return (1);
 	}
 	return (0);
 }
