@@ -6,7 +6,7 @@
 #    By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 22:33:20 by irychkov          #+#    #+#              #
-#    Updated: 2024/10/31 12:08:20 by irychkov         ###   ########.fr        #
+#    Updated: 2024/11/04 13:06:39 by irychkov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,7 @@ SRCS = src/main.c \
 		src/expand.c \
 		src/expand_tilde.c \
 		src/expand_utilities.c \
-		src/signals.c \
+		src/signals.c src/signals_utilities.c \
 		src/update-underscore-variable.c \
 		src/set_environment.c \
 		src/init_env.c \

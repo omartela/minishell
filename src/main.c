@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/11/04 11:23:52 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/05 18:00:08 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,27 @@
 
 int	g_sig = 0;
 
-void	sig_handler_sigint_g(int signum)
+void	init_signal(t_shell *sh)
 {
-	if (signum == SIGINT)
+	if (sh->promtflag)
+		init_signal_updated();
+	else
+		init_signal_first();
+}
+
+static int	catch_signal(t_shell *sh, char *input)
+{
+	if (g_sig == SIGINT)
 	{
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
+		g_sig = 0;
+		sh->exit_status = 130;
 	}
+	if (input == NULL)
+	{
+		printf("exit\n");
+		return (1);
+	}
+	return (0);
 }
 
 static void	loop_userpromt(t_shell *sh)
@@ -30,32 +43,10 @@ static void	loop_userpromt(t_shell *sh)
 
 	while (1)
 	{
-		/* printf("g_sig = %d\n", g_sig); */
-		if (g_sig == 2 || sh->promtflag)
-		{
-			signal(SIGINT, sig_handler_sigint_g);
-			signal(SIGQUIT, SIG_IGN);
-		}
-		else
-			init_signal();
-		//input = readline("minishell> ");
-		if (isatty(fileno(stdin)))
-			input = readline("minishell> ");
-		else
-		{
-			char *line;
-			line = get_next_line(fileno(stdin));
-			input = ft_strtrim(line, "\n");
-			free(line);
-		}
-		if (input == NULL)
-		{
-			/* printf("exit\n"); */
+		init_signal(sh);
+		input = readline("minishell> ");
+		if (catch_signal(sh, input))
 			break ;
-		}
-		char *temp = ft_strdup(input);
-		free(input);
-		input = temp;
 		if (add_prompt(sh, input))
 		{
 			free(input);
@@ -63,7 +54,7 @@ static void	loop_userpromt(t_shell *sh)
 		}
 		if (process_input(sh, input))
 		{
-			/* printf("exit\n"); */
+			printf("exit\n");
 			break ;
 		}
 		free_partial(sh);

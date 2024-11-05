@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 16:05:06 by irychkov          #+#    #+#             */
-/*   Updated: 2024/11/01 14:22:13 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 13:05:49 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,5 @@ void	initialize_shell(t_shell *sh, char ***envp)
 	if (initialize_shlvl(sh) || initialize_homepath(sh, sh->envp)
 		|| (initialize_heredoc(sh)))
 		exit(1);
-	init_signal();
+	init_signal_first();
 }

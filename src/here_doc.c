@@ -6,17 +6,11 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:56:24 by irychkov          #+#    #+#             */
-/*   Updated: 2024/10/31 19:52:04 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/04 14:00:00 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	signal_handler_hd(int signal)
-{
-	close(STDIN_FILENO);
-	g_sig = signal;
-}
 
 int	is_heredoc(char *input)
 {
@@ -88,7 +82,6 @@ int	here_doc_input(char *delimiter, t_shell *sh, int expand_flag)
 	int	result;
 	int	pipe_fd[2];
 
-	g_sig = 0;
 	if (setup_pipe_and_prompt(pipe_fd, sh) == -1)
 		return (-1);
 	result = read_hd_lines(pipe_fd, sh, delimiter, expand_flag);
