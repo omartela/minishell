@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:43:09 by omartela          #+#    #+#             */
-/*   Updated: 2024/11/04 14:23:03 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/05 18:00:08 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,21 @@ void	init_signal(t_shell *sh)
 		init_signal_first();
 }
 
+static int	catch_signal(t_shell *sh, char *input)
+{
+	if (g_sig == SIGINT)
+	{
+		g_sig = 0;
+		sh->exit_status = 130;
+	}
+	if (input == NULL)
+	{
+		printf("exit\n");
+		return (1);
+	}
+	return (0);
+}
+
 static void	loop_userpromt(t_shell *sh)
 {
 	char	*input;
@@ -30,11 +45,8 @@ static void	loop_userpromt(t_shell *sh)
 	{
 		init_signal(sh);
 		input = readline("minishell> ");
-		if (input == NULL)
-		{
-			printf("exit\n");
+		if (catch_signal(sh, input))
 			break ;
-		}
 		if (add_prompt(sh, input))
 		{
 			free(input);

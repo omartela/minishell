@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 11:18:27 by omartela          #+#    #+#             */
-/*   Updated: 2024/11/04 14:03:23 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/05 17:46:20 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	sig_handler_sigint_2(int signum)
 	}
 	if (signum == SIGQUIT)
 	{
-		error_sys("Quit (core dumped)\n");
+		error_sys("Quit\n");
 	}
 }
 
@@ -28,7 +28,7 @@ static void	sig_handler_sigint(int signum)
 {
 	if (signum == SIGINT)
 	{
-		g_sig = 0;
+		g_sig = signum;
 		rl_replace_line("", 0);
 		printf("\n");
 		rl_on_new_line();

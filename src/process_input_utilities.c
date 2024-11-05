@@ -6,7 +6,7 @@
 /*   By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:19:37 by irychkov          #+#    #+#             */
-/*   Updated: 2024/11/04 14:02:42 by irychkov         ###   ########.fr       */
+/*   Updated: 2024/11/05 19:35:01 by irychkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,13 @@ int	expand_and_add_spaces(t_shell *sh, char **input)
 static int	process_next_input(t_shell *sh, char **input,
 			char *next_input, int saved_stdin)
 {
-	if (add_prompt(sh, " ") || add_prompt(sh, next_input))
+	int	prompt_result;
+
+	if (is_open_quote(*input))
+		prompt_result = (add_prompt(sh, "\n") || add_prompt(sh, next_input));
+	else
+		prompt_result = (add_prompt(sh, " ") || add_prompt(sh, next_input));
+	if (prompt_result)
 	{
 		free(*input);
 		free(next_input);
@@ -91,6 +97,7 @@ static int	handle_signal_if_needed2(t_shell *sh, char **input,
 	{
 		g_sig = 0;
 		sh->promtflag = 1;
+		sh->exit_status = 130;
 		free(*input);
 		return (-2);
 	}
