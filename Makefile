@@ -6,7 +6,7 @@
 #    By: irychkov <irychkov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 22:33:20 by irychkov          #+#    #+#              #
-#    Updated: 2024/11/04 13:06:39 by irychkov         ###   ########.fr        #
+#    Updated: 2024/11/06 09:00:01 by irychkov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,6 +54,9 @@ SRCS = src/main.c \
 		src/execute-builtin-exit-cd-export-env.c \
 
 OBJS = $(SRCS:src/%.c=src/%.o)
+
+# Tell make .o files don't need to be created if target is up to date with respect to .c files
+# .SECONDARY: $(OBJS)
 
 HEADERS = -Iinclude -I$(LIBFT_DIR)
 
