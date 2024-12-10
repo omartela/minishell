@@ -36,44 +36,51 @@
 	```bash
 	git clone https://github.com/omartela/minishell.git
 	cd minishell
+	```
 
 2. Compile the project:
 	```bash
 	make
+	```
 
 3. Run the shell:
 	```bash
 	./minishell
+	```
 
 ---
 
 ## Usage
 
 Launch Minishell by running:
-	```bash
-	./minishell
+```bash
+./minishell
+```
 
-Examples of supported commands:
+#### Examples of supported commands:
 
-	Standard commands: ls, grep, etc.
+Standard commands: **ls, grep**, etc.
 
-	Built-ins:
-		```bash
-		export MY_VAR="value"
-		echo $MY_VAR
-		unset MY_VAR
+Built-ins:
+```bash
+export MY_VAR="value"
+echo $MY_VAR
+unset MY_VAR
+```
 
-	Redirections and pipelines:
-		```bash
-		cat file.txt | grep "text" > result.txt
+Redirections and pipelines:
+```bash
+cat file.txt | grep "text" > result.txt
+```
 
-	Heredoc:
-		```bash
-		cat << EOF
-		This is a heredoc example.
-		EOF
+Heredoc:
+```bash
+cat << EOF
+This is a heredoc example.
+EOF
+```
 
-	To exit, type exit or press Ctrl+D
+To exit, type **exit** or press **Ctrl+D**
 
 
 ---
@@ -91,19 +98,17 @@ No external libraries are permitted.
 ---
 
 ## Project Architecture
-
+```
 minishell/
-├── src/               # Source code files
-│   ├── builtins/      # Built-in command implementations
-│   ├── parsing/       # Input parsing and syntax validation
-│   ├── execution/     # Execution of commands and pipelines
-│   ├── signals/       # Signal handling logic
-│   └── utils/         # Helper functions
-├── include/           # Header files
-├── lib/               # External libraries (if any)
-├── Makefile           # Build script
-└── README.md          # Project documentation
-
+├── docs/						# Documentation and test functions
+├── include/					# Header files
+├── libft/						# My library
+├── src/						# Source code files
+├── Makefile					# Build script
+├── README.md					# Project documentation
+├── script_for_fds.sh			# Test script for fds
+└── script-run-all-mand.sh		# Test script for leaks and fds
+```
 
 ---
 
