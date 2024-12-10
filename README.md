@@ -12,7 +12,6 @@
 4. [Project Requirements](#project-requirements)
 5. [Project Architecture](#project-architecture)
 6. [Acknowledgments](#acknowledgments)
-7. [License](#license)
 
 ---
 
@@ -59,7 +58,7 @@ Launch Minishell by running:
 
 #### Examples of supported commands:
 
-Standard commands: **ls, grep**, etc.
+Standard commands: `ls`, `grep`, etc.
 
 Built-ins:
 ```bash
@@ -80,7 +79,7 @@ This is a heredoc example.
 EOF
 ```
 
-To exit, type **exit** or press **Ctrl+D**
+To exit, type `exit` or press `Ctrl+D`
 
 
 ---
@@ -92,7 +91,7 @@ This project adheres to the following constraints:
 Must be written in C.
 Follow the Norm coding standard.
 Only allowed to use the following functions:
-read, write, malloc, free, exit, fork, wait, execve, open, close, signal, kill, stat, lstat, fstat, pipe, dup, dup2, opendir, readdir, closedir, strerror, and perror.
+**read, write, malloc, free, exit, fork, wait, execve, open, close, signal, kill, stat, lstat, fstat, pipe, dup, dup2, opendir, readdir, closedir, strerror, and perror**.
 No external libraries are permitted.
 
 ---
