@@ -2,9 +2,16 @@
 
 **Minishell** is a minimalistic shell project developed as part of the 42 curriculum. It replicates essential features of a Unix-like shell, providing hands-on experience with system programming concepts like process management, piping, and signal handling.
 
-**Project Statistics**
+---
 
-The project was developed over a span of 10 weeks, resulting in 6200 lines of code. The team worked closely together to build a fully functional shell, overcoming challenges and continuously refining the architecture.
+## Project Details
+
+- **Total Time Spent**: 68 days
+- **Total Lines of Code**: 6214
+- **Commts**: 477
+- **Programming Language**: C
+
+The team worked closely together to build a fully functional shell, overcoming challenges and continuously refining the architecture.
 
 Created by [Omartela](https://github.com/omartela) and [RychkovIurii](https://github.com/RychkovIurii).
 
@@ -12,6 +19,7 @@ Created by [Omartela](https://github.com/omartela) and [RychkovIurii](https://gi
 
 ## Table of Contents
 
+0. [Project Details](#project-details)
 1. [Features](#features)
 2. [Installation](#installation)
 3. [Usage](#usage)
