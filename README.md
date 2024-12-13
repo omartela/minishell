@@ -8,7 +8,7 @@
 
 - **Total Time Spent**: 68 days
 - **Total Lines of Code**: 6214
-- **Commts**: 477
+- **Commits**: 477
 - **Programming Language**: C
 
 The team worked closely together to build a fully functional shell, overcoming challenges and continuously refining the architecture.
